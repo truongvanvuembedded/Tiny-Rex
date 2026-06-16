@@ -26,14 +26,14 @@ We also hope that this repository will also be useful for those are on the look 
 
 AK base kit uses the following memory map to run its application code
 
-- [ 0x08000000 ] : **Boot** [[ak-base-kit-stm32l151-boot.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/ak-base-kit-stm32l151-boot.bin)
+- [ 0x08000000 ] : **Boot** [[Tiny-Rex-boot.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/Tiny-Rex-boot.bin)
 - [ 0x08002000 ] : **BSF** [ Memory for data sharing between Boot and Application ]
-- [ 0x08003000 ] : **Application** [[ak-base-kit-stm32l151-application.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/ak-base-kit-stm32l151-application.bin)                                             |
+- [ 0x08003000 ] : **Application** [[Tiny-Rex-application.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/Tiny-Rex-application.bin)                                             |
 
 >**Note:** After loading the boot and application firmware, you can use [AK - Flash](https://github.com/ak-embedded-software/ak-flash), a CLI to work with the AK base kit, to load the application directly through the kit's USB port. Once installed, the following command will flash user's defined code into the kit's application's memory region.
 
 ```sh
-ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
+ak_flash /dev/ttyUSB0 Tiny-Rex-application.bin 0x08003000
 ```
 
 ## Hardware
