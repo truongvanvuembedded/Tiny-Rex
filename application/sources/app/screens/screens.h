@@ -43,4 +43,9 @@ extern view_dynamic_t dyn_view_welcome;
 extern view_screen_t scr_welcome;
 extern void scr_welcome_handle(ak_msg_t* msg);
 
+// scr_tiny_rex_game
+extern view_dynamic_t dyn_view_tiny_rex_game;
+extern view_screen_t scr_tiny_rex_game;
+extern void scr_tiny_rex_game_handle(ak_msg_t* msg);
+
 #endif //__SCREENS_H__
