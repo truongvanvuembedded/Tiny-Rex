@@ -23,11 +23,11 @@ ENV GCC_PATH=/opt/gcc-arm-none-eabi-10.3-2021.10
 ENV PATH="${GCC_PATH}/bin:${PATH}"
 
 # ===== AK-FLASH TOOL =====
-WORKDIR /opt/tools
+WORKDIR /workspace/tools
 
 RUN git clone https://github.com/the-ak-foundation/ak-flash.git
 
-WORKDIR /opt/tools/ak-flash
+WORKDIR /workspace/tools/ak-flash
 
 RUN make && \
     cp build_ak-flash/ak-flash /usr/local/bin/ak-flash
