@@ -107,6 +107,9 @@ SECTIONS {
 		__heap_end__ = . ;
 	} > SRAM
 
+	end = .;
+	_end = .;
+
 	/* non clear RAM */
 	.non_clear_ram (NOLOAD) : {
 		_non_clear_ram = .;
