@@ -44,6 +44,40 @@ ak_flash /dev/ttyUSB0 Tiny-Rex-application.bin 0x08003000
 
 [<img src="hardware/images/board-view-bottom.png" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)
 
+## Development Environment
+
+To ensure a consistent and reproducible build environment, the project is developed using a Docker-based toolchain setup instead of local installation.
+
+### Toolchain in Docker
+
+The Docker image includes:
+
+- GCC ARM Embedded toolchain (arm-none-eabi-gcc)
+- GDB multiarch debugger
+- Build tools (make)
+- Git for source control
+- Ak-Flash utility
+
+## Build Workflow
+
+```bash
+# Build Docker image
+docker build -t tiny-rex-game .
+
+# Run container with mounted source code
+docker run -it --rm \
+    -v $(pwd):/workspace/source \
+    --privileged \
+    -w /workspace/source \
+    tiny-rex-game
+
+# Build project
+make
+
+# Flash firmware
+ak-flash /dev/ttyUSB0 build_Tiny-Rex-application/Tiny-Rex-application.bin 0x08003000
+```
+
 ## Reference
 
 | Topic | Link |
