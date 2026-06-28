@@ -15,12 +15,11 @@ SOC_FLASH_BYTES = 131072 # 128KB
 SOC_SRAM_BYTES = 16384	 # 16KB
 FLASH_BASE_ADDR_VAL = 0x08000000
 
-# Name of build target ex: ak-base-kit-stm32l151-application.bin
-NAME_MODULE = ak-base-kit-stm32l151-application
+# Name of build target ex: Tiny-Rex-application.bin
+NAME_MODULE = Tiny-Rex-application
 PROJECT = $(NAME_MODULE)
 
-GCC_PATH			= $(HOME)/Workspace/Tools/gcc-arm-none-eabi-10.3-2021.10
-PROGRAMER_PATH		= $(HOME)/workspace/tools/STM32CubeProgrammer/bin
+PROGRAMER_PATH		= /mnt/DCB43A0FB439ED20/work/me/ak/tiny-rex-game/tool/STM32CubeProgrammer/bin
 OPENOCD_CFG_PATH	= /usr/local/share/openocd/scripts/board/stm32ldiscovery.cfg
 
 # App start address, that need sync with declare in linker file and interrupt vector table.
@@ -90,29 +89,35 @@ SOURCES_ASM	+=
 SOURCES_ASM_	 = $(shell find $(SOURCES_ASM) -type f -printf "%f\n")
 OBJECTS		+= $(patsubst %.s, $(OBJECTS_DIR)/%.o, $(SOURCES_ASM_))
 
-LIBC		= $(GCC_PATH)/arm-none-eabi/lib/thumb/v7-m/nofp/libc.a
-LIBM		= $(GCC_PATH)/arm-none-eabi/lib/thumb/v7-m/nofp/libm.a
-LIBFPU		= $(GCC_PATH)/arm-none-eabi/lib/thumb/v7-m/nofp/libg.a
-LIBRDPMON	= $(GCC_PATH)/arm-none-eabi/lib/thumb/v7-m/nofp/librdpmon.a
-LIBSTDCPP_NANO	= $(GCC_PATH)/arm-none-eabi/lib/thumb/v7-m/nofp/libstdc++_nano.a
 
-LIBGCC		= $(GCC_PATH)/lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/libgcc.a
-LIBGCOV		= $(GCC_PATH)/lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/libgcov.a
+GCC_VER     = 13.2.1
+ARCH        = thumb/v7-m/nofp
+NEWLIB_DIR  = /usr/lib/arm-none-eabi/newlib/$(ARCH)
+GCC_LIB_DIR = /usr/lib/gcc/arm-none-eabi/$(GCC_VER)/$(ARCH)
 
-LIB_PATH += -L$(GCC_PATH)/arm-none-eabi/lib/thumb/v7-m/nofp
-LIB_PATH += -L$(GCC_PATH)/lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp
+LIBC            = $(NEWLIB_DIR)/libc.a
+LIBM            = $(NEWLIB_DIR)/libm.a
+LIBFPU          = $(NEWLIB_DIR)/libg.a
+LIBRDPMON       = $(NEWLIB_DIR)/librdpmon.a
+LIBSTDCPP_NANO  = $(NEWLIB_DIR)/libstdc++_nano.a
+
+LIBGCC          = $(GCC_LIB_DIR)/libgcc.a
+LIBGCOV         = $(GCC_LIB_DIR)/libgcov.a
+
+LIB_PATH += -L$(NEWLIB_DIR)
+LIB_PATH += -L$(GCC_LIB_DIR)
 
 # The command for calling the compiler.
-CC		=	$(GCC_PATH)/bin/arm-none-eabi-gcc
-CPP		=	$(GCC_PATH)/bin/arm-none-eabi-g++
-AR		=	$(GCC_PATH)/bin/arm-none-eabi-ar
-AS		=	$(GCC_PATH)/bin/arm-none-eabi-gcc -x assembler-with-cpp
-LD		=	$(GCC_PATH)/bin/arm-none-eabi-ld
-OBJCOPY		=	$(GCC_PATH)/bin/arm-none-eabi-objcopy
-OBJDUMP		=	$(GCC_PATH)/bin/arm-none-eabi-objdump
-OBJNM		=	$(GCC_PATH)/bin/arm-none-eabi-nm
-ARM_GDB		=	$(GCC_PATH)/bin/arm-none-eabi-gdb-py
-ARM_SIZE	=	$(GCC_PATH)/bin/arm-none-eabi-size
+CC		=	arm-none-eabi-gcc
+CPP		=	arm-none-eabi-g++
+AR		=	arm-none-eabi-ar
+AS		=	arm-none-eabi-gcc -x assembler-with-cpp
+LD		=	arm-none-eabi-ld
+OBJCOPY		=	arm-none-eabi-objcopy
+OBJDUMP		=	arm-none-eabi-objdump
+OBJNM		=	arm-none-eabi-nm
+ARM_GDB		=	arm-none-eabi-gdb-py
+ARM_SIZE	=	arm-none-eabi-size
 
 MEMORY_USAGE_BAR_WIDTH = 30
 FLASH_SECTION_FILTER = $$1==".isr_vector" || $$1==".text" || $$1==".ARM.exidx" || $$1==".init_array" || $$1==".fini_array" || $$1==".data"

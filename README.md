@@ -26,14 +26,14 @@ We also hope that this repository will also be useful for those are on the look 
 
 AK base kit uses the following memory map to run its application code
 
-- [ 0x08000000 ] : **Boot** [[ak-base-kit-stm32l151-boot.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/ak-base-kit-stm32l151-boot.bin)
+- [ 0x08000000 ] : **Boot** [[Tiny-Rex-boot.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/Tiny-Rex-boot.bin)
 - [ 0x08002000 ] : **BSF** [ Memory for data sharing between Boot and Application ]
-- [ 0x08003000 ] : **Application** [[ak-base-kit-stm32l151-application.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/ak-base-kit-stm32l151-application.bin)                                             |
+- [ 0x08003000 ] : **Application** [[Tiny-Rex-application.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/Tiny-Rex-application.bin)                                             |
 
 >**Note:** After loading the boot and application firmware, you can use [AK - Flash](https://github.com/ak-embedded-software/ak-flash), a CLI to work with the AK base kit, to load the application directly through the kit's USB port. Once installed, the following command will flash user's defined code into the kit's application's memory region.
 
 ```sh
-ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
+ak_flash /dev/ttyUSB0 Tiny-Rex-application.bin 0x08003000
 ```
 
 ## Hardware
@@ -43,6 +43,40 @@ ak_flash /dev/ttyUSB0 ak-base-kit-stm32l151-application.bin 0x08003000
 [<img src="hardware/images/board-view-top.png" width="480"/>](<https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu>)
 
 [<img src="hardware/images/board-view-bottom.png" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)
+
+## Development Environment
+
+To ensure a consistent and reproducible build environment, the project is developed using a Docker-based toolchain setup instead of local installation.
+
+### Toolchain in Docker
+
+The Docker image includes:
+
+- GCC ARM Embedded toolchain (arm-none-eabi-gcc)
+- GDB multiarch debugger
+- Build tools (make)
+- Git for source control
+- Ak-Flash utility
+
+## Build Workflow
+
+```bash
+# Build Docker image
+docker build -t tiny-rex-game .
+
+# Run container with mounted source code
+docker run -it --rm \
+    -v $(pwd):/workspace/source \
+    --privileged \
+    -w /workspace/source \
+    tiny-rex-game
+
+# Build project
+make
+
+# Flash firmware
+ak-flash /dev/ttyUSB0 build_Tiny-Rex-application/Tiny-Rex-application.bin 0x08003000
+```
 
 ## Reference
 
