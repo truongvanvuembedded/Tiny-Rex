@@ -1,0 +1,41 @@
+{
+	// Name of the development container shown in VS Code
+	"name": "Tiny-Rex-Game container",
+
+	// Build configuration for the container
+	"build": {
+		// Path to the Dockerfile used to create the container
+		"dockerfile": "Dockerfile"
+	},
+
+	// VS Code specific customizations when the container starts
+	"customizations": {
+		"vscode": {
+
+			// Default settings applied inside the container
+			"settings": {
+				// Set bash as default terminal inside container
+				"terminal.integrated.defaultProfile.linux": "bash"
+			},
+
+			// Extensions automatically installed in the container
+			"extensions": [
+
+				// Cortex-Debug extension allows debugging ARM Cortex-M
+				"marus25.cortex-debug",
+
+				// C/C++ language support (IntelliSense, debugging)
+				"ms-vscode.cpptools",
+			]
+		}
+	},
+
+	// Additional arguments passed to docker run
+	"runArgs": [
+
+		// Allows container to access USB devices (needed for ST-Link)
+		"--privileged",
+  		"-v", "/dev/bus/usb:/dev/bus/usb"
+	]
+
+}

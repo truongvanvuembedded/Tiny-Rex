@@ -1,0 +1,22 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Tiny-Rex-Debug",
+			"type": "cortex-debug",
+			"request": "launch",
+			"servertype": "openocd",
+			"cwd": "${workspaceFolder}",
+			//"preLaunchTask": "build-flash",
+			"executable": "/workspaces/Tiny-Rex/application/build/Tiny-Rex-application.axf",
+			"configFiles": [
+				"interface/stlink.cfg",
+				"target/stm32l1.cfg"
+			],
+			"runToEntryPoint": "main_app",
+			"showDevDebugOutput": "raw",
+			"gdbPath": "/usr/bin/gdb-multiarch",
+			"objdumpPath": "/usr/bin/objdump",
+		}
+	],
+}

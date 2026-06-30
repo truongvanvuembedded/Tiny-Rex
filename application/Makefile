@@ -19,7 +19,6 @@ FLASH_BASE_ADDR_VAL = 0x08000000
 NAME_MODULE = Tiny-Rex-application
 PROJECT = $(NAME_MODULE)
 
-PROGRAMER_PATH		= /mnt/DCB43A0FB439ED20/work/me/ak/tiny-rex-game/tool/STM32CubeProgrammer/bin
 OPENOCD_CFG_PATH	= /usr/local/share/openocd/scripts/board/stm32ldiscovery.cfg
 
 # App start address, that need sync with declare in linker file and interrupt vector table.
@@ -74,7 +73,7 @@ include sources/sys/Makefile.mk
 include sources/networks/Makefile.mk
 include sources/platform/stm32l/Makefile.mk
 
-OBJECTS_DIR = build_$(NAME_MODULE)
+OBJECTS_DIR = build
 TARGET = $(OBJECTS_DIR)/$(NAME_MODULE).axf
 
 SOURCES		+=
@@ -116,7 +115,7 @@ LD		=	arm-none-eabi-ld
 OBJCOPY		=	arm-none-eabi-objcopy
 OBJDUMP		=	arm-none-eabi-objdump
 OBJNM		=	arm-none-eabi-nm
-ARM_GDB		=	arm-none-eabi-gdb-py
+ARM_GDB		=	gdb-multiarch
 ARM_SIZE	=	arm-none-eabi-size
 
 MEMORY_USAGE_BAR_WIDTH = 30
@@ -282,7 +281,7 @@ flash: all
 ifdef dev
 	ak-flash $(dev) $(TARGET:.axf=.bin) $(APP_START_ADDR_VAL)
 else
-	$(PROGRAMER_PATH)/STM32_Programmer.sh -c port=SWD -w $(TARGET:.axf=.bin) $(APP_START_ADDR_VAL) -rst
+	st-flash write $(TARGET:.axf=.bin) $(APP_START_ADDR_VAL)
 endif
 
 .PHONY: com
@@ -295,14 +294,11 @@ endif
 
 .PHONY: debug
 debug: all
-	xterm -e openocd -f $(OPENOCD_PATH)/tcl/board/stm32ldiscovery.cfg &
-ifeq ($(gdb),ddd)
-	$(Print) DBG using DDD
-	ddd --debugger $(ARM_GDB) --command=stm32l_init.gdb $(TARGET)
-else
-	$(Print) DBG GDB
-	$(ARM_GDB) -w --command=stm32l_init.gdb $(TARGET)
-endif
+	@echo "DBG OPENOCD"
+	openocd -f interface/stlink.cfg -f target/stm32l1.cfg &
+
+	@echo "DBG GDB"
+	gdb-multiarch -q -x stm32l_init.gdb $(TARGET)
 
 .PHONY: clean
 clean:
