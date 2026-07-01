@@ -70,13 +70,32 @@ docker run -it --rm \
     --privileged \
     -w /workspace/source \
     tiny-rex-game
+```
+
+## Using Dev Container
+You can also use a VSCode Dev Container to build and work on this project without installing toolchains locally.
+- Build and run container
+```bash
+Open pallet (Ctrl+Shift+P) -> dev Containers: Reopen in Container
+```
 
 # Build project
+```bash
 make
-
-# Flash firmware
-ak-flash /dev/ttyUSB0 build_Tiny-Rex-application/Tiny-Rex-application.bin 0x08003000
 ```
+
+# Flash firmware via st-link
+```bash
+make flash
+```
+
+# Flash firmware via ak-flash
+```bash
+make flash dev=dev/ttyUSB0
+```
+## Debug flow
+For a step-by-step debugging guide, see:
+[Debug Guideline](./debug-guiline.md)
 
 ## Reference
 
