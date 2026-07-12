@@ -24,6 +24,8 @@ RUN apt-get update && apt-get install -y \
     \
     # Clang format
     clang-format \
+	# minicom
+	minicom \
     # Clean package cache to reduce image size
     && rm -rf /var/lib/apt/lists/*
 
