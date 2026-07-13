@@ -1,3 +1,7 @@
+// Define varaible
+#define REAL_RAM
+#include "screens.h"
+#undef REAL_RAM
 #include "scr_menu.h"
 
 #define NUMBER_ITEMS (4)
@@ -18,13 +22,8 @@ view_screen_t scr_menu = {
     .focus_item = 0,
 };
 
-static const unsigned char* image_trex_running = epd_bitmap_t_rex__1_1;
-static const unsigned char* image_trex_ducking = epd_bitmap_t_rex_1;
-static uint8_t image_trex_ducking_y = 39;
-static uint8_t image_trex_ducking_width = 23;
-static uint8_t image_trex_ducking_height = 25;
-static const unsigned char* image_bird_flying = epd_bitmap_bird_1;
 static uint8_t current_location = 0;
+static uint8_t is_ducking = 0;
 static const char* const items_name[NUMBER_ITEMS] = {
     "<<   Play   >>",
     "<<  Setting >>",
@@ -41,30 +40,20 @@ static inline const unsigned char* toggle_frame(
 
 static void menu_animation_update()
 {
-    image_trex_running =
-        toggle_frame(image_trex_running,
-                     epd_bitmap_t_rex__1_1,
-                     epd_bitmap_t_rex__1_2);
+    // Ducking toggle
+    is_ducking = !is_ducking;
+    // Toggle frames
+    image_trex_running = toggle_frame(image_trex_running,
+                 epd_bitmap_t_rex__1_1,
+                 epd_bitmap_t_rex__1_2);
 
-    if (image_trex_ducking == epd_bitmap_t_rex_1)
-    {
-        image_trex_ducking = epd_bitmap_t_rex__2;
-        image_trex_ducking_y = 49;
-        image_trex_ducking_width = 30;
-        image_trex_ducking_height = 15;
-    }
-    else
-    {
-        image_trex_ducking = epd_bitmap_t_rex_1;
-        image_trex_ducking_y = 39;
-        image_trex_ducking_width = 23;
-        image_trex_ducking_height = 25;
-    }
+    image_trex_ducking = toggle_frame(image_trex_ducking,
+                 epd_bitmap_t_rex_1,
+                 epd_bitmap_t_rex_2);
 
-    image_bird_flying =
-        toggle_frame(image_bird_flying,
-                     epd_bitmap_bird_1,
-                     epd_bitmap_bird_2);
+    image_bird_flying = toggle_frame(image_bird_flying,
+                 epd_bitmap_bird_1,
+                 epd_bitmap_bird_2);
 }
 
 static void view_scr_menu()
@@ -81,10 +70,10 @@ static void view_scr_menu()
 
     view_render.drawBitmap(
         30,
-        image_trex_ducking_y,
+        (is_ducking) ? 49 : 39,
         image_trex_ducking,
-        image_trex_ducking_width,
-        image_trex_ducking_height,
+        (is_ducking) ? 30 : 23,
+        (is_ducking) ? 15 : 25,
         WHITE);
 
     view_render.drawBitmap(
@@ -142,6 +131,12 @@ void scr_menu_handle(ak_msg_t* msg)
             AC_DISPLAY_MENU_ANIMATION_UPDATE,
             AC_DISPLAY_MENU_ANIMATION_UPDATE_INTERVAL,
             TIMER_PERIODIC);
+        // Init Variable
+        image_trex_running = epd_bitmap_t_rex__1_1;
+        image_trex_ducking = epd_bitmap_t_rex_1;
+        image_bird_flying = epd_bitmap_bird_1;
+        current_location = 0;
+        is_ducking = 0;
     }
     break;
 
@@ -174,6 +169,7 @@ void scr_menu_handle(ak_msg_t* msg)
         }
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     }
+    break;
 
     case AC_DISPLAY_BUTON_MODE_PRESSED:
     {

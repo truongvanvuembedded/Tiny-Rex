@@ -7,7 +7,7 @@
 extern const unsigned char PROGMEM epd_bitmap_bird_1[];
 extern const unsigned char PROGMEM epd_bitmap_bird_2[];
 extern const unsigned char PROGMEM epd_bitmap_t_rex_1[];
-extern const unsigned char PROGMEM epd_bitmap_t_rex__2[];
+extern const unsigned char PROGMEM epd_bitmap_t_rex_2[];
 extern const unsigned char PROGMEM epd_bitmap_tree_1[];
 extern const unsigned char PROGMEM epd_bitmap_t_rex__1_1[];
 extern const unsigned char PROGMEM epd_bitmap_t_rex__1_2[];

@@ -22,6 +22,12 @@
 
 #include "screens_bitmap.h"
 
+#ifdef REAL_RAM
+	#define EXTERN
+#else
+	#define EXTERN extern
+#endif
+
 // scr_menu.cpp
 extern view_screen_t scr_menu;
 extern void scr_menu_handle(ak_msg_t* msg);
@@ -33,5 +39,10 @@ extern void scr_startup_handle(ak_msg_t* msg);
 // scr_play.cpp
 extern view_screen_t scr_play;
 extern void scr_play_handle(ak_msg_t* msg);
+
+// Variable used in screens
+EXTERN const unsigned char* image_trex_running;
+EXTERN const unsigned char* image_trex_ducking;
+EXTERN const unsigned char* image_bird_flying;
 
 #endif //__SCREENS_H__
