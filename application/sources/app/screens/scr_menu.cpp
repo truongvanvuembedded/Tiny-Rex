@@ -1,4 +1,4 @@
-#include "screens_menu.h"
+#include "scr_menu.h"
 
 #define NUMBER_ITEMS (4)
 
@@ -173,6 +173,18 @@ void scr_menu_handle(ak_msg_t* msg)
             current_location--;
         }
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    }
+
+    case AC_DISPLAY_BUTON_MODE_PRESSED:
+    {
+        if (current_location == 0)
+        {
+            BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+            SCREEN_TRAN(scr_play_handle, &scr_play);
+            timer_remove_attr(
+                AC_TASK_DISPLAY_ID,
+                AC_DISPLAY_MENU_ANIMATION_UPDATE);
+        }
     }
     break;
 
