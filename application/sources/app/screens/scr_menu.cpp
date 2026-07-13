@@ -30,7 +30,8 @@ static const char* const items_name[NUMBER_ITEMS] = {
     "<<   Rank   >>",
     "<<   Exit   >>",
 };
-static inline const unsigned char* toggle_frame(
+
+const unsigned char* toggle_frame(
     const unsigned char* current,
     const unsigned char* frame1,
     const unsigned char* frame2)
@@ -176,7 +177,7 @@ void scr_menu_handle(ak_msg_t* msg)
         if (current_location == 0)
         {
             BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-            SCREEN_TRAN(scr_play_handle, &scr_play);
+            SCREEN_TRAN(scr_play_handle_signal, &scr_play);
             timer_remove_attr(
                 AC_TASK_DISPLAY_ID,
                 AC_DISPLAY_MENU_ANIMATION_UPDATE);

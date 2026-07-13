@@ -38,11 +38,17 @@ extern void scr_startup_handle(ak_msg_t* msg);
 
 // scr_play.cpp
 extern view_screen_t scr_play;
-extern void scr_play_handle(ak_msg_t* msg);
+extern void scr_play_handle_signal(ak_msg_t* msg);
 
 // Variable used in screens
 EXTERN const unsigned char* image_trex_running;
 EXTERN const unsigned char* image_trex_ducking;
 EXTERN const unsigned char* image_bird_flying;
+
+// Function used in screens
+extern const unsigned char* toggle_frame(
+    const unsigned char* current,
+    const unsigned char* frame1,
+    const unsigned char* frame2);
 
 #endif //__SCREENS_H__

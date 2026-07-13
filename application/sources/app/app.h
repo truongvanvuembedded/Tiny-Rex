@@ -151,6 +151,7 @@ extern "C"
 #define AC_DISPLAY_WELCOME_TEXT_ANIM_TICK_INTERVAL (120)
     /* Tiny game intervals */
 #define AC_DISPLAY_MENU_ANIMATION_UPDATE_INTERVAL (200)
+#define AC_DISPLAY_MENU_PLAYING_UPDATE_INTERVAL (100)
 
     /* define signal */
     enum
@@ -173,6 +174,7 @@ extern "C"
         /* Tiny game signals */
         AC_DISPLAY_SHOW_MENU,
         AC_DISPLAY_MENU_ANIMATION_UPDATE,
+		AC_DISPLAY_PLAYING_UPDATE,
     };
 
     /*****************************************************************************/
