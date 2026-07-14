@@ -21,6 +21,8 @@
 #include <vector>
 
 #include "screens_bitmap.h"
+/* game */
+#include "tiny_rex_object.h"
 
 #ifdef REAL_RAM
 	#define EXTERN

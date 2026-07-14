@@ -45,6 +45,8 @@ enum {
 	AC_LINK_ID,
 #endif
 
+	/* ARCHERY GAME ID */
+	TINY_REX_OBJECT_ID,
 	/* EOT task ID */
 	AK_TASK_EOT_ID,
 };
@@ -92,6 +94,8 @@ extern void task_link(ak_msg_t*);
 /* RF24 DEMO TASK */
 extern void task_rf24_demo(ak_msg_t*);
 
+/* GAME HANDLE */
+extern void tiny_rex_object_handle(ak_msg_t* msg);
 /*****************************************************************************/
 /*  DECLARE: Task polling
  */

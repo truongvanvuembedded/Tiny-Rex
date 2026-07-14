@@ -151,7 +151,7 @@ extern "C"
 #define AC_DISPLAY_WELCOME_TEXT_ANIM_TICK_INTERVAL (120)
     /* Tiny game intervals */
 #define AC_DISPLAY_MENU_ANIMATION_UPDATE_INTERVAL (200)
-#define AC_DISPLAY_MENU_PLAYING_UPDATE_INTERVAL (100)
+#define AC_DISPLAY_PLAYING_UPDATE_INTERVAL (100)
 
     /* define signal */
     enum
@@ -202,6 +202,23 @@ extern "C"
     {
         AC_DBG_TEST_1 = AK_USER_DEFINE_SIG,
     };
+
+/*****************************************************************************/
+/*  Tiny-Rex obaject signal define
+ */
+/*****************************************************************************/
+/* Define signal */
+enum
+{
+	EVENT_TINY_REX_OBJECT_SETUP = AR_GAME_DEFINE_SIG,
+	EVENT_TINY_REX_OBJECT_START,
+	EVENT_TINY_REX_OBJECT_UPDATE,
+	EVENT_TINY_REX_OBJECT_DANCE,
+	EVENT_TINY_REX_OBJECT_UP,
+	EVENT_TINY_REX_OBJECT_DOWN,
+	EVENT_TINY_REX_OBJECT_DUCK,
+	EVENT_TINY_REX_OBJECT_GAME_OVER,
+};
 
 /*****************************************************************************/
 /*  app function declare

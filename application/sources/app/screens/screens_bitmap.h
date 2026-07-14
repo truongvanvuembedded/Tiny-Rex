@@ -3,15 +3,26 @@
 
 #include "view_render.h"
 
-// Tiny-Game bitmaps
-extern const unsigned char PROGMEM epd_bitmap_bird_1[];
-extern const unsigned char PROGMEM epd_bitmap_bird_2[];
-extern const unsigned char PROGMEM epd_bitmap_t_rex_1[];
-extern const unsigned char PROGMEM epd_bitmap_t_rex_2[];
-extern const unsigned char PROGMEM epd_bitmap_tree_1[];
-extern const unsigned char PROGMEM epd_bitmap_t_rex__1_1[];
-extern const unsigned char PROGMEM epd_bitmap_t_rex__1_2[];
-extern const unsigned char PROGMEM image_ButtonLeftSmall_bits[];
-extern const unsigned char PROGMEM image_ButtonRightSmall_bits[];
-extern const unsigned char PROGMEM epd_bitmap_line[];
+typedef struct
+{
+    const unsigned char *bitmap;
+    uint16_t width;
+    uint16_t height;
+} bitmap_info_t;
+
+typedef enum
+{
+    BITMAP_BIRD_1 = 0,
+    BITMAP_BIRD_2,
+    BITMAP_T_REX_1,
+    BITMAP_T_REX_2,
+    BITMAP_T_REX_RUN_1,
+    BITMAP_T_REX_RUN_2,
+    BITMAP_TREE_1,
+    BITMAP_LINE,
+    BITMAP_MAX
+} bitmap_id_t;
+
+extern const bitmap_info_t g_bitmap_table[BITMAP_MAX];
+
 #endif //__SCREENS_BITMAP_H__

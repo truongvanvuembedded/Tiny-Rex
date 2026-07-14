@@ -1,4 +1,5 @@
 include sources/app/screens/Makefile.mk
+include sources/app/tiny_rex_game/Makefile.mk
 
 CFLAGS		+= -I./sources/app
 CPPFLAGS	+= -I./sources/app
