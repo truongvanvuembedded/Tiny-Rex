@@ -24,6 +24,8 @@
 #define TREX_JUMP_SPEED (5)
 #define TREX_JUMP_TOP_Y (0)
 #define TREX_GROUND_Y (39)
+/* Y axis when tiny rex ducking */
+#define AXIS_Y_TINY_REX_OBJECT_DUCKING (49)
 //==================================================================================================
 //	Local define I/O
 //==================================================================================================
@@ -47,8 +49,19 @@ game_object_t tiny_rex_object;
 //==================================================================================================
 //	Local Function Prototype
 //==================================================================================================
-static void update_trex_y(void);
-static void update_trex_bitmap(void);
+static void update_position(void);
+static void update_animation(void);
+/* state */
+static void tiny_rex_init(void);
+static void tiny_rex_start(void);
+static void tiny_rex_update(void);
+static void tiny_rex_dance(void);
+static void tiny_rex_jump(void);
+static void tiny_rex_fall(void);
+static void tiny_rex_duck(void);
+static void tiny_rex_duck_release(void);
+static void tiny_rex_over(void);
+
 //==================================================================================================
 //	Source Code
 //==================================================================================================
@@ -57,76 +70,111 @@ void tiny_rex_object_handle(ak_msg_t* msg)
     switch (msg->sig)
     {
     case EVENT_TINY_REX_OBJECT_SETUP:
-    {
-        APP_DBG_SIG("EVENT_TINY_REX_OBJECT_SETUP\n");
-        tiny_rex_object.x = AXIS_X_TINY_REX_OBJECT;
-        tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
-        tiny_rex_object.visible = WHITE;
-        tiny_rex_object.state = EM_TINY_REX_STATE_IDLE;
-        tiny_rex_object.bitmap_index = BITMAP_T_REX_1;
-    }
-    break;
+        tiny_rex_init();
+        break;
+
     case EVENT_TINY_REX_OBJECT_START:
-    {
-        APP_DBG_SIG("EVENT_TINY_REX_OBJECT_START\n");
-        tiny_rex_object.x = AXIS_X_TINY_REX_OBJECT;
-        tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
-        tiny_rex_object.visible = WHITE;
-        tiny_rex_object.state = EM_TINY_REX_STATE_RUNNING;
-        tiny_rex_object.bitmap_index = BITMAP_T_REX_RUN_1;
-    }
-    break;
+        tiny_rex_start();
+        break;
+
     case EVENT_TINY_REX_OBJECT_UPDATE:
-    {
-        APP_DBG_SIG("EVENT_TINY_REX_OBJECT_UPDATE\n");
-        tiny_rex_object.visible = WHITE;
-        /* Update */
-        update_trex_y();
-        update_trex_bitmap();
-    }
-    break;
+        tiny_rex_update();
+        break;
+
     case EVENT_TINY_REX_OBJECT_DANCE:
-    {
-        APP_DBG_SIG("EVENT_TINY_REX_OBJECT_DANCE\n");
-        tiny_rex_object.visible = WHITE;
-        tiny_rex_object.state = EM_TINY_REX_STATE_DANCING;
-    }
-    break;
+        tiny_rex_dance();
+        break;
+
     case EVENT_TINY_REX_OBJECT_UP:
-    {
-        APP_DBG_SIG("EVENT_TINY_REX_OBJECT_UP\n");
-        tiny_rex_object.visible = WHITE;
-        tiny_rex_object.state = EM_TINY_REX_STATE_JUMPING;
-    }
-    break;
+        tiny_rex_jump();
+        break;
+
     case EVENT_TINY_REX_OBJECT_DOWN:
-    {
-        APP_DBG_SIG("EVENT_TINY_REX_OBJECT_DOWN\n");
-        tiny_rex_object.visible = WHITE;
-        if (tiny_rex_object.state == EM_TINY_REX_STATE_JUMPING)
-        {
-            tiny_rex_object.state = EM_TINY_REX_STATE_FALLING;
-        }
-    }
-    break;
+        tiny_rex_fall();
+        break;
+
     case EVENT_TINY_REX_OBJECT_DUCK:
-    {
-        APP_DBG_SIG("EVENT_TINY_REX_OBJECT_DUCK\n");
-        tiny_rex_object.visible = WHITE;
-        if (tiny_rex_object.state == EM_TINY_REX_STATE_RUNNING)
-        {
-            tiny_rex_object.state = EM_TINY_REX_STATE_DUCKING;
-        }
-    }
-    break;
+        tiny_rex_duck();
+        break;
+
+    case EVENT_TINY_REX_OBJECT_DUCK_RELEAASE:
+        tiny_rex_duck_release();
+        break;
+
+    case EVENT_TINY_REX_OBJECT_GAME_OVER:
+        tiny_rex_over();
+        break;
 
     default:
         break;
     }
 }
-static void update_trex_y(void)
+static void tiny_rex_init(void)
+{
+
+    tiny_rex_object.x = AXIS_X_TINY_REX_OBJECT;
+    tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
+    tiny_rex_object.visible = WHITE;
+    tiny_rex_object.state = EM_TINY_REX_STATE_IDLE;
+    tiny_rex_object.bitmap_index = BITMAP_T_REX_STAND;
+}
+static void tiny_rex_start(void)
+{
+    tiny_rex_init();
+    tiny_rex_object.state = EM_TINY_REX_STATE_RUNNING;
+    tiny_rex_object.bitmap_index = BITMAP_T_REX_RUN_1;
+}
+static void tiny_rex_jump(void)
+{
+
+    if (tiny_rex_object.state == EM_TINY_REX_STATE_RUNNING)
+    {
+        tiny_rex_object.state = EM_TINY_REX_STATE_JUMPING;
+    }
+}
+static void tiny_rex_fall(void)
 {
     if (tiny_rex_object.state == EM_TINY_REX_STATE_JUMPING)
+    {
+        tiny_rex_object.state = EM_TINY_REX_STATE_FALLING;
+    }
+}
+static void tiny_rex_duck(void)
+{
+    if (tiny_rex_object.state == EM_TINY_REX_STATE_RUNNING)
+    {
+        tiny_rex_object.state = EM_TINY_REX_STATE_DUCKING;
+        tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT_DUCKING;
+        tiny_rex_object.bitmap_index = BITMAP_T_REX_DUCKING_1;
+    }
+}
+static void tiny_rex_duck_release(void)
+{
+    if (tiny_rex_object.state == EM_TINY_REX_STATE_DUCKING)
+    {
+        tiny_rex_object.state = EM_TINY_REX_STATE_RUNNING;
+        tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
+        tiny_rex_object.bitmap_index = BITMAP_T_REX_RUN_1;
+    }
+}
+static void tiny_rex_dance(void)
+{
+    tiny_rex_object.state = EM_TINY_REX_STATE_DANCING;
+}
+static void tiny_rex_over(void)
+{
+    tiny_rex_init();
+}
+static void tiny_rex_update(void)
+{
+    update_position();
+    update_animation();
+}
+static void update_position(void)
+{
+    switch (tiny_rex_object.state)
+    {
+    case EM_TINY_REX_STATE_JUMPING:
     {
         tiny_rex_object.y -= TREX_JUMP_SPEED;
 
@@ -136,7 +184,9 @@ static void update_trex_y(void)
             tiny_rex_object.state = EM_TINY_REX_STATE_FALLING;
         }
     }
-    else if (tiny_rex_object.state == EM_TINY_REX_STATE_FALLING)
+    break;
+
+    case EM_TINY_REX_STATE_FALLING:
     {
         tiny_rex_object.y += TREX_JUMP_SPEED;
 
@@ -146,12 +196,39 @@ static void update_trex_y(void)
             tiny_rex_object.state = EM_TINY_REX_STATE_RUNNING;
         }
     }
+    break;
+
+    default:
+        break;
+    }
 }
-static void update_trex_bitmap(void)
+static void update_animation(void)
 {
-    if (tiny_rex_object.state == EM_TINY_REX_STATE_RUNNING || tiny_rex_object.state == EM_TINY_REX_STATE_DANCING)
+    switch (tiny_rex_object.state)
     {
-        tiny_rex_object.bitmap_index = (tiny_rex_object.bitmap_index == BITMAP_T_REX_RUN_1) ? BITMAP_T_REX_RUN_2 : BITMAP_T_REX_RUN_1;
+    case EM_TINY_REX_STATE_RUNNING:
+    case EM_TINY_REX_STATE_JUMPING:
+    case EM_TINY_REX_STATE_FALLING:
+    case EM_TINY_REX_STATE_DANCING:
+    {
+        tiny_rex_object.bitmap_index =
+            (tiny_rex_object.bitmap_index == BITMAP_T_REX_RUN_1)
+                ? BITMAP_T_REX_RUN_2
+                : BITMAP_T_REX_RUN_1;
+    }
+    break;
+
+    case EM_TINY_REX_STATE_DUCKING:
+    {
+        tiny_rex_object.bitmap_index =
+            (tiny_rex_object.bitmap_index == BITMAP_T_REX_DUCKING_1)
+                ? BITMAP_T_REX_DUCKING_2
+                : BITMAP_T_REX_DUCKING_1;
+    }
+    break;
+
+    default:
+        break;
     }
 }
 /* ************************************* End of File ******************************************** */

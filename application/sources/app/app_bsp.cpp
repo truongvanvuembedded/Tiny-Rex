@@ -25,8 +25,9 @@ void btn_mode_callback(void* b) {
 	}
 		break;
 
-	case BUTTON_SW_STATE_LONG_PRESSED: {
-		APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
+	case BUTTON_SW_STATE_RELEASED: {
+		APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_RELEASED\n");
+		task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_MODE_RELEASE);
 	}
 		break;
 

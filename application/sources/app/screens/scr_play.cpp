@@ -129,6 +129,11 @@ void scr_play_handle_signal(ak_msg_t* msg)
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_DUCK);
     }
     break;
+    case AC_DISPLAY_BUTON_MODE_RELEASE:
+    {
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_DUCK_RELEAASE);
+    }
+    break;
 
     case AC_DISPLAY_BUTON_DOWN_PRESSED:
     {
