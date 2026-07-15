@@ -109,6 +109,17 @@ void tiny_rex_object_handle(ak_msg_t* msg)
         break;
     }
 }
+void draw_tiny_rex_object(void)
+{
+    // Draw bit-map of Tiny-Rex
+    view_render.drawBitmap(
+        tiny_rex_object.x,
+        tiny_rex_object.y,
+        g_bitmap_table[tiny_rex_object.bitmap_index].bitmap,
+        g_bitmap_table[tiny_rex_object.bitmap_index].width,
+        g_bitmap_table[tiny_rex_object.bitmap_index].height,
+        tiny_rex_object.visible);
+}
 static void tiny_rex_init(void)
 {
 

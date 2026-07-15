@@ -81,14 +81,9 @@ view_screen_t scr_play = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void view_scr_play()
 {
-    // Draw bit-map of Tiny-Rex
-    view_render.drawBitmap(
-        tiny_rex_object.x,
-        tiny_rex_object.y,
-        g_bitmap_table[tiny_rex_object.bitmap_index].bitmap,
-        g_bitmap_table[tiny_rex_object.bitmap_index].width,
-        g_bitmap_table[tiny_rex_object.bitmap_index].height,
-        tiny_rex_object.visible);
+    draw_tiny_rex_object();
+    // Draw line
+    draw_line_object();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //	Name     : scr_play_handle_signal
@@ -106,8 +101,10 @@ void scr_play_handle_signal(ak_msg_t* msg)
     case SCREEN_ENTRY:
     {
         APP_DBG_SIG("SCREEN_PLAY_ENTRY\n");
-        // task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_SETUP);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_SETUP);
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_START);
+        task_post_pure_msg(TINY_LINE_ID, EVENT_LINE_OBJECT_SETUP);
+        task_post_pure_msg(TINY_LINE_ID, EVENT_LINE_OBJECT_START);
         timer_set(
             AC_TASK_DISPLAY_ID,
             AC_DISPLAY_PLAYING_UPDATE,
@@ -145,6 +142,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
     case AC_DISPLAY_PLAYING_UPDATE:
     {
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_UPDATE);
+        task_post_pure_msg(TINY_LINE_ID, EVENT_LINE_OBJECT_UPDATE);
     }
     break;
 

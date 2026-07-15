@@ -31,5 +31,6 @@ typedef enum
 } EM_TINY_REX_STATE;
 /* Object */
 extern game_object_t tiny_rex_object;
-
+/* Function */
+extern void draw_tiny_rex_object(void);
 #endif //__TINY_REX_OBJECT_H_

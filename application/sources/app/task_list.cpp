@@ -46,6 +46,7 @@ const task_t app_task_table[] = {
 	/* GAME */
 	/*************************************************************************/
 	{TINY_REX_OBJECT_ID		,	TASK_PRI_LEVEL_4	,	tiny_rex_object_handle},
+	{TINY_LINE_ID			,	TASK_PRI_LEVEL_4	,	line_object_handle},
 
 	/*************************************************************************/
 	/* END OF TABLE */

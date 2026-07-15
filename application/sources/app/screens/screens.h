@@ -23,6 +23,7 @@
 #include "screens_bitmap.h"
 /* game */
 #include "tiny_rex_object.h"
+#include "line_object.h"
 
 #ifdef REAL_RAM
 	#define EXTERN

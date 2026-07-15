@@ -6,6 +6,7 @@
 typedef struct {
     bool visible;
     uint8_t state;
+    uint8_t speed;
     int8_t x, y;
     uint8_t action_image;
     uint8_t bitmap_index;

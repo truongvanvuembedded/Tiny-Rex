@@ -205,7 +205,7 @@ extern "C"
     };
 
 /*****************************************************************************/
-/*  Tiny-Rex obaject signal define
+/*  Tiny-Rex object signal define
  */
 /*****************************************************************************/
 /* Define signal */
@@ -220,6 +220,19 @@ enum
 	EVENT_TINY_REX_OBJECT_DUCK,
 	EVENT_TINY_REX_OBJECT_DUCK_RELEAASE,
 	EVENT_TINY_REX_OBJECT_GAME_OVER,
+};
+
+/*****************************************************************************/
+/*  Line object signal define
+ */
+/*****************************************************************************/
+/* Define signal */
+enum
+{
+	EVENT_LINE_OBJECT_SETUP = AR_GAME_DEFINE_SIG,
+	EVENT_LINE_OBJECT_START,
+	EVENT_LINE_OBJECT_UPDATE,
+	EVENT_LINE_OBJECT_GAME_OVER,
 };
 
 /*****************************************************************************/
