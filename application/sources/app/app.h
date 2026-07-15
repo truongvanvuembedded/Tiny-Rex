@@ -236,6 +236,20 @@ enum
 };
 
 /*****************************************************************************/
+/*  Tree object signal define
+ */
+/*****************************************************************************/
+/* Define signal */
+enum
+{
+	EVENT_TREE_OBJECT_SETUP = AR_GAME_DEFINE_SIG,
+	EVENT_TREE_OBJECT_START,
+	EVENT_TREE_OBJECT_UPDATE,
+	EVENT_TREE_OBJECT_STAND,
+	EVENT_TREE_OBJECT_GAME_OVER,
+};
+
+/*****************************************************************************/
 /*  app function declare
  */
 /*****************************************************************************/

@@ -24,6 +24,7 @@
 /* game */
 #include "tiny_rex_object.h"
 #include "line_object.h"
+#include "tree_object.h"
 
 #ifdef REAL_RAM
 	#define EXTERN

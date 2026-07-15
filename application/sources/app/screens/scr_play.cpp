@@ -81,9 +81,12 @@ view_screen_t scr_play = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void view_scr_play()
 {
+    // Draw T-Rex
     draw_tiny_rex_object();
     // Draw line
     draw_line_object();
+    // Draw tree
+    draw_tree_object();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //	Name     : scr_play_handle_signal
@@ -103,8 +106,10 @@ void scr_play_handle_signal(ak_msg_t* msg)
         APP_DBG_SIG("SCREEN_PLAY_ENTRY\n");
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_SETUP);
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_START);
-        task_post_pure_msg(TINY_LINE_ID, EVENT_LINE_OBJECT_SETUP);
-        task_post_pure_msg(TINY_LINE_ID, EVENT_LINE_OBJECT_START);
+        task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_SETUP);
+        task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_START);
+        task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
+        task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_START);
         timer_set(
             AC_TASK_DISPLAY_ID,
             AC_DISPLAY_PLAYING_UPDATE,
@@ -142,7 +147,8 @@ void scr_play_handle_signal(ak_msg_t* msg)
     case AC_DISPLAY_PLAYING_UPDATE:
     {
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_UPDATE);
-        task_post_pure_msg(TINY_LINE_ID, EVENT_LINE_OBJECT_UPDATE);
+        task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_UPDATE);
+        task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
     }
     break;
 

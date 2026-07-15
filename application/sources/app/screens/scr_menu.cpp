@@ -49,14 +49,10 @@ static void view_scr_menu()
     // Mode
     view_render.setCursor(22, 23);
     view_render.print(items_name[current_location]);
-    // Draw bit-map of Tiny-Rex
-    view_render.drawBitmap(
-        tiny_rex_object.x,
-        tiny_rex_object.y,
-        g_bitmap_table[tiny_rex_object.bitmap_index].bitmap,
-        g_bitmap_table[tiny_rex_object.bitmap_index].width,
-        g_bitmap_table[tiny_rex_object.bitmap_index].height,
-        tiny_rex_object.visible);
+    // Draw T-Rex
+    draw_tiny_rex_object();
+    // Draw tree
+    draw_tree_object();
 }
 
 void scr_menu_handle(ak_msg_t* msg)
@@ -70,6 +66,8 @@ void scr_menu_handle(ak_msg_t* msg)
         current_location = 0;
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_SETUP);
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_DANCE);
+        task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
+        task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_STAND);
         timer_set(
             AC_TASK_DISPLAY_ID,
             AC_DISPLAY_MENU_ANIMATION_UPDATE,
