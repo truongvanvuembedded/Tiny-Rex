@@ -46,10 +46,13 @@ game_object_t bird_object;
 //	Local Function Prototype
 //==================================================================================================
 static void bird_init(void);
-static void bird_start(void);
+static void bird_fly(void);
 static void bird_update(void);
-static void bird_stand(void);
+static void bird_stand_fly(void);
 static void bird_over(void);
+/* Helper function */
+static void update_position(void);
+static void update_animation(void);
 //==================================================================================================
 //	Source Code
 //==================================================================================================
@@ -62,15 +65,15 @@ void bird_object_handle(ak_msg_t* msg)
         break;
 
     case EVENT_BIRD_OBJECT_START:
-        bird_start();
+        bird_fly();
         break;
 
     case EVENT_BIRD_OBJECT_UPDATE:
         bird_update();
         break;
 
-    case EVENT_BIRD_OBJECT_STAND:
-        bird_stand();
+    case EVENT_BIRD_OBJECT_STAND_FLY:
+        bird_stand_fly();
         break;
 
     case EVENT_BIRD_OBJECT_GAME_OVER:
@@ -96,19 +99,25 @@ static void bird_init(void)
 {
     bird_object.x = AXIS_X_BIRD_OBJECT;
     bird_object.y = AXIS_Y_BIRD_OBJECT;
-    bird_object.visible = WHITE;
+    bird_object.visible = BLACK;
     bird_object.state = EM_BIRD_STATE_IDLE;
     bird_object.bitmap_index = BITMAP_TREE_1;
     bird_object.speed = 4;
 }
-static void bird_start(void)
+static void bird_fly(void)
 {
     bird_init();
-    bird_object.state = EM_BIRD_STATE_RUNNING;
+    bird_object.visible = WHITE;
+    bird_object.state = EM_BIRD_STATE_FLYING;
 }
 static void bird_update(void)
 {
-    if (bird_object.state != EM_BIRD_STATE_RUNNING)
+    update_position();
+    update_animation();
+}
+static void update_position(void)
+{
+    if (bird_object.state != EM_BIRD_STATE_FLYING)
     {
         return;
     }
@@ -118,7 +127,14 @@ static void bird_update(void)
         bird_object.x = AXIS_X_BIRD_OBJECT;
     }
 }
-static void bird_stand(void)
+static void update_animation(void)
+{
+    bird_object.bitmap_index =
+        (bird_object.bitmap_index == BITMAP_BIRD_1)
+            ? BITMAP_BIRD_2
+            : BITMAP_BIRD_1;
+}
+static void bird_stand_fly(void)
 {
     bird_object.x = AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN;
     bird_object.y = AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN;

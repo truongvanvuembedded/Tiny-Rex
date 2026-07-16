@@ -65,7 +65,7 @@ void scr_menu_handle(ak_msg_t* msg)
         // Init Variable
         current_location = 0;
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_SETUP);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_DANCE);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_RUN);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_STAND);
         timer_set(

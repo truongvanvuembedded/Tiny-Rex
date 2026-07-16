@@ -30,7 +30,7 @@ typedef enum
 {
     EM_BIRD_STATE_IDLE = 0,
     EM_BIRD_STATE_STAND,
-    EM_BIRD_STATE_RUNNING,
+    EM_BIRD_STATE_FLYING,
 } EM_BIRD_STATE;
 /* Object */
 extern game_object_t bird_object;

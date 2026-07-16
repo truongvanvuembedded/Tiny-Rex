@@ -53,9 +53,8 @@ static void update_position(void);
 static void update_animation(void);
 /* state */
 static void tiny_rex_init(void);
-static void tiny_rex_start(void);
+static void tiny_rex_run(void);
 static void tiny_rex_update(void);
-static void tiny_rex_dance(void);
 static void tiny_rex_jump(void);
 static void tiny_rex_fall(void);
 static void tiny_rex_duck(void);
@@ -73,16 +72,12 @@ void tiny_rex_object_handle(ak_msg_t* msg)
         tiny_rex_init();
         break;
 
-    case EVENT_TINY_REX_OBJECT_START:
-        tiny_rex_start();
+    case EVENT_TINY_REX_OBJECT_RUN:
+        tiny_rex_run();
         break;
 
     case EVENT_TINY_REX_OBJECT_UPDATE:
         tiny_rex_update();
-        break;
-
-    case EVENT_TINY_REX_OBJECT_DANCE:
-        tiny_rex_dance();
         break;
 
     case EVENT_TINY_REX_OBJECT_UP:
@@ -125,13 +120,14 @@ static void tiny_rex_init(void)
 
     tiny_rex_object.x = AXIS_X_TINY_REX_OBJECT;
     tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
-    tiny_rex_object.visible = WHITE;
+    tiny_rex_object.visible = BLACK;
     tiny_rex_object.state = EM_TINY_REX_STATE_IDLE;
     tiny_rex_object.bitmap_index = BITMAP_T_REX_STAND;
 }
-static void tiny_rex_start(void)
+static void tiny_rex_run(void)
 {
     tiny_rex_init();
+    tiny_rex_object.visible = WHITE;
     tiny_rex_object.state = EM_TINY_REX_STATE_RUNNING;
     tiny_rex_object.bitmap_index = BITMAP_T_REX_RUN_1;
 }
@@ -167,10 +163,6 @@ static void tiny_rex_duck_release(void)
         tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
         tiny_rex_object.bitmap_index = BITMAP_T_REX_RUN_1;
     }
-}
-static void tiny_rex_dance(void)
-{
-    tiny_rex_object.state = EM_TINY_REX_STATE_DANCING;
 }
 static void tiny_rex_over(void)
 {
@@ -218,14 +210,18 @@ static void update_animation(void)
     switch (tiny_rex_object.state)
     {
     case EM_TINY_REX_STATE_RUNNING:
-    case EM_TINY_REX_STATE_JUMPING:
-    case EM_TINY_REX_STATE_FALLING:
-    case EM_TINY_REX_STATE_DANCING:
     {
         tiny_rex_object.bitmap_index =
             (tiny_rex_object.bitmap_index == BITMAP_T_REX_RUN_1)
                 ? BITMAP_T_REX_RUN_2
                 : BITMAP_T_REX_RUN_1;
+    }
+    break;
+
+    case EM_TINY_REX_STATE_JUMPING:
+    case EM_TINY_REX_STATE_FALLING:
+    {
+        tiny_rex_object.bitmap_index = BITMAP_T_REX_STAND;
     }
     break;
 

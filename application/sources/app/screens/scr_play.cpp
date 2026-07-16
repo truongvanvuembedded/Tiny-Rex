@@ -105,7 +105,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
     {
         APP_DBG_SIG("SCREEN_PLAY_ENTRY\n");
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_SETUP);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_START);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_RUN);
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_SETUP);
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_START);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);

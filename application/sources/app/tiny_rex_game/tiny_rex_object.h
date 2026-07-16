@@ -27,7 +27,6 @@ typedef enum
     EM_TINY_REX_STATE_JUMPING,
     EM_TINY_REX_STATE_DUCKING,
     EM_TINY_REX_STATE_FALLING,
-    EM_TINY_REX_STATE_DANCING,
 } EM_TINY_REX_STATE;
 /* Object */
 extern game_object_t tiny_rex_object;
