@@ -64,7 +64,7 @@ void bird_object_handle(ak_msg_t* msg)
         bird_init();
         break;
 
-    case EVENT_BIRD_OBJECT_START:
+    case EVENT_BIRD_OBJECT_FLY:
         bird_fly();
         break;
 

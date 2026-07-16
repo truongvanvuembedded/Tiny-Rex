@@ -46,7 +46,7 @@ game_object_t tree_object;
 //	Local Function Prototype
 //==================================================================================================
 static void tree_init(void);
-static void tree_start(void);
+static void tree_run(void);
 static void tree_update(void);
 static void tree_stand(void);
 static void tree_over(void);
@@ -61,8 +61,8 @@ void tree_object_handle(ak_msg_t* msg)
         tree_init();
         break;
 
-    case EVENT_TREE_OBJECT_START:
-        tree_start();
+    case EVENT_TREE_OBJECT_RUN:
+        tree_run();
         break;
 
     case EVENT_TREE_OBJECT_UPDATE:
@@ -96,14 +96,15 @@ static void tree_init(void)
 {
     tree_object.x = AXIS_X_TREE_OBJECT;
     tree_object.y = AXIS_Y_TREE_OBJECT;
-    tree_object.visible = WHITE;
+    tree_object.visible = BLACK;
     tree_object.state = EM_TREE_STATE_IDLE;
     tree_object.bitmap_index = BITMAP_TREE_1;
     tree_object.speed = 4;
 }
-static void tree_start(void)
+static void tree_run(void)
 {
     tree_init();
+    tree_object.visible = WHITE;
     tree_object.state = EM_TREE_STATE_RUNNING;
 }
 static void tree_update(void)
@@ -120,6 +121,7 @@ static void tree_update(void)
 }
 static void tree_stand(void)
 {
+    tree_object.visible = WHITE;
     tree_object.x = AXIS_X_TREE_OBJECT_IN_MENU_SCREEN;
     tree_object.y = AXIS_Y_TREE_OBJECT_IN_MENU_SCREEN;
 }
