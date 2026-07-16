@@ -250,6 +250,20 @@ enum
 };
 
 /*****************************************************************************/
+/*  Bird object signal define
+ */
+/*****************************************************************************/
+/* Define signal */
+enum
+{
+	EVENT_BIRD_OBJECT_SETUP = AR_GAME_DEFINE_SIG,
+	EVENT_BIRD_OBJECT_START,
+	EVENT_BIRD_OBJECT_UPDATE,
+	EVENT_BIRD_OBJECT_STAND,
+	EVENT_BIRD_OBJECT_GAME_OVER,
+};
+
+/*****************************************************************************/
 /*  app function declare
  */
 /*****************************************************************************/
