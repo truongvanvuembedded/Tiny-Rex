@@ -97,11 +97,11 @@ void draw_bird_object(void)
 }
 static void bird_init(void)
 {
-    bird_object.x = AXIS_X_BIRD_OBJECT;
+    bird_object.x = AXIS_X_BIRD_OBJECT_INIT;
     bird_object.y = AXIS_Y_BIRD_OBJECT;
     bird_object.visible = BLACK;
     bird_object.state = EM_BIRD_STATE_IDLE;
-    bird_object.bitmap_index = BITMAP_TREE_1;
+    bird_object.bitmap_index = BITMAP_BIRD_1;
     bird_object.speed = 4;
 }
 static void bird_fly(void)
@@ -122,7 +122,7 @@ static void update_position(void)
         return;
     }
     bird_object.x -= bird_object.speed;
-    if (bird_object.x <= -BIRD_WIDTH_IN_RUN)
+    if (bird_object.x <= 0-g_bitmap_table[BITMAP_BIRD_1].width)
     {
         bird_object.x = AXIS_X_BIRD_OBJECT;
     }

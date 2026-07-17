@@ -114,7 +114,7 @@ static void tree_update(void)
         return;
     }
     tree_object.x -= tree_object.speed;
-    if (tree_object.x <= -TREE_WIDTH_IN_RUN)
+    if (tree_object.x <= 0-g_bitmap_table[BITMAP_TREE_1].width)
     {
         tree_object.x = AXIS_X_TREE_OBJECT;
     }
