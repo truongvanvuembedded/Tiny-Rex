@@ -25,6 +25,7 @@
 #include "tiny_rex_object.h"
 #include "line_object.h"
 #include "tree_object.h"
+#include "bird_object.h"
 
 #ifdef REAL_RAM
 	#define EXTERN

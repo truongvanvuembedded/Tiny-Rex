@@ -18,10 +18,10 @@
 
 /* Axis */
 #define AXIS_X_BIRD_OBJECT (128)
-#define AXIS_Y_BIRD_OBJECT (44)
+#define AXIS_Y_BIRD_OBJECT (25)
 /* Menu screen */
-#define AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN (69)
-#define AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN (44)
+#define AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN (50)
+#define AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN (35)
 /* */
 #define BIRD_WIDTH_IN_RUN (128+15)
 
@@ -29,7 +29,7 @@
 typedef enum
 {
     EM_BIRD_STATE_IDLE = 0,
-    EM_BIRD_STATE_STAND,
+    EM_BIRD_STATE_STAND_FLY,
     EM_BIRD_STATE_FLYING,
 } EM_BIRD_STATE;
 /* Object */

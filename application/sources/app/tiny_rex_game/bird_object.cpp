@@ -136,6 +136,8 @@ static void update_animation(void)
 }
 static void bird_stand_fly(void)
 {
+    bird_object.visible = WHITE;
+	bird_object.state = EM_BIRD_STATE_STAND_FLY;
     bird_object.x = AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN;
     bird_object.y = AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN;
 }

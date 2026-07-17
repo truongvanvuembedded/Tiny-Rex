@@ -81,12 +81,11 @@ view_screen_t scr_play = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void view_scr_play()
 {
-    // Draw T-Rex
+    /* Draw object */
     draw_tiny_rex_object();
-    // Draw line
-    draw_line_object();
-    // Draw tree
     draw_tree_object();
+    draw_line_object();
+    draw_bird_object();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //	Name     : scr_play_handle_signal
@@ -110,8 +109,8 @@ void scr_play_handle_signal(ak_msg_t* msg)
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_START);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_RUN);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_TREE_OBJECT_RUN);
+        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_SETUP);
+        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_FLY);
         timer_set(
             AC_TASK_DISPLAY_ID,
             AC_DISPLAY_PLAYING_UPDATE,
@@ -151,7 +150,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_UPDATE);
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_UPDATE);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
+        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);
     }
     break;
 
