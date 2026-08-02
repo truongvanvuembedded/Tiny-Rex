@@ -16,9 +16,6 @@
 #include "scr_play.h"
 #include "game_object.h"
 
-/* Axis */
-#define AXIS_X_TINY_REX_OBJECT (5)
-#define AXIS_Y_TINY_REX_OBJECT (39)
 /* State */
 typedef enum
 {

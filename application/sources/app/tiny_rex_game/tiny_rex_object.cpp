@@ -21,11 +21,13 @@
 //==================================================================================================
 //	Local define
 //==================================================================================================
+/* Axis */
+#define AXIS_X_TINY_REX_OBJECT (5)
+#define AXIS_Y_TINY_REX_OBJECT (HEIGHT - g_bitmap_table[tiny_rex_object.bitmap_index].height - 1)
+
 #define TREX_JUMP_SPEED (5)
 #define TREX_JUMP_TOP_Y (0)
-#define TREX_GROUND_Y (39)
-/* Y axis when tiny rex ducking */
-#define AXIS_Y_TINY_REX_OBJECT_DUCKING (49)
+#define TREX_GROUND_Y (AXIS_Y_TINY_REX_OBJECT)
 //==================================================================================================
 //	Local define I/O
 //==================================================================================================
@@ -118,11 +120,11 @@ void draw_tiny_rex_object(void)
 static void tiny_rex_init(void)
 {
 
+    tiny_rex_object.bitmap_index = BITMAP_T_REX_STAND;
     tiny_rex_object.x = AXIS_X_TINY_REX_OBJECT;
     tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
     tiny_rex_object.visible = BLACK;
     tiny_rex_object.state = EM_TINY_REX_STATE_IDLE;
-    tiny_rex_object.bitmap_index = BITMAP_T_REX_STAND;
 }
 static void tiny_rex_run(void)
 {
@@ -151,8 +153,8 @@ static void tiny_rex_duck(void)
     if (tiny_rex_object.state == EM_TINY_REX_STATE_RUNNING)
     {
         tiny_rex_object.state = EM_TINY_REX_STATE_DUCKING;
-        tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT_DUCKING;
         tiny_rex_object.bitmap_index = BITMAP_T_REX_DUCKING_1;
+        tiny_rex_object.y = TREX_GROUND_Y;
     }
 }
 static void tiny_rex_duck_release(void)
@@ -160,8 +162,8 @@ static void tiny_rex_duck_release(void)
     if (tiny_rex_object.state == EM_TINY_REX_STATE_DUCKING)
     {
         tiny_rex_object.state = EM_TINY_REX_STATE_RUNNING;
-        tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
         tiny_rex_object.bitmap_index = BITMAP_T_REX_RUN_1;
+        tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
     }
 }
 static void tiny_rex_over(void)

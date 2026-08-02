@@ -16,16 +16,6 @@
 #include "scr_play.h"
 #include "game_object.h"
 
-/* Axis */
-#define AXIS_X_BIRD_OBJECT_INIT (64)
-#define AXIS_X_BIRD_OBJECT (128)
-#define AXIS_Y_BIRD_OBJECT (25)
-/* Menu screen */
-#define AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN (50)
-#define AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN (40)
-/* */
-#define BIRD_WIDTH_IN_RUN (128+15)
-
 /* State */
 typedef enum
 {

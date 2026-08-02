@@ -16,12 +16,6 @@
 #include "scr_play.h"
 #include "game_object.h"
 
-/* Axis */
-#define AXIS_X_LINE_OBJECT (0)
-#define AXIS_Y_LINE_OBJECT (59)
-/* Size */
-#define GROUND_WIDTH (128)
-#define GROUND_HEIGHT (5)
 /* State */
 typedef enum
 {

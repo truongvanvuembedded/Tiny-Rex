@@ -16,15 +16,6 @@
 #include "scr_play.h"
 #include "game_object.h"
 
-/* Axis */
-#define AXIS_X_TREE_OBJECT (128)
-#define AXIS_Y_TREE_OBJECT (36)
-/* Menu screen */
-#define AXIS_X_TREE_OBJECT_IN_MENU_SCREEN (104)
-#define AXIS_Y_TREE_OBJECT_IN_MENU_SCREEN (36)
-/* */
-#define TREE_WIDTH_IN_RUN (128+15)
-
 /* State */
 typedef enum
 {

@@ -119,7 +119,7 @@ void scr_menu_handle(ak_msg_t* msg)
     case AC_DISPLAY_MENU_ANIMATION_UPDATE:
     {
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_UPDATE);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_TINY_REX_OBJECT_UPDATE);
+        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);
     }
     break;
 

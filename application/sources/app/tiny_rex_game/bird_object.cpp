@@ -21,6 +21,13 @@
 //==================================================================================================
 //	Local define
 //==================================================================================================
+/* Axis */
+#define AXIS_X_BIRD_OBJECT_INIT (64)
+#define AXIS_X_BIRD_OBJECT (128)
+#define AXIS_Y_BIRD_OBJECT (25)
+/* Menu screen */
+#define AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN (50)
+#define AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN (HEIGHT - g_bitmap_table[bird_object.bitmap_index].height)
 
 //==================================================================================================
 //	Local define I/O

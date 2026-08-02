@@ -21,6 +21,12 @@
 //==================================================================================================
 //	Local define
 //==================================================================================================
+/* Axis */
+#define AXIS_X_TREE_OBJECT (128)
+#define AXIS_Y_TREE_OBJECT (HEIGHT - g_bitmap_table[tree_object.bitmap_index].height - 1)
+/* Menu screen */
+#define AXIS_X_TREE_OBJECT_IN_MENU_SCREEN (104)
+#define AXIS_Y_TREE_OBJECT_IN_MENU_SCREEN AXIS_Y_TREE_OBJECT
 
 //==================================================================================================
 //	Local define I/O
