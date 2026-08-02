@@ -20,6 +20,7 @@ typedef enum
     BITMAP_T_REX_RUN_1,
     BITMAP_T_REX_RUN_2,
     BITMAP_TREE_1,
+    BITMAP_TREE_2,
     BITMAP_LINE,
     BITMAP_MAX
 } bitmap_id_t;
