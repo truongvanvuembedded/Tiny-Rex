@@ -51,8 +51,7 @@ game_object_t tiny_rex_object;
 //==================================================================================================
 //	Local Function Prototype
 //==================================================================================================
-static void update_position(void);
-static void update_animation(void);
+static void tiny_rex_update(void);
 /* state */
 static void tiny_rex_init(void);
 
@@ -117,8 +116,7 @@ void tiny_rex_object_handle(ak_msg_t* msg)
 
     case EVENT_TINY_REX_UPDATE:
     {
-        update_position();
-        update_animation();
+        tiny_rex_update();
     }
     break;
 
@@ -146,39 +144,7 @@ static void tiny_rex_init(void)
     tiny_rex_object.speed = TREX_JUMP_SPEED;
     tiny_rex_object.state = EM_TINY_REX_STATE_RUN;
 }
-static void update_position(void)
-{
-    switch (tiny_rex_object.state)
-    {
-    case EM_TINY_REX_STATE_JUMP:
-    {
-        tiny_rex_object.y -= TREX_JUMP_SPEED;
-
-        if (tiny_rex_object.y <= TREX_JUMP_TOP_Y)
-        {
-            tiny_rex_object.y = TREX_JUMP_TOP_Y;
-            tiny_rex_object.state = EM_TINY_REX_STATE_FALL;
-        }
-    }
-    break;
-
-    case EM_TINY_REX_STATE_FALL:
-    {
-        tiny_rex_object.y += TREX_JUMP_SPEED;
-
-        if (tiny_rex_object.y >= TREX_GROUND_Y)
-        {
-            tiny_rex_object.y = TREX_GROUND_Y;
-            tiny_rex_object.state = EM_TINY_REX_STATE_RUN;
-        }
-    }
-    break;
-
-    default:
-        break;
-    }
-}
-static void update_animation(void)
+static void tiny_rex_update(void)
 {
     switch (tiny_rex_object.state)
     {
@@ -192,9 +158,28 @@ static void update_animation(void)
     break;
 
     case EM_TINY_REX_STATE_JUMP:
+    {
+        tiny_rex_object.action_image = BITMAP_T_REX_STAND;
+        tiny_rex_object.y -= TREX_JUMP_SPEED;
+
+        if (tiny_rex_object.y <= TREX_JUMP_TOP_Y)
+        {
+            tiny_rex_object.y = TREX_JUMP_TOP_Y;
+            tiny_rex_object.state = EM_TINY_REX_STATE_FALL;
+        }
+    }
+    break;
+
     case EM_TINY_REX_STATE_FALL:
     {
         tiny_rex_object.action_image = BITMAP_T_REX_STAND;
+        tiny_rex_object.y += TREX_JUMP_SPEED;
+
+        if (tiny_rex_object.y >= TREX_GROUND_Y)
+        {
+            tiny_rex_object.y = TREX_GROUND_Y;
+            tiny_rex_object.state = EM_TINY_REX_STATE_RUN;
+        }
     }
     break;
 
