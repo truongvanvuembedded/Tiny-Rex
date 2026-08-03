@@ -50,6 +50,7 @@ enum {
 	LINE_OBJECT_ID,
 	TREE_OBJECT_ID,
 	BIRD_OBJECT_ID,
+	OVER_CHECK_ID,
 	/* EOT task ID */
 	AK_TASK_EOT_ID,
 };
@@ -102,6 +103,7 @@ extern void tiny_rex_object_handle(ak_msg_t* msg);
 extern void line_object_handle(ak_msg_t* msg);
 extern void tree_object_handle(ak_msg_t* msg);
 extern void bird_object_handle(ak_msg_t* msg);
+extern void over_check_handle(ak_msg_t* msg);
 /*****************************************************************************/
 /*  DECLARE: Task polling
  */

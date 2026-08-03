@@ -22,6 +22,7 @@ typedef enum
     BITMAP_TREE_1,
     BITMAP_TREE_2,
     BITMAP_LINE,
+    BITMAP_GAME_OVER_ICON,
     BITMAP_MAX
 } bitmap_id_t;
 

@@ -86,6 +86,7 @@ static void view_scr_play()
     draw_tree_object();
     draw_line_object();
     draw_bird_object();
+    draw_over_icon();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //	Name     : scr_play_handle_signal
@@ -107,6 +108,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
         task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_PLAY);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_PLAY);
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_START);
+        task_post_pure_msg(OVER_CHECK_ID, EVENT_OVER_CHECK_COLLISTION_DETECT);
         timer_set(
             AC_TASK_DISPLAY_ID,
             AC_DISPLAY_PLAYING_UPDATE,
@@ -126,6 +128,10 @@ void scr_play_handle_signal(ak_msg_t* msg)
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_BUTTON_MODE_PRESS);
+        if (over_check_object.state == EM_OVER_CHECK_STATE_FAULT)
+        {
+            SCREEN_TRAN(scr_menu_handle, &scr_menu);
+        }
     }
     break;
     case AC_DISPLAY_BUTON_MODE_RELEASE:
@@ -147,6 +153,14 @@ void scr_play_handle_signal(ak_msg_t* msg)
         task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_UPDATE);
+        task_post_pure_msg(OVER_CHECK_ID, EVENT_OVER_CHECK_UPDATE);
+    }
+    break;
+
+    case EVENT_TINY_REX_GAME_OVER:
+    {
+        timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_PLAYING_UPDATE);
+        BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
     }
     break;
 

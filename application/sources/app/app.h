@@ -176,6 +176,7 @@ extern "C"
         AC_DISPLAY_SHOW_MENU,
         AC_DISPLAY_MENU_ANIMATION_UPDATE,
 		AC_DISPLAY_PLAYING_UPDATE,
+		EVENT_TINY_REX_GAME_OVER,
     };
 
     /*****************************************************************************/
@@ -214,7 +215,6 @@ enum
     EVENT_TINY_REX_SETUP = AR_GAME_DEFINE_SIG,
     EVENT_TINY_REX_PLAY,
     EVENT_TINY_REX_UPDATE,
-    EVENT_TINY_REX_GAME_OVER,
 
     EVENT_BUTTON_UP_PRESS,
     EVENT_BUTTON_DOWN_PRESS,
@@ -256,6 +256,18 @@ enum
 	EVENT_BIRD_OBJECT_SETUP = AR_GAME_DEFINE_SIG,
 	EVENT_BIRD_OBJECT_PLAY,
 	EVENT_BIRD_OBJECT_UPDATE,
+};
+
+/*****************************************************************************/
+/*  Over check signal define
+ */
+/*****************************************************************************/
+/* Define signal */
+enum
+{
+	EVENT_OVER_CHECK_SETUP = AR_GAME_DEFINE_SIG,
+	EVENT_OVER_CHECK_COLLISTION_DETECT,
+	EVENT_OVER_CHECK_UPDATE,
 };
 
 /*****************************************************************************/
