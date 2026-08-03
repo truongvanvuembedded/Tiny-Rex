@@ -27,7 +27,7 @@
 #define AXIS_Y_BIRD_OBJECT (25)
 /* Menu screen */
 #define AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN (50)
-#define AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN (HEIGHT - g_bitmap_table[bird_object.bitmap_index].height)
+#define AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN (HEIGHT - g_bitmap_table[bird_object.action_image].height)
 
 //==================================================================================================
 //	Local define I/O
@@ -97,9 +97,9 @@ void draw_bird_object(void)
     view_render.drawBitmap(
         bird_object.x,
         bird_object.y,
-        g_bitmap_table[bird_object.bitmap_index].bitmap,
-        g_bitmap_table[bird_object.bitmap_index].width,
-        g_bitmap_table[bird_object.bitmap_index].height,
+        g_bitmap_table[bird_object.action_image].bitmap,
+        g_bitmap_table[bird_object.action_image].width,
+        g_bitmap_table[bird_object.action_image].height,
         bird_object.visible);
 }
 static void bird_init(void)
@@ -108,7 +108,7 @@ static void bird_init(void)
     bird_object.y = AXIS_Y_BIRD_OBJECT;
     bird_object.visible = BLACK;
     bird_object.state = EM_BIRD_STATE_IDLE;
-    bird_object.bitmap_index = BITMAP_BIRD_1;
+    bird_object.action_image = BITMAP_BIRD_1;
     bird_object.speed = 4;
 }
 static void bird_fly(void)
@@ -136,8 +136,8 @@ static void update_position(void)
 }
 static void update_animation(void)
 {
-    bird_object.bitmap_index =
-        (bird_object.bitmap_index == BITMAP_BIRD_1)
+    bird_object.action_image =
+        (bird_object.action_image == BITMAP_BIRD_1)
             ? BITMAP_BIRD_2
             : BITMAP_BIRD_1;
 }

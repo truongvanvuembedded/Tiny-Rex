@@ -23,7 +23,7 @@
 //==================================================================================================
 /* Axis */
 #define AXIS_X_TREE_OBJECT (128)
-#define AXIS_Y_TREE_OBJECT (HEIGHT - g_bitmap_table[tree_object.bitmap_index].height - 1)
+#define AXIS_Y_TREE_OBJECT (HEIGHT - g_bitmap_table[tree_object.action_image].height - 1)
 /* Menu screen */
 #define AXIS_X_TREE_OBJECT_IN_MENU_SCREEN (104)
 #define AXIS_Y_TREE_OBJECT_IN_MENU_SCREEN AXIS_Y_TREE_OBJECT
@@ -104,7 +104,7 @@ static void tree_init(void)
     tree_object.y = AXIS_Y_TREE_OBJECT;
     tree_object.visible = BLACK;
     tree_object.state = EM_TREE_STATE_IDLE;
-    tree_object.bitmap_index = BITMAP_TREE_1;
+    tree_object.action_image = BITMAP_TREE_1;
     tree_object.speed = 4;
 }
 static void tree_run(void)

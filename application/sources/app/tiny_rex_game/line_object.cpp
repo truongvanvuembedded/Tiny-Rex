@@ -23,7 +23,7 @@
 //==================================================================================================
 /* Axis */
 #define AXIS_X_LINE_OBJECT (0)
-#define AXIS_Y_LINE_OBJECT (HEIGHT - g_bitmap_table[line_object.bitmap_index].height)
+#define AXIS_Y_LINE_OBJECT (HEIGHT - g_bitmap_table[line_object.action_image].height)
 /* Size */
 #define GROUND_WIDTH (128)
 #define GROUND_HEIGHT (5)
@@ -107,7 +107,7 @@ static void line_init(void)
     line_object.y = AXIS_Y_LINE_OBJECT;
     line_object.visible = WHITE;
     line_object.state = EM_LINE_STATE_IDLE;
-    line_object.bitmap_index = BITMAP_LINE;
+    line_object.action_image = BITMAP_LINE;
     line_object.speed = 4;
 }
 static void line_start(void)
