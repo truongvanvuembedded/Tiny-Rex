@@ -232,7 +232,6 @@ enum
 	EVENT_LINE_OBJECT_SETUP = AR_GAME_DEFINE_SIG,
 	EVENT_LINE_OBJECT_START,
 	EVENT_LINE_OBJECT_UPDATE,
-	EVENT_LINE_OBJECT_GAME_OVER,
 };
 
 /*****************************************************************************/
@@ -243,10 +242,8 @@ enum
 enum
 {
 	EVENT_TREE_OBJECT_SETUP = AR_GAME_DEFINE_SIG,
-	EVENT_TREE_OBJECT_RUN,
+	EVENT_TREE_OBJECT_PLAY,
 	EVENT_TREE_OBJECT_UPDATE,
-	EVENT_TREE_OBJECT_STAND,
-	EVENT_TREE_OBJECT_GAME_OVER,
 };
 
 /*****************************************************************************/

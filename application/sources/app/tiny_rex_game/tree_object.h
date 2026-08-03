@@ -19,9 +19,9 @@
 /* State */
 typedef enum
 {
-    EM_TREE_STATE_IDLE = 0,
-    EM_TREE_STATE_STAND,
-    EM_TREE_STATE_RUNNING,
+    EM_TREE_STATE_STAND = 0,
+    EM_TREE_STATE_HIDDEN,
+    EM_TREE_STATE_MOVE,
 } EM_TREE_STATE;
 /* Object */
 extern game_object_t tree_object;

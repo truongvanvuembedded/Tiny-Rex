@@ -25,8 +25,6 @@
 #define AXIS_X_LINE_OBJECT (0)
 #define AXIS_Y_LINE_OBJECT (HEIGHT - g_bitmap_table[line_object.action_image].height)
 /* Size */
-#define GROUND_WIDTH (128)
-#define GROUND_HEIGHT (5)
 
 //==================================================================================================
 //	Local define I/O
@@ -51,10 +49,7 @@ game_object_t line_object;
 //==================================================================================================
 //	Local Function Prototype
 //==================================================================================================
-static void line_init(void);
-static void line_start(void);
-static void line_update(void);
-static void line_over(void);
+
 //==================================================================================================
 //	Source Code
 //==================================================================================================
@@ -63,20 +58,33 @@ void line_object_handle(ak_msg_t* msg)
     switch (msg->sig)
     {
     case EVENT_LINE_OBJECT_SETUP:
-        line_init();
-        break;
+    {
+        line_object.action_image = BITMAP_LINE;
+        line_object.x = AXIS_X_LINE_OBJECT;
+        line_object.y = AXIS_Y_LINE_OBJECT;
+        line_object.visible = BLACK;
+        line_object.state = EM_LINE_STATE_IDLE;
+        line_object.speed = 4;
+    }
+    break;
 
     case EVENT_LINE_OBJECT_START:
-        line_start();
-        break;
+    {
+        line_object.visible = WHITE;
+        line_object.state = EM_LINE_STATE_RUNNING;
+    }
+    break;
 
     case EVENT_LINE_OBJECT_UPDATE:
-        line_update();
-        break;
+    {
+        line_object.x -= line_object.speed;
 
-    case EVENT_LINE_OBJECT_GAME_OVER:
-        line_over();
-        break;
+        if (line_object.x <= -WIDTH)
+        {
+            line_object.x = 0;
+        }
+    }
+    break;
 
     default:
         break;
@@ -94,41 +102,10 @@ void draw_line_object(void)
         line_object.visible);
 
     view_render.drawBitmap(
-        line_object.x + GROUND_WIDTH,
+        line_object.x + WIDTH,
         line_object.y,
         g_bitmap_table[BITMAP_LINE].bitmap,
         g_bitmap_table[BITMAP_LINE].width,
         g_bitmap_table[BITMAP_LINE].height,
         line_object.visible);
-}
-static void line_init(void)
-{
-    line_object.x = AXIS_X_LINE_OBJECT;
-    line_object.y = AXIS_Y_LINE_OBJECT;
-    line_object.visible = WHITE;
-    line_object.state = EM_LINE_STATE_IDLE;
-    line_object.action_image = BITMAP_LINE;
-    line_object.speed = 4;
-}
-static void line_start(void)
-{
-    line_init();
-    line_object.state = EM_LINE_STATE_RUNNING;
-}
-static void line_update(void)
-{
-    if (line_object.state != EM_LINE_STATE_RUNNING)
-    {
-        return;
-    }
-    line_object.x -= line_object.speed;
-
-    if (line_object.x <= -GROUND_WIDTH)
-    {
-        line_object.x = 0;
-    }
-}
-static void line_over(void)
-{
-    line_init();
 }

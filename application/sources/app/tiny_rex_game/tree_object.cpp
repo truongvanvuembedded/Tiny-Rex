@@ -22,12 +22,14 @@
 //	Local define
 //==================================================================================================
 /* Axis */
-#define AXIS_X_TREE_OBJECT (128)
 #define AXIS_Y_TREE_OBJECT (HEIGHT - g_bitmap_table[tree_object.action_image].height - 1)
 /* Menu screen */
 #define AXIS_X_TREE_OBJECT_IN_MENU_SCREEN (104)
 #define AXIS_Y_TREE_OBJECT_IN_MENU_SCREEN AXIS_Y_TREE_OBJECT
 
+/* Spawn delay in game ticks */
+#define TREE_SPAWN_DELAY_MIN_TICK (1000 / 50)
+#define TREE_SPAWN_DELAY_MAX_TICK (3000 / 50)
 //==================================================================================================
 //	Local define I/O
 //==================================================================================================
@@ -44,6 +46,7 @@
 //	Global RAM
 //==================================================================================================
 game_object_t tree_object;
+static uint32_t tree_hidden_timer;
 //==================================================================================================
 //	Local ROM
 //==================================================================================================
@@ -51,11 +54,7 @@ game_object_t tree_object;
 //==================================================================================================
 //	Local Function Prototype
 //==================================================================================================
-static void tree_init(void);
-static void tree_run(void);
 static void tree_update(void);
-static void tree_stand(void);
-static void tree_over(void);
 //==================================================================================================
 //	Source Code
 //==================================================================================================
@@ -64,24 +63,27 @@ void tree_object_handle(ak_msg_t* msg)
     switch (msg->sig)
     {
     case EVENT_TREE_OBJECT_SETUP:
-        tree_init();
-        break;
+    {
+        tree_object.action_image = BITMAP_TREE_1;
+        tree_object.x = AXIS_X_TREE_OBJECT_IN_MENU_SCREEN;
+        tree_object.y = AXIS_Y_TREE_OBJECT_IN_MENU_SCREEN;
+        tree_object.visible = WHITE;
+        tree_object.state = EM_TREE_STATE_STAND;
+        tree_object.speed = 4;
+    }
+    break;
 
-    case EVENT_TREE_OBJECT_RUN:
-        tree_run();
-        break;
+    case EVENT_TREE_OBJECT_PLAY:
+    {
+        tree_object.visible = BLACK;
+        tree_object.state = EM_TREE_STATE_HIDDEN;
+        tree_hidden_timer = random(TREE_SPAWN_DELAY_MIN_TICK, TREE_SPAWN_DELAY_MAX_TICK);
+    }
+    break;
 
     case EVENT_TREE_OBJECT_UPDATE:
         tree_update();
-        break;
-
-    case EVENT_TREE_OBJECT_STAND:
-        tree_stand();
-        break;
-
-    case EVENT_TREE_OBJECT_GAME_OVER:
-        tree_over();
-        break;
+    break;
 
     default:
         break;
@@ -93,45 +95,35 @@ void draw_tree_object(void)
     view_render.drawBitmap(
         tree_object.x,
         tree_object.y,
-        g_bitmap_table[BITMAP_TREE_1].bitmap,
-        g_bitmap_table[BITMAP_TREE_1].width,
-        g_bitmap_table[BITMAP_TREE_1].height,
+        g_bitmap_table[tree_object.action_image].bitmap,
+        g_bitmap_table[tree_object.action_image].width,
+        g_bitmap_table[tree_object.action_image].height,
         tree_object.visible);
-}
-static void tree_init(void)
-{
-    tree_object.x = AXIS_X_TREE_OBJECT;
-    tree_object.y = AXIS_Y_TREE_OBJECT;
-    tree_object.visible = BLACK;
-    tree_object.state = EM_TREE_STATE_IDLE;
-    tree_object.action_image = BITMAP_TREE_1;
-    tree_object.speed = 4;
-}
-static void tree_run(void)
-{
-    tree_init();
-    tree_object.visible = WHITE;
-    tree_object.state = EM_TREE_STATE_RUNNING;
 }
 static void tree_update(void)
 {
-    if (tree_object.state != EM_TREE_STATE_RUNNING)
+    if (tree_object.state == EM_TREE_STATE_HIDDEN)
     {
-        return;
+        if (tree_hidden_timer > 0)
+        {
+            tree_hidden_timer--;
+            return;
+        }
+        tree_object.visible = WHITE;
+        tree_object.state = EM_TREE_STATE_MOVE;
+        tree_object.x = WIDTH;
+        /* Change action iamge */
+        tree_object.action_image = (tree_object.action_image == BITMAP_TREE_1) ? BITMAP_TREE_2 : BITMAP_TREE_1;
     }
-    tree_object.x -= tree_object.speed;
-    if (tree_object.x <= 0-g_bitmap_table[BITMAP_TREE_1].width)
+    else if (tree_object.state == EM_TREE_STATE_MOVE)
     {
-        tree_object.x = AXIS_X_TREE_OBJECT;
+        /* Update position */
+        tree_object.x -= tree_object.speed;
+        if (tree_object.x <= 0-g_bitmap_table[tree_object.action_image].width)
+        {
+            tree_object.visible = BLACK;
+            tree_object.state = EM_TREE_STATE_HIDDEN;
+            tree_hidden_timer = random(TREE_SPAWN_DELAY_MIN_TICK, TREE_SPAWN_DELAY_MAX_TICK);
+        }
     }
-}
-static void tree_stand(void)
-{
-    tree_object.visible = WHITE;
-    tree_object.x = AXIS_X_TREE_OBJECT_IN_MENU_SCREEN;
-    tree_object.y = AXIS_Y_TREE_OBJECT_IN_MENU_SCREEN;
-}
-static void tree_over(void)
-{
-    tree_init();
 }
