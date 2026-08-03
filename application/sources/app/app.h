@@ -257,10 +257,8 @@ enum
 enum
 {
 	EVENT_BIRD_OBJECT_SETUP = AR_GAME_DEFINE_SIG,
-	EVENT_BIRD_OBJECT_FLY,
+	EVENT_BIRD_OBJECT_PLAY,
 	EVENT_BIRD_OBJECT_UPDATE,
-	EVENT_BIRD_OBJECT_STAND_FLY,
-	EVENT_BIRD_OBJECT_GAME_OVER,
 };
 
 /*****************************************************************************/

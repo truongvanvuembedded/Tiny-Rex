@@ -23,12 +23,15 @@
 //==================================================================================================
 /* Axis */
 #define AXIS_X_BIRD_OBJECT_INIT (64)
-#define AXIS_X_BIRD_OBJECT (128)
-#define AXIS_Y_BIRD_OBJECT (25)
 /* Menu screen */
 #define AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN (50)
 #define AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN (HEIGHT - g_bitmap_table[bird_object.action_image].height)
-
+/* Spawn delay in game ticks */
+#define BIRD_SPAWN_DELAY_MIN_TICK (1000 / 50)
+#define BIRD_SPAWN_DELAY_MAX_TICK (3000 / 50)
+/* Spawn axis in game ticks */
+#define AXIS_Y_BIRD_OBJECT_MIN (5)
+#define AXIS_Y_BIRD_OBJECT_MAX (HEIGHT - 16)
 //==================================================================================================
 //	Local define I/O
 //==================================================================================================
@@ -45,6 +48,7 @@
 //	Global RAM
 //==================================================================================================
 game_object_t bird_object;
+static uint32_t hidden_timer;
 //==================================================================================================
 //	Local ROM
 //==================================================================================================
@@ -52,14 +56,7 @@ game_object_t bird_object;
 //==================================================================================================
 //	Local Function Prototype
 //==================================================================================================
-static void bird_init(void);
-static void bird_fly(void);
 static void bird_update(void);
-static void bird_stand_fly(void);
-static void bird_over(void);
-/* Helper function */
-static void update_position(void);
-static void update_animation(void);
 //==================================================================================================
 //	Source Code
 //==================================================================================================
@@ -68,23 +65,26 @@ void bird_object_handle(ak_msg_t* msg)
     switch (msg->sig)
     {
     case EVENT_BIRD_OBJECT_SETUP:
-        bird_init();
-        break;
+    {
+        bird_object.x = AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN;
+        bird_object.y = AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN;
+        bird_object.visible = WHITE;
+        bird_object.state = EM_BIRD_STATE_STAND_FLY;
+        bird_object.action_image = BITMAP_BIRD_1;
+        bird_object.speed = 4;
+    }
+    break;
 
-    case EVENT_BIRD_OBJECT_FLY:
-        bird_fly();
-        break;
+    case EVENT_BIRD_OBJECT_PLAY:
+    {
+        bird_object.visible = BLACK;
+        bird_object.state = EM_BIRD_STATE_HIDDEN_FLY;
+        hidden_timer = random(BIRD_SPAWN_DELAY_MIN_TICK, BIRD_SPAWN_DELAY_MAX_TICK);
+    }
+    break;
 
     case EVENT_BIRD_OBJECT_UPDATE:
         bird_update();
-        break;
-
-    case EVENT_BIRD_OBJECT_STAND_FLY:
-        bird_stand_fly();
-        break;
-
-    case EVENT_BIRD_OBJECT_GAME_OVER:
-        bird_over();
         break;
 
     default:
@@ -102,53 +102,37 @@ void draw_bird_object(void)
         g_bitmap_table[bird_object.action_image].height,
         bird_object.visible);
 }
-static void bird_init(void)
-{
-    bird_object.x = AXIS_X_BIRD_OBJECT_INIT;
-    bird_object.y = AXIS_Y_BIRD_OBJECT;
-    bird_object.visible = BLACK;
-    bird_object.state = EM_BIRD_STATE_IDLE;
-    bird_object.action_image = BITMAP_BIRD_1;
-    bird_object.speed = 4;
-}
-static void bird_fly(void)
-{
-    bird_init();
-    bird_object.visible = WHITE;
-    bird_object.state = EM_BIRD_STATE_FLYING;
-}
 static void bird_update(void)
 {
-    update_position();
-    update_animation();
-}
-static void update_position(void)
-{
-    if (bird_object.state != EM_BIRD_STATE_FLYING)
+    if (bird_object.state == EM_BIRD_STATE_HIDDEN_FLY)
     {
+        if (hidden_timer > 0)
+        {
+            hidden_timer--;
+            return;
+        }
+
+        bird_object.visible = WHITE;
+        bird_object.state = EM_BIRD_STATE_FLY;
+        bird_object.x = WIDTH;
+        bird_object.y = random(AXIS_Y_BIRD_OBJECT_MIN, AXIS_Y_BIRD_OBJECT_MAX);
         return;
     }
-    bird_object.x -= bird_object.speed;
-    if (bird_object.x <= 0-g_bitmap_table[BITMAP_BIRD_1].width)
+
+    if (bird_object.state == EM_BIRD_STATE_FLY)
     {
-        bird_object.x = AXIS_X_BIRD_OBJECT;
+        /* Update position */
+        bird_object.x -= bird_object.speed;
+        if (bird_object.x <= 0-g_bitmap_table[BITMAP_BIRD_1].width)
+        {
+            bird_object.visible = BLACK;
+            bird_object.state = EM_BIRD_STATE_HIDDEN_FLY;
+            hidden_timer = random(BIRD_SPAWN_DELAY_MIN_TICK, BIRD_SPAWN_DELAY_MAX_TICK);
+        }
     }
-}
-static void update_animation(void)
-{
+    /* Update animation */
     bird_object.action_image =
         (bird_object.action_image == BITMAP_BIRD_1)
             ? BITMAP_BIRD_2
             : BITMAP_BIRD_1;
-}
-static void bird_stand_fly(void)
-{
-    bird_object.visible = WHITE;
-	bird_object.state = EM_BIRD_STATE_STAND_FLY;
-    bird_object.x = AXIS_X_BIRD_OBJECT_IN_MENU_SCREEN;
-    bird_object.y = AXIS_Y_BIRD_OBJECT_IN_MENU_SCREEN;
-}
-static void bird_over(void)
-{
-    bird_init();
 }

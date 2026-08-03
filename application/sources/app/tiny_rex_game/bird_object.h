@@ -19,9 +19,9 @@
 /* State */
 typedef enum
 {
-    EM_BIRD_STATE_IDLE = 0,
-    EM_BIRD_STATE_STAND_FLY,
-    EM_BIRD_STATE_FLYING,
+    EM_BIRD_STATE_STAND_FLY = 0,
+    EM_BIRD_STATE_HIDDEN_FLY,
+    EM_BIRD_STATE_FLY,
 } EM_BIRD_STATE;
 /* Object */
 extern game_object_t bird_object;

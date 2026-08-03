@@ -284,77 +284,50 @@ sequenceDiagram
     autonumber
 
     participant Scr as Game Screen
-    participant Rex as Tiny-Rex Object
+    participant Bird as Bird Object
 
     %%========================
     %% Setup
     %%========================
-    Scr->>Rex: TINY_REX_SETUP_EVENT
-    activate Rex
-    Note right of Rex: state = RUN_STATE<br/>x = INIT_X<br/>y = INIT_Y<br/>visible = ON<br/>action_image = RUN
-    deactivate Rex
+    Scr->>Bird: BIRD_SETUP_EVENT
+    activate Bird
+    Note right of Bird: state = STAND_FLY_STATE<br/>x = INIT_X<br/>y = INIT_Y<br/>visible = ON
+    deactivate Bird
 
     %%========================
-    %% Up Button
+    %% Play
     %%========================
-    Scr->>Rex: BUTTON_UP_PRESS_EVENT
-    activate Rex
-    Note right of Rex: if state == RUN_STATE<br/>state = JUMP_STATE<br/>speed = JUMP_SPEED
-    deactivate Rex
-
-    %%========================
-    %% Down Button
-    %%========================
-    Scr->>Rex: BUTTON_DOWN_PRESS_EVENT
-    activate Rex
-    Note right of Rex: if state == JUMP_STATE<br/>state = FALL_STATE<br/>speed = FALL_SPEED
-    deactivate Rex
-
-    %%========================
-    %% Mode Button
-    %%========================
-    Scr->>Rex: BUTTON_MODE_PRESS_EVENT
-    activate Rex
-    Note right of Rex: if state == RUN_STATE<br/>state = BEND_OVER_STATE
-    deactivate Rex
-
-    %%========================
-    %% Release Button
-    %%========================
-    Scr->>Rex: BUTTON_MODE_RELEASE_EVENT
-    activate Rex
-    Note right of Rex: if state == BEND_OVER_STATE<br/>state = RUN_STATE
-    deactivate Rex
+    Scr->>Bird: BIRD_PLAY_EVENT
+    activate Bird
+    Note right of Bird: state = HIDDEN_FLY_STATE<br/>hidden_timer = RANDOM_TIME<br/>visible = OFF
+    deactivate Bird
 
     %%========================
     %% Game Tick
     %%========================
     loop Every GAME_TICK (50 ms)
 
-        Scr->>Rex: TINY_REX_UPDATE_EVENT
+        Scr->>Bird: BIRD_UPDATE_EVENT
 
-        activate Rex
+        activate Bird
 
-        alt state == RUN_STATE
-            Note right of Rex: Run animation
-        else state == JUMP_STATE
-            Note right of Rex: y -= speed
-            opt y <= 0
-                Note right of Rex: state = FALL_STATE
+        alt state == HIDDEN_FLY_STATE
+            Note right of Bird: hidden_timer -= GAME_TICK
+            opt hidden_timer <= 0
+                Note right of Bird: state = FLY_STATE<br/>visible = ON<br/>x = SCREEN_WIDTH<br/>y = RANDOM_Y
             end
-        else state == FALL_STATE
-            Note right of Rex: y += speed
-            opt y >= GROUND_Y
-                Note right of Rex: y = GROUND_Y<br/>state = RUN_STATE
+        else state == FLY_STATE
+            Note right of Bird: x -= speed
+            Note right of Bird: Fly animation
+            opt x <= LEFT_EDGE
+                Note right of Bird: state = HIDDEN_FLY_STATE<br/>visible = OFF<br/>hidden_timer = RANDOM_TIME
             end
-        else state == BEND_OVER_STATE
-            Note right of Rex: Run animation
         end
 
-        deactivate Rex
+        deactivate Bird
 
     end
-```
+````
 
 ## Contact & Support
 

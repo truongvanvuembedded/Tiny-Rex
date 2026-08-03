@@ -68,7 +68,6 @@ void scr_menu_handle(ak_msg_t* msg)
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_STAND);
         task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_SETUP);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_STAND_FLY);
         timer_set(
             AC_TASK_DISPLAY_ID,
             AC_DISPLAY_MENU_ANIMATION_UPDATE,
