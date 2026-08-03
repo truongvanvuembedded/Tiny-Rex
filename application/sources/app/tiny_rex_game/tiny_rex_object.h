@@ -19,12 +19,12 @@
 /* State */
 typedef enum
 {
-    EM_TINY_REX_STATE_IDLE = 0,
-    EM_TINY_REX_STATE_RUNNING,
-    EM_TINY_REX_STATE_JUMPING,
-    EM_TINY_REX_STATE_DUCKING,
-    EM_TINY_REX_STATE_FALLING,
+    EM_TINY_REX_STATE_RUN = 0,
+    EM_TINY_REX_STATE_JUMP,
+    EM_TINY_REX_STATE_FALL,
+    EM_TINY_REX_STATE_BEND_OVER,
 } EM_TINY_REX_STATE;
+
 /* Object */
 extern game_object_t tiny_rex_object;
 /* Function */

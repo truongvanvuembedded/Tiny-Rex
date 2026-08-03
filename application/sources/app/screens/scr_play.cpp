@@ -103,8 +103,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
     case SCREEN_ENTRY:
     {
         APP_DBG_SIG("SCREEN_PLAY_ENTRY\n");
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_SETUP);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_RUN);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_SETUP);
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_SETUP);
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_START);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
@@ -122,32 +121,32 @@ void scr_play_handle_signal(ak_msg_t* msg)
     case AC_DISPLAY_BUTON_UP_PRESSED:
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_UP);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_BUTTON_UP_PRESS);
     }
     break;
 
     case AC_DISPLAY_BUTON_MODE_PRESSED:
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_DUCK);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_BUTTON_MODE_PRESS);
     }
     break;
     case AC_DISPLAY_BUTON_MODE_RELEASE:
     {
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_DUCK_RELEAASE);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_BUTTON_MODE_RELEASE);
     }
     break;
 
     case AC_DISPLAY_BUTON_DOWN_PRESSED:
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_DOWN);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_BUTTON_DOWN_PRESS);
     }
     break;
 
     case AC_DISPLAY_PLAYING_UPDATE:
     {
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_OBJECT_UPDATE);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_UPDATE);
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_UPDATE);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
         task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);

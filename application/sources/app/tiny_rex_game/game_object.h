@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+typedef void (*state_handler_t)(void);
+
 typedef struct {
     bool visible;
     uint8_t state;

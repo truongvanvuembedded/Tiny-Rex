@@ -108,7 +108,6 @@ make flash dev=dev/ttyUSB0
 ## Debug flow
 For a step-by-step debugging guide, see:
 [Debug Guideline](./debug-guiline.md)
-
 ## Basic Game Sequence Logic
 
 ```mermaid
@@ -132,17 +131,17 @@ sequenceDiagram
     deactivate Scr
 
     Note over Scr: IDLE_STATE
-    Scr->>Rex: TINY_REX_EVENT_MENU_SETUP
-    Scr->>Bird: BIRD_EVENT_MENU_SETUP
-    Scr->>Tree: TREE_EVENT_MENU_SETUP
-    Scr->>Line: LINE_EVENT_MENU_SETUP
-    Scr->>Over_Chk: OVER_EVENT_MENU_SETUP
+    Scr->>Rex: TINY_REX_SETUP_EVENT
+    Scr->>Bird: BIRD_SETUP_EVENT
+    Scr->>Tree: TREE_SETUP_EVENT
+    Scr->>Line: LINE_SETUP_EVENT
+    Scr->>Over_Chk: OVER_SETUP_EVENT
 
     loop Every GAME_TICK (50 ms)
 
-        Scr->>Rex: TINY_REX_EVENT_UPDATE
-        Scr->>Bird: BIRD_EVENT_UPDATE
-        Scr->>Tree: TREE_EVENT_UPDATE
+        Scr->>Rex: TINY_REX_UPDATE_EVENT
+        Scr->>Bird: BIRD_UPDATE_EVENT
+        Scr->>Tree: TREE_UPDATE_EVENT
     end
 
     %%========================
@@ -154,24 +153,24 @@ sequenceDiagram
     deactivate Scr
 
     Note over Scr: PLAY_STATE
-    Scr->>Rex: TINY_REX_EVENT_PLAY
-    Scr->>Bird: BIRD_EVENT_PLAY
-    Scr->>Tree: TREE_EVENT_PLAY
-    Scr->>Line: LINE_EVENT_PLAY
-    Scr->>Over_Chk: OVER_EVENT_PLAY
+    Scr->>Rex: TINY_REX_PLAY_EVENT
+    Scr->>Bird: BIRD_PLAY_EVENT
+    Scr->>Tree: TREE_PLAY_EVENT
+    Scr->>Line: LINE_PLAY_EVENT
+    Scr->>Over_Chk: OVER_PLAY_EVENT
     Note over Scr: Create timer 50ms for update
 
     loop Every GAME_TICK (50 ms)
 
-        Scr->>Rex: TINY_REX_EVENT_UPDATE
-        Scr->>Bird: BIRD_EVENT_UPDATE
-        Scr->>Tree: TREE_EVENT_UPDATE
-        Scr->>Line: LINE_EVENT_UPDATE
-        Scr->>Over_Chk: OVER_EVENT_CHECK
+        Scr->>Rex: TINY_REX_UPDATE_EVENT
+        Scr->>Bird: BIRD_UPDATE_EVENT
+        Scr->>Tree: TREE_UPDATE_EVENT
+        Scr->>Line: LINE_UPDATE_EVENT
+        Scr->>Over_Chk: OVER_CHECK_EVENT
         activate Over_Chk
         Note left of Over_Chk: Collision Check
             opt Collision detected
-                Over_Chk->>Scr: OVER_EVENT_CHECK
+                Over_Chk->>Scr: OVER_CHECK_EVENT
                     activate Scr
                     Note right of Scr: game_state = OVER_STATE
                     Note right of Scr: Delete timer 50ms for update
@@ -180,25 +179,24 @@ sequenceDiagram
         deactivate Over_Chk
     end
 
-    Act->>Scr: BUTTON_UP_EVENT_PRESS
-    Scr->>Rex: BUTTON_UP_EVENT_PRESS
-    Act->>Scr: BUTTON_DOWN_EVENT_PRESS
-    Scr->>Rex: BUTTON_DOWN_EVENT_PRESS
-    Act->>Scr: BUTTON_MODE_EVENT_PRESS
-    Scr->>Rex: BUTTON_MODE_EVENT_PRESS
+    Act->>Scr: BUTTON_UP_PRESS_EVENT
+    Scr->>Rex: BUTTON_UP_PRESS_EVENT
+    Act->>Scr: BUTTON_DOWN_PRESS_EVENT
+    Scr->>Rex: BUTTON_DOWN_PRESS_EVENT
+    Act->>Scr: BUTTON_MODE_PRESS_EVENT
+    Scr->>Rex: BUTTON_MODE_PRESS_EVENT
 
     %%========================
-    %% Game Over_Chk
+    %% Game Over
     %%========================
 
     Note over Scr: OVER_STATE
-    Act->>Scr: BUTTON_MODE_EVENT_PRESS
+    Act->>Scr: BUTTON_MODE_PRESS_EVENT
     activate Scr
     Scr->>Scr: RESET_EVENT
     deactivate Scr
 
 ```
-
 
 ## Tiny-Rex Object Sequence
 
@@ -212,7 +210,7 @@ sequenceDiagram
     %%========================
     %% Setup
     %%========================
-    Scr->>Rex: TINY_REX_EVENT_MENU_SETUP
+    Scr->>Rex: TINY_REX_SETUP_EVENT
     activate Rex
     Note right of Rex: state = RUN_STATE<br/>x = INIT_X<br/>y = INIT_Y<br/>visible = ON<br/>action_image = RUN
     deactivate Rex
@@ -220,7 +218,7 @@ sequenceDiagram
     %%========================
     %% Up Button
     %%========================
-    Scr->>Rex: BUTTON_UP_EVENT_PRESS
+    Scr->>Rex: BUTTON_UP_PRESS_EVENT
     activate Rex
     Note right of Rex: if state == RUN_STATE<br/>state = JUMP_STATE<br/>speed = JUMP_SPEED
     deactivate Rex
@@ -228,7 +226,7 @@ sequenceDiagram
     %%========================
     %% Down Button
     %%========================
-    Scr->>Rex: BUTTON_DOWN_EVENT_PRESS
+    Scr->>Rex: BUTTON_DOWN_PRESS_EVENT
     activate Rex
     Note right of Rex: if state == JUMP_STATE<br/>state = FALL_STATE<br/>speed = FALL_SPEED
     deactivate Rex
@@ -236,17 +234,17 @@ sequenceDiagram
     %%========================
     %% Mode Button
     %%========================
-    Scr->>Rex: BUTTON_MODE_EVENT_PRESS
+    Scr->>Rex: BUTTON_MODE_PRESS_EVENT
     activate Rex
-    Note right of Rex: if state == RUN_STATE<br/>state = BEND_OVER_STATE<br/>
+    Note right of Rex: if state == RUN_STATE<br/>state = BEND_OVER_STATE
     deactivate Rex
 
     %%========================
     %% Release Button
     %%========================
-    Scr->>Rex: BUTTON_MODE_EVENT_RELEASE
+    Scr->>Rex: BUTTON_MODE_RELEASE_EVENT
     activate Rex
-    Note right of Rex: if state == BEND_OVER_STATE<br/>state = RUN_STATE<br/>
+    Note right of Rex: if state == BEND_OVER_STATE<br/>state = RUN_STATE
     deactivate Rex
 
     %%========================
@@ -254,7 +252,7 @@ sequenceDiagram
     %%========================
     loop Every GAME_TICK (50 ms)
 
-        Scr->>Rex: TINY_REX_EVENT_UPDATE
+        Scr->>Rex: TINY_REX_UPDATE_EVENT
 
         activate Rex
 
@@ -278,7 +276,6 @@ sequenceDiagram
 
     end
 ```
-
 
 ## Contact & Support
 

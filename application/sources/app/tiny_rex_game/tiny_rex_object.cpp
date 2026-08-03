@@ -55,13 +55,6 @@ static void update_position(void);
 static void update_animation(void);
 /* state */
 static void tiny_rex_init(void);
-static void tiny_rex_run(void);
-static void tiny_rex_update(void);
-static void tiny_rex_jump(void);
-static void tiny_rex_fall(void);
-static void tiny_rex_duck(void);
-static void tiny_rex_duck_release(void);
-static void tiny_rex_over(void);
 
 //==================================================================================================
 //	Source Code
@@ -70,37 +63,64 @@ void tiny_rex_object_handle(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
-    case EVENT_TINY_REX_OBJECT_SETUP:
-        tiny_rex_init();
-        break;
+    case EVENT_TINY_REX_SETUP:
+    case EVENT_TINY_REX_PLAY:
+    {
+        tiny_rex_object.action_image = BITMAP_T_REX_RUN_1;
+        tiny_rex_object.x = AXIS_X_TINY_REX_OBJECT;
+        tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
+        tiny_rex_object.visible = WHITE;
+        tiny_rex_object.speed = TREX_JUMP_SPEED;
+        tiny_rex_object.state = EM_TINY_REX_STATE_RUN;
+    }
+    break;
 
-    case EVENT_TINY_REX_OBJECT_RUN:
-        tiny_rex_run();
-        break;
+    case EVENT_BUTTON_UP_PRESS:
+    {
+        if (tiny_rex_object.state == EM_TINY_REX_STATE_RUN)
+        {
+            tiny_rex_object.state = EM_TINY_REX_STATE_JUMP;
+        }
+    }
+    break;
 
-    case EVENT_TINY_REX_OBJECT_UPDATE:
-        tiny_rex_update();
-        break;
+    case EVENT_BUTTON_DOWN_PRESS:
+    {
+        if (tiny_rex_object.state == EM_TINY_REX_STATE_JUMP)
+        {
+            tiny_rex_object.state = EM_TINY_REX_STATE_FALL;
+        }
+    }
+    break;
 
-    case EVENT_TINY_REX_OBJECT_UP:
-        tiny_rex_jump();
-        break;
+    case EVENT_BUTTON_MODE_PRESS:
+    {
+        if (tiny_rex_object.state == EM_TINY_REX_STATE_RUN)
+        {
+            tiny_rex_object.state = EM_TINY_REX_STATE_BEND_OVER;
+            tiny_rex_object.action_image = BITMAP_T_REX_DUCKING_1;
+            tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
+        }
+    }
+    break;
 
-    case EVENT_TINY_REX_OBJECT_DOWN:
-        tiny_rex_fall();
-        break;
+    case EVENT_BUTTON_MODE_RELEASE:
+    {
+        if (tiny_rex_object.state == EM_TINY_REX_STATE_BEND_OVER)
+        {
+            tiny_rex_object.state = EM_TINY_REX_STATE_RUN;
+            tiny_rex_object.action_image = BITMAP_T_REX_RUN_1;
+            tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
+        }
+    }
+    break;
 
-    case EVENT_TINY_REX_OBJECT_DUCK:
-        tiny_rex_duck();
-        break;
-
-    case EVENT_TINY_REX_OBJECT_DUCK_RELEAASE:
-        tiny_rex_duck_release();
-        break;
-
-    case EVENT_TINY_REX_OBJECT_GAME_OVER:
-        tiny_rex_over();
-        break;
+    case EVENT_TINY_REX_UPDATE:
+    {
+        update_position();
+        update_animation();
+    }
+    break;
 
     default:
         break;
@@ -119,86 +139,37 @@ void draw_tiny_rex_object(void)
 }
 static void tiny_rex_init(void)
 {
-
-    tiny_rex_object.action_image = BITMAP_T_REX_STAND;
+    tiny_rex_object.action_image = BITMAP_T_REX_RUN_1;
     tiny_rex_object.x = AXIS_X_TINY_REX_OBJECT;
     tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
-    tiny_rex_object.visible = BLACK;
-    tiny_rex_object.state = EM_TINY_REX_STATE_IDLE;
-}
-static void tiny_rex_run(void)
-{
-    tiny_rex_init();
     tiny_rex_object.visible = WHITE;
-    tiny_rex_object.state = EM_TINY_REX_STATE_RUNNING;
-    tiny_rex_object.action_image = BITMAP_T_REX_RUN_1;
-}
-static void tiny_rex_jump(void)
-{
-
-    if (tiny_rex_object.state == EM_TINY_REX_STATE_RUNNING)
-    {
-        tiny_rex_object.state = EM_TINY_REX_STATE_JUMPING;
-    }
-}
-static void tiny_rex_fall(void)
-{
-    if (tiny_rex_object.state == EM_TINY_REX_STATE_JUMPING)
-    {
-        tiny_rex_object.state = EM_TINY_REX_STATE_FALLING;
-    }
-}
-static void tiny_rex_duck(void)
-{
-    if (tiny_rex_object.state == EM_TINY_REX_STATE_RUNNING)
-    {
-        tiny_rex_object.state = EM_TINY_REX_STATE_DUCKING;
-        tiny_rex_object.action_image = BITMAP_T_REX_DUCKING_1;
-        tiny_rex_object.y = TREX_GROUND_Y;
-    }
-}
-static void tiny_rex_duck_release(void)
-{
-    if (tiny_rex_object.state == EM_TINY_REX_STATE_DUCKING)
-    {
-        tiny_rex_object.state = EM_TINY_REX_STATE_RUNNING;
-        tiny_rex_object.action_image = BITMAP_T_REX_RUN_1;
-        tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
-    }
-}
-static void tiny_rex_over(void)
-{
-    tiny_rex_init();
-}
-static void tiny_rex_update(void)
-{
-    update_position();
-    update_animation();
+    tiny_rex_object.speed = TREX_JUMP_SPEED;
+    tiny_rex_object.state = EM_TINY_REX_STATE_RUN;
 }
 static void update_position(void)
 {
     switch (tiny_rex_object.state)
     {
-    case EM_TINY_REX_STATE_JUMPING:
+    case EM_TINY_REX_STATE_JUMP:
     {
         tiny_rex_object.y -= TREX_JUMP_SPEED;
 
         if (tiny_rex_object.y <= TREX_JUMP_TOP_Y)
         {
             tiny_rex_object.y = TREX_JUMP_TOP_Y;
-            tiny_rex_object.state = EM_TINY_REX_STATE_FALLING;
+            tiny_rex_object.state = EM_TINY_REX_STATE_FALL;
         }
     }
     break;
 
-    case EM_TINY_REX_STATE_FALLING:
+    case EM_TINY_REX_STATE_FALL:
     {
         tiny_rex_object.y += TREX_JUMP_SPEED;
 
         if (tiny_rex_object.y >= TREX_GROUND_Y)
         {
             tiny_rex_object.y = TREX_GROUND_Y;
-            tiny_rex_object.state = EM_TINY_REX_STATE_RUNNING;
+            tiny_rex_object.state = EM_TINY_REX_STATE_RUN;
         }
     }
     break;
@@ -211,7 +182,7 @@ static void update_animation(void)
 {
     switch (tiny_rex_object.state)
     {
-    case EM_TINY_REX_STATE_RUNNING:
+    case EM_TINY_REX_STATE_RUN:
     {
         tiny_rex_object.action_image =
             (tiny_rex_object.action_image == BITMAP_T_REX_RUN_1)
@@ -220,14 +191,14 @@ static void update_animation(void)
     }
     break;
 
-    case EM_TINY_REX_STATE_JUMPING:
-    case EM_TINY_REX_STATE_FALLING:
+    case EM_TINY_REX_STATE_JUMP:
+    case EM_TINY_REX_STATE_FALL:
     {
         tiny_rex_object.action_image = BITMAP_T_REX_STAND;
     }
     break;
 
-    case EM_TINY_REX_STATE_DUCKING:
+    case EM_TINY_REX_STATE_BEND_OVER:
     {
         tiny_rex_object.action_image =
             (tiny_rex_object.action_image == BITMAP_T_REX_DUCKING_1)
