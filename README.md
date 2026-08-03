@@ -109,9 +109,190 @@ make flash dev=dev/ttyUSB0
 For a step-by-step debugging guide, see:
 [Debug Guideline](./debug-guiline.md)
 
-## Reference
+## Basic Game Sequence Logic
 
-| Topic | Link |
-| ------ | ------ |
-| Tutorials | <https://epcb.vn/blogs/ak-embedded-software> |
-| Vendor | <https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu> |
+```mermaid
+sequenceDiagram
+    autonumber
+
+    participant Act as Player/<br/>Msg Pool
+    participant Scr as Game Screen
+    participant Rex as Tiny-Rex Object
+    participant Bird as Bird Object
+    participant Tree as Tree Object
+    participant Line as Line Object
+    participant Over_Chk as Over Object
+
+    %%========================
+    %% Reset Game
+    %%========================
+    Act->>Scr: RESET_EVENT
+    activate Scr
+    Note right of Scr: game_state = IDLE_STATE<br/>current_screen = MENU_SCREEN
+    deactivate Scr
+
+    Note over Scr: IDLE_STATE
+    Scr->>Rex: TINY_REX_EVENT_MENU_SETUP
+    Scr->>Bird: BIRD_EVENT_MENU_SETUP
+    Scr->>Tree: TREE_EVENT_MENU_SETUP
+    Scr->>Line: LINE_EVENT_MENU_SETUP
+    Scr->>Over_Chk: OVER_EVENT_MENU_SETUP
+
+    loop Every GAME_TICK (50 ms)
+
+        Scr->>Rex: TINY_REX_EVENT_UPDATE
+        Scr->>Bird: BIRD_EVENT_UPDATE
+        Scr->>Tree: TREE_EVENT_UPDATE
+    end
+
+    %%========================
+    %% Start Game
+    %%========================
+    Act->>Scr: PLAY_EVENT
+    activate Scr
+    Note right of Scr: game_state = PLAY_STATE<br/>current_screen = PLAY_SCREEN
+    deactivate Scr
+
+    Note over Scr: PLAY_STATE
+    Scr->>Rex: TINY_REX_EVENT_PLAY
+    Scr->>Bird: BIRD_EVENT_PLAY
+    Scr->>Tree: TREE_EVENT_PLAY
+    Scr->>Line: LINE_EVENT_PLAY
+    Scr->>Over_Chk: OVER_EVENT_PLAY
+    Note over Scr: Create timer 50ms for update
+
+    loop Every GAME_TICK (50 ms)
+
+        Scr->>Rex: TINY_REX_EVENT_UPDATE
+        Scr->>Bird: BIRD_EVENT_UPDATE
+        Scr->>Tree: TREE_EVENT_UPDATE
+        Scr->>Line: LINE_EVENT_UPDATE
+        Scr->>Over_Chk: OVER_EVENT_CHECK
+        activate Over_Chk
+        Note left of Over_Chk: Collision Check
+            opt Collision detected
+                Over_Chk->>Scr: OVER_EVENT_CHECK
+                    activate Scr
+                    Note right of Scr: game_state = OVER_STATE
+                    Note right of Scr: Delete timer 50ms for update
+                    deactivate Scr
+            end
+        deactivate Over_Chk
+    end
+
+    Act->>Scr: BUTTON_UP_EVENT_PRESS
+    Scr->>Rex: BUTTON_UP_EVENT_PRESS
+    Act->>Scr: BUTTON_DOWN_EVENT_PRESS
+    Scr->>Rex: BUTTON_DOWN_EVENT_PRESS
+    Act->>Scr: BUTTON_MODE_EVENT_PRESS
+    Scr->>Rex: BUTTON_MODE_EVENT_PRESS
+
+    %%========================
+    %% Game Over_Chk
+    %%========================
+
+    Note over Scr: OVER_STATE
+    Act->>Scr: BUTTON_MODE_EVENT_PRESS
+    activate Scr
+    Scr->>Scr: RESET_EVENT
+    deactivate Scr
+
+```
+
+
+## Tiny-Rex Object Sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+
+    participant Scr as Game Screen
+    participant Rex as Tiny-Rex Object
+
+    %%========================
+    %% Setup
+    %%========================
+    Scr->>Rex: TINY_REX_EVENT_MENU_SETUP
+    activate Rex
+    Note right of Rex: state = RUN_STATE<br/>x = INIT_X<br/>y = INIT_Y<br/>visible = ON<br/>action_image = RUN
+    deactivate Rex
+
+    %%========================
+    %% Up Button
+    %%========================
+    Scr->>Rex: BUTTON_UP_EVENT_PRESS
+    activate Rex
+    Note right of Rex: if state == RUN_STATE<br/>state = JUMP_STATE<br/>speed = JUMP_SPEED
+    deactivate Rex
+
+    %%========================
+    %% Down Button
+    %%========================
+    Scr->>Rex: BUTTON_DOWN_EVENT_PRESS
+    activate Rex
+    Note right of Rex: if state == JUMP_STATE<br/>state = FALL_STATE<br/>speed = FALL_SPEED
+    deactivate Rex
+
+    %%========================
+    %% Mode Button
+    %%========================
+    Scr->>Rex: BUTTON_MODE_EVENT_PRESS
+    activate Rex
+    Note right of Rex: if state == RUN_STATE<br/>state = BEND_OVER_STATE<br/>
+    deactivate Rex
+
+    %%========================
+    %% Release Button
+    %%========================
+    Scr->>Rex: BUTTON_MODE_EVENT_RELEASE
+    activate Rex
+    Note right of Rex: if state == BEND_OVER_STATE<br/>state = RUN_STATE<br/>
+    deactivate Rex
+
+    %%========================
+    %% Game Tick
+    %%========================
+    loop Every GAME_TICK (50 ms)
+
+        Scr->>Rex: TINY_REX_EVENT_UPDATE
+
+        activate Rex
+
+        alt state == RUN_STATE
+            Note right of Rex: Run animation
+        else state == JUMP_STATE
+            Note right of Rex: y -= speed
+            opt y <= 0
+                Note right of Rex: state = FALL_STATE
+            end
+        else state == FALL_STATE
+            Note right of Rex: y += speed
+            opt y >= GROUND_Y
+                Note right of Rex: y = GROUND_Y<br/>state = RUN_STATE
+            end
+        else state == BEND_OVER_STATE
+            Note right of Rex: Run animation
+        end
+
+        deactivate Rex
+
+    end
+```
+
+
+## Contact & Support
+
+<p style="font-size: 20px;"><strong>TRUONG VAN VU</strong> - Embedded Software Enginneer</p>
+
+``` Note
+Thank you for visiting this repository.
+If you have any questions, suggestions, or feedback about this project or firmware development, feel free to contact me directly.
+```
+
+<a href="https://github.com/truongvanvuembedded">
+  <img src="https://img.shields.io/badge/GitHub-TRUONGVANVU-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
+
+<a href="https://www.linkedin.com/in/vu-truong-van-1b9291271/">
+  <img src="https://img.shields.io/badge/LinkedIn-Truong%20Van%20Vu-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
