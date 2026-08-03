@@ -111,7 +111,11 @@ static void bird_update(void)
             hidden_timer--;
             return;
         }
-
+        /* Only display bird when tree is not moving */
+        if(tree_object.state == EM_TREE_STATE_MOVE)
+        {
+            return;
+        }
         bird_object.visible = WHITE;
         bird_object.state = EM_BIRD_STATE_FLY;
         bird_object.x = WIDTH;
