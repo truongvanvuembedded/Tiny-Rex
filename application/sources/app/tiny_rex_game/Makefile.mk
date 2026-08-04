@@ -8,4 +8,3 @@ SOURCES_CPP += sources/app/tiny_rex_game/tiny_rex_object.cpp
 SOURCES_CPP += sources/app/tiny_rex_game/line_object.cpp
 SOURCES_CPP += sources/app/tiny_rex_game/tree_object.cpp
 SOURCES_CPP += sources/app/tiny_rex_game/bird_object.cpp
-SOURCES_CPP += sources/app/tiny_rex_game/over_check.cpp

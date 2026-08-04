@@ -52,9 +52,6 @@ game_object_t tiny_rex_object;
 //	Local Function Prototype
 //==================================================================================================
 static void tiny_rex_update(void);
-/* state */
-static void tiny_rex_init(void);
-
 //==================================================================================================
 //	Source Code
 //==================================================================================================
@@ -134,15 +131,6 @@ void draw_tiny_rex_object(void)
         g_bitmap_table[tiny_rex_object.action_image].width,
         g_bitmap_table[tiny_rex_object.action_image].height,
         tiny_rex_object.visible);
-}
-static void tiny_rex_init(void)
-{
-    tiny_rex_object.action_image = BITMAP_T_REX_RUN_1;
-    tiny_rex_object.x = AXIS_X_TINY_REX_OBJECT;
-    tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
-    tiny_rex_object.visible = WHITE;
-    tiny_rex_object.speed = TREX_JUMP_SPEED;
-    tiny_rex_object.state = EM_TINY_REX_STATE_RUN;
 }
 static void tiny_rex_update(void)
 {

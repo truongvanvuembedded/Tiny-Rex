@@ -49,7 +49,6 @@ const task_t app_task_table[] = {
 	{LINE_OBJECT_ID			,	TASK_PRI_LEVEL_4	,	line_object_handle},
 	{TREE_OBJECT_ID			,	TASK_PRI_LEVEL_4	,	tree_object_handle},
 	{BIRD_OBJECT_ID			,	TASK_PRI_LEVEL_4	,	bird_object_handle},
-	{OVER_CHECK_ID			,	TASK_PRI_LEVEL_4	,	over_check_handle},
 
 	/*************************************************************************/
 	/* END OF TABLE */

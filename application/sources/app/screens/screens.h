@@ -26,7 +26,6 @@
 #include "line_object.h"
 #include "tree_object.h"
 #include "bird_object.h"
-#include "over_check.h"
 
 #ifdef REAL_RAM
 	#define EXTERN

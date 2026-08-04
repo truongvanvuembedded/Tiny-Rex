@@ -50,7 +50,6 @@ enum {
 	LINE_OBJECT_ID,
 	TREE_OBJECT_ID,
 	BIRD_OBJECT_ID,
-	OVER_CHECK_ID,
 	/* EOT task ID */
 	AK_TASK_EOT_ID,
 };
