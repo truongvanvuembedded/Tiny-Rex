@@ -120,11 +120,11 @@ sequenceDiagram
     participant Bird as Bird Object
     participant Tree as Tree Object
     participant Line as Line Object
-    participant Over_Chk as Over Object
 
     %%========================
     %% Reset Game
     %%========================
+    rect rgb(46, 11, 3)
     Act->>Scr: RESET_EVENT
     activate Scr
     Note right of Scr: game_state = IDLE_STATE<br/>current_screen = MENU_SCREEN
@@ -135,18 +135,18 @@ sequenceDiagram
     Scr->>Bird: BIRD_SETUP_EVENT
     Scr->>Tree: TREE_SETUP_EVENT
     Scr->>Line: LINE_SETUP_EVENT
-    Scr->>Over_Chk: OVER_SETUP_EVENT
 
     loop Every GAME_TICK (50 ms)
-
         Scr->>Rex: TINY_REX_UPDATE_EVENT
         Scr->>Bird: BIRD_UPDATE_EVENT
         Scr->>Tree: TREE_UPDATE_EVENT
+    end
     end
 
     %%========================
     %% Start Game
     %%========================
+    rect rgb(12, 40, 117)
     Act->>Scr: PLAY_EVENT
     activate Scr
     Note right of Scr: game_state = PLAY_STATE<br/>current_screen = PLAY_SCREEN
@@ -157,7 +157,7 @@ sequenceDiagram
     Scr->>Bird: BIRD_PLAY_EVENT
     Scr->>Tree: TREE_PLAY_EVENT
     Scr->>Line: LINE_PLAY_EVENT
-    Scr->>Over_Chk: OVER_PLAY_EVENT
+
     Note over Scr: Create timer 50ms for update
 
     loop Every GAME_TICK (50 ms)
@@ -166,36 +166,48 @@ sequenceDiagram
         Scr->>Bird: BIRD_UPDATE_EVENT
         Scr->>Tree: TREE_UPDATE_EVENT
         Scr->>Line: LINE_UPDATE_EVENT
-        Scr->>Over_Chk: OVER_CHECK_EVENT
-        activate Over_Chk
-        Note left of Over_Chk: Collision Check
-            opt Collision detected
-                Over_Chk->>Scr: OVER_CHECK_EVENT
-                    activate Scr
-                    Note right of Scr: game_state = OVER_STATE
-                    Note right of Scr: Delete timer 50ms for update
-                    deactivate Scr
-            end
-        deactivate Over_Chk
+
+        Note over Scr: Increase Score
+
+        opt Reach Score Threshold
+            Note over Scr: Increase Game Speed<br/>Play High Score Sound
+        end
+
+        Note over Scr: Collision Check
+
+        opt Collision detected
+            Note over Scr: game_state = OVER_STATE<br/>Delete timer 50ms update<br/>Save Highest Score
+        end
+
+    end
     end
 
+    %%========================
+    %% Player Input
+    %%========================
+    rect rgb(56, 50, 4)
     Act->>Scr: BUTTON_UP_PRESS_EVENT
     Scr->>Rex: BUTTON_UP_PRESS_EVENT
+
     Act->>Scr: BUTTON_DOWN_PRESS_EVENT
     Scr->>Rex: BUTTON_DOWN_PRESS_EVENT
+
     Act->>Scr: BUTTON_MODE_PRESS_EVENT
     Scr->>Rex: BUTTON_MODE_PRESS_EVENT
+    end
 
     %%========================
     %% Game Over
     %%========================
-
+    rect rgb(11, 95, 66)
     Note over Scr: OVER_STATE
-    Act->>Scr: BUTTON_MODE_PRESS_EVENT
+
+    Act->>Scr: BUTTON_MODE_PRESS_EVENT<br/>BUTTON_UP_PRESS_EVENT<br/>BUTTON_DOWN_PRESS_EVENT
+
     activate Scr
     Scr->>Scr: RESET_EVENT
     deactivate Scr
-
+    end
 ```
 
 ## Tiny-Rex Object Sequence
