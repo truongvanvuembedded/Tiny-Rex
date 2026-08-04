@@ -52,6 +52,7 @@ view_screen_t scr_play = {
     .focus_item = 0,
 };
 game_object_t over_check_object;
+score_t score_object;
 //==================================================================================================
 //	Local RAM
 //==================================================================================================
@@ -63,13 +64,16 @@ game_object_t over_check_object;
 //==================================================================================================
 //	Local Function Prototype
 //==================================================================================================
+static void reset(void);
 static void tiny_rex_collision_check(void);
 static bool object_collision(const game_object_t *obj1,
                              const bitmap_info_t *bmp1,
                              const game_object_t *obj2,
                              const bitmap_info_t *bmp2);
-void draw_over_icon(void);
-
+static void draw_over_icon(void);
+/* Score */
+static void draw_score(void);
+static void update_score(void);
 //==================================================================================================
 //	Source Code
 //==================================================================================================
@@ -94,6 +98,7 @@ static void view_scr_play()
     draw_line_object();
     draw_bird_object();
     draw_over_icon();
+    draw_score();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //	Name     : scr_play_handle_signal
@@ -111,6 +116,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
     case SCREEN_ENTRY:
     {
         APP_DBG_SIG("SCREEN_PLAY_ENTRY\n");
+        reset();
         task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_SETUP);
         task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_PLAY);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_PLAY);
@@ -120,9 +126,6 @@ void scr_play_handle_signal(ak_msg_t* msg)
             AC_DISPLAY_PLAYING_UPDATE,
             AC_DISPLAY_PLAYING_UPDATE_INTERVAL,
             TIMER_PERIODIC);
-        /* Reset over check object */
-        over_check_object.state = EM_GAME_STATE_PLAYING;
-        over_check_object.visible = BLACK;
     }
     break;
 
@@ -162,6 +165,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
         task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
         task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_UPDATE);
+        update_score();
         tiny_rex_collision_check();
     }
     break;
@@ -211,9 +215,14 @@ static void tiny_rex_collision_check(void)
         over_check_object.action_image = BITMAP_GAME_OVER_ICON;
         timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_PLAYING_UPDATE);
         BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
+        /* Save new highest score */
+        if(score_object.current_score > score_object.high_score)
+        {
+            score_object.high_score = score_object.current_score;
+        }
     }
 }
-void draw_over_icon(void)
+static void draw_over_icon(void)
 {
     if(over_check_object.visible == BLACK)
         return;
@@ -225,4 +234,67 @@ void draw_over_icon(void)
         g_bitmap_table[over_check_object.action_image].width,
         g_bitmap_table[over_check_object.action_image].height,
         over_check_object.visible);
+}
+static void draw_score(void)
+{
+    char str[5];
+    uint8_t score_blink_on = true;
+
+    view_render.setTextSize(1);
+    view_render.setTextColor(WHITE);
+
+    /* HI */
+    view_render.setCursor(61, 6);
+    view_render.print("HI");
+
+    /* High Score */
+    snprintf(str, sizeof(str), "%04lu", score_object.high_score);
+    view_render.setCursor(75, 6);
+    view_render.print(str);
+
+    /* Current Score */
+    if (score_object.animation_timer > 0)
+    {
+        score_blink_on = ((score_object.animation_timer / 5) & 0x01);
+        score_object.animation_timer--;
+    }
+    if(score_blink_on)
+    {
+        snprintf(str, sizeof(str), "%04lu", score_object.current_score);
+        view_render.setCursor(102, 6);
+        view_render.print(str);
+    }
+}
+static void update_score(void)
+{
+    /* Update score */
+    score_object.skip_count++;
+    if(score_object.skip_count >= 2)
+    {
+        score_object.current_score++;
+        if(score_object.current_score > 9999)
+        {
+            score_object.current_score = 9999;
+        }
+        score_object.skip_count = 0;
+    }
+    /* Update new high score */
+    if(score_object.current_score > score_object.threshold)
+    {
+        score_object.threshold += 100;
+        score_object.animation_timer = 25;
+        BUZZER_PlaySound(BUZZER_SOUND_HIGHSCORE);
+    }
+}
+static void reset(void)
+{
+    /* Reset over check object */
+    over_check_object.state = EM_GAME_STATE_PLAYING;
+    over_check_object.visible = BLACK;
+    /* Reset score */
+    score_object.skip_count = 0;
+    score_object.current_score = 0;
+    score_object.high_score = 0;
+    score_object.threshold = 100;
+    score_object.animation_timer = 0;
 }
