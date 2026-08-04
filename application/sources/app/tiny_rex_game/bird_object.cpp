@@ -93,6 +93,8 @@ void bird_object_handle(ak_msg_t* msg)
 }
 void draw_bird_object(void)
 {
+    if(bird_object.visible == BLACK)
+        return;
     // Draw bit-map of bird
     view_render.drawBitmap(
         bird_object.x,

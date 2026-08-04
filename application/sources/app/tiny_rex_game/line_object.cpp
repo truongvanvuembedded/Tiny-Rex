@@ -92,6 +92,8 @@ void line_object_handle(ak_msg_t* msg)
 }
 void draw_line_object(void)
 {
+    if(line_object.visible == BLACK)
+        return;
     // Draw bit-map of line
     view_render.drawBitmap(
         line_object.x,

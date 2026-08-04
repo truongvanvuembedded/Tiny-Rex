@@ -215,6 +215,8 @@ static void tiny_rex_collision_check(void)
 }
 void draw_over_icon(void)
 {
+    if(over_check_object.visible == BLACK)
+        return;
     // Draw bit-map of over check icon
     view_render.drawBitmap(
         over_check_object.x,

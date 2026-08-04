@@ -91,6 +91,8 @@ void tree_object_handle(ak_msg_t* msg)
 }
 void draw_tree_object(void)
 {
+    if(tree_object.visible == BLACK)
+        return;
     // Draw bit-map of tree
     view_render.drawBitmap(
         tree_object.x,

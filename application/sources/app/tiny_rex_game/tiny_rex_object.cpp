@@ -123,6 +123,8 @@ void tiny_rex_object_handle(ak_msg_t* msg)
 }
 void draw_tiny_rex_object(void)
 {
+    if(tiny_rex_object.visible == BLACK)
+        return;
     // Draw bit-map of Tiny-Rex
     view_render.drawBitmap(
         tiny_rex_object.x,
