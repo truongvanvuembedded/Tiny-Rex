@@ -25,7 +25,9 @@
 #define AXIS_X_TINY_REX_OBJECT (5)
 #define AXIS_Y_TINY_REX_OBJECT (HEIGHT - g_bitmap_table[tiny_rex_object.action_image].height - 1)
 
-#define TREX_JUMP_SPEED (5)
+#define TREX_JUMP_SPEED_JUMP (6)
+#define TREX_JUMP_SPEED_FALL (3)
+#define TREX_JUMP_SPEED_FALL_FAST (6)
 #define TREX_JUMP_TOP_Y (0)
 #define TREX_GROUND_Y (AXIS_Y_TINY_REX_OBJECT)
 //==================================================================================================
@@ -66,7 +68,6 @@ void tiny_rex_object_handle(ak_msg_t* msg)
         tiny_rex_object.x = AXIS_X_TINY_REX_OBJECT;
         tiny_rex_object.y = AXIS_Y_TINY_REX_OBJECT;
         tiny_rex_object.visible = WHITE;
-        tiny_rex_object.speed = TREX_JUMP_SPEED;
         tiny_rex_object.state = EM_TINY_REX_STATE_RUN;
     }
     break;
@@ -86,6 +87,7 @@ void tiny_rex_object_handle(ak_msg_t* msg)
         {
             tiny_rex_object.state = EM_TINY_REX_STATE_FALL;
         }
+        tiny_rex_object.speed = TREX_JUMP_SPEED_FALL_FAST;
     }
     break;
 
@@ -150,11 +152,13 @@ static void tiny_rex_update(void)
     case EM_TINY_REX_STATE_JUMP:
     {
         tiny_rex_object.action_image = BITMAP_T_REX_STAND;
-        tiny_rex_object.y -= TREX_JUMP_SPEED;
+        tiny_rex_object.speed = TREX_JUMP_SPEED_JUMP;
+        tiny_rex_object.y -= tiny_rex_object.speed;
 
         if (tiny_rex_object.y <= TREX_JUMP_TOP_Y)
         {
             tiny_rex_object.y = TREX_JUMP_TOP_Y;
+            tiny_rex_object.speed = TREX_JUMP_SPEED_FALL;
             tiny_rex_object.state = EM_TINY_REX_STATE_FALL;
         }
     }
@@ -163,7 +167,7 @@ static void tiny_rex_update(void)
     case EM_TINY_REX_STATE_FALL:
     {
         tiny_rex_object.action_image = BITMAP_T_REX_STAND;
-        tiny_rex_object.y += TREX_JUMP_SPEED;
+        tiny_rex_object.y += tiny_rex_object.speed;
 
         if (tiny_rex_object.y >= TREX_GROUND_Y)
         {
