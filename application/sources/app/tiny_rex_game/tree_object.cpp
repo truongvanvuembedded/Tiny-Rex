@@ -119,13 +119,15 @@ static void tree_update(void)
         tree_object.visible = WHITE;
         tree_object.state = EM_TREE_STATE_MOVE;
         tree_object.x = WIDTH;
+        tree_object.y = AXIS_Y_TREE_OBJECT;
         /* Change action iamge */
-        tree_object.action_image = (tree_object.action_image == BITMAP_TREE_1) ? BITMAP_TREE_2 : BITMAP_TREE_1;
+        tree_object.action_image = random(BITMAP_TREE_1, BITMAP_TREE_4+1);
     }
     else if (tree_object.state == EM_TREE_STATE_MOVE)
     {
         /* Update position */
         tree_object.x -= tree_object.speed;
+        tree_object.y = AXIS_Y_TREE_OBJECT;
         if (tree_object.x <= 0-g_bitmap_table[tree_object.action_image].width)
         {
             tree_object.visible = BLACK;
