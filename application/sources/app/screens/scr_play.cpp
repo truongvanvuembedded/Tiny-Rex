@@ -65,7 +65,7 @@ score_t score_object;
 //	Local Function Prototype
 //==================================================================================================
 static void reset(void);
-static void tiny_rex_collision_check(void);
+static bool tiny_rex_collision_check(void);
 static bool object_collision(const game_object_t *obj1,
                              const bitmap_info_t *bmp1,
                              const game_object_t *obj2,
@@ -161,12 +161,14 @@ void scr_play_handle_signal(ak_msg_t* msg)
 
     case AC_DISPLAY_PLAYING_UPDATE:
     {
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_UPDATE);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);
-        task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
-        task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_UPDATE);
-        update_score();
-        tiny_rex_collision_check();
+        if(tiny_rex_collision_check() == false)
+        {
+            update_score();
+            task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_UPDATE);
+            task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);
+            task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
+            task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_UPDATE);
+        }
     }
     break;
 
@@ -192,7 +194,7 @@ static bool object_collision(const game_object_t *obj1,
               (obj1->y + bmp1->height <= obj2->y) ||
               (obj2->y + bmp2->height <= obj1->y) );
 }
-static void tiny_rex_collision_check(void)
+static bool tiny_rex_collision_check(void)
 {
 
     /* Rex <-> Bird */
@@ -221,6 +223,7 @@ static void tiny_rex_collision_check(void)
             score_object.high_score = score_object.current_score;
         }
     }
+    return (rex_tree_collistion || rex_bird_collistion)?true:false;
 }
 static void draw_over_icon(void)
 {
