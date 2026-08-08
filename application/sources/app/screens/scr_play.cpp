@@ -212,9 +212,9 @@ static bool tiny_rex_collision_check(void)
         /* Game Over */
         over_check_object.state = EM_GAME_STATE_OVER;
         over_check_object.visible = WHITE;
-        over_check_object.x = 46;
-        over_check_object.y = 16;
         over_check_object.action_image = BITMAP_GAME_OVER_ICON;
+        over_check_object.x = (WIDTH-g_bitmap_table[over_check_object.action_image].width) / 2;
+        over_check_object.y = (HEIGHT-g_bitmap_table[over_check_object.action_image].height) / 2;;
         timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_PLAYING_UPDATE);
         BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
         /* Save new highest score */
@@ -229,6 +229,14 @@ static void draw_over_icon(void)
 {
     if(over_check_object.visible == BLACK)
         return;
+    // Draw rectangle
+    view_render.drawRoundRect(
+        over_check_object.x-1,
+        over_check_object.y-1,
+        g_bitmap_table[over_check_object.action_image].width+2,
+        g_bitmap_table[over_check_object.action_image].height+2,
+        2,
+        WHITE);
     // Draw bit-map of over check icon
     view_render.drawBitmap(
         over_check_object.x,
@@ -236,7 +244,7 @@ static void draw_over_icon(void)
         g_bitmap_table[over_check_object.action_image].bitmap,
         g_bitmap_table[over_check_object.action_image].width,
         g_bitmap_table[over_check_object.action_image].height,
-        over_check_object.visible);
+        WHITE);
 }
 static void draw_score(void)
 {
