@@ -95,6 +95,14 @@ void draw_bird_object(void)
 {
     if(bird_object.visible == BLACK)
         return;
+    /* Clear image before write for avoid line ground over write to object */
+    view_render.fillRoundRect(
+        bird_object.x,
+        bird_object.y,
+        g_bitmap_table[bird_object.action_image].width,
+        g_bitmap_table[bird_object.action_image].height,
+        0,
+        BLACK);
     // Draw bit-map of bird
     view_render.drawBitmap(
         bird_object.x,
