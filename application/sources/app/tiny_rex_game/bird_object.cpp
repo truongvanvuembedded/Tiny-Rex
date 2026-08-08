@@ -31,7 +31,7 @@
 #define BIRD_SPAWN_DELAY_MAX_TICK (3000 / 50)
 /* Spawn axis in game ticks */
 #define AXIS_Y_BIRD_OBJECT_MIN (5)
-#define AXIS_Y_BIRD_OBJECT_MAX (HEIGHT - 16)
+#define AXIS_Y_BIRD_OBJECT_MAX (HEIGHT - 20)
 //==================================================================================================
 //	Local define I/O
 //==================================================================================================
