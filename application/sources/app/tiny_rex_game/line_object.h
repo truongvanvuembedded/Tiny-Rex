@@ -19,8 +19,8 @@
 /* State */
 typedef enum
 {
-    EM_LINE_STATE_IDLE = 0,
-    EM_LINE_STATE_RUNNING,
+    EM_HORIZONE_STATE_IDLE = 0,
+    EM_HORIZONE_STATE_RUNNING,
 } EM_LINE_STATE;
 /* Object */
 extern game_object_t line_object;
