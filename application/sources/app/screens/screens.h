@@ -45,15 +45,12 @@ extern void scr_startup_handle(ak_msg_t* msg);
 extern view_screen_t scr_play;
 extern void scr_play_handle_signal(ak_msg_t* msg);
 
-// Variable used in screens
-EXTERN const unsigned char* image_trex_running;
-EXTERN const unsigned char* image_trex_ducking;
-EXTERN const unsigned char* image_bird_flying;
+// scr_setting.cpp
+extern view_screen_t scr_setting;
+extern void scr_setting_handle(ak_msg_t* msg);
 
-// Function used in screens
-extern const unsigned char* toggle_frame(
-    const unsigned char* current,
-    const unsigned char* frame1,
-    const unsigned char* frame2);
+// scr_ranking.cpp
+extern view_screen_t scr_ranking;
+extern void scr_ranking_handle(ak_msg_t* msg);
 
 #endif //__SCREENS_H__

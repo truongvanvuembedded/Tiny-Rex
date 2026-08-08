@@ -4,9 +4,17 @@
 #undef REAL_RAM
 #include "scr_menu.h"
 
-#define NUMBER_ITEMS (4)
+enum
+{
+	EM_SCREEN_PLAY,
+	EM_SCREEN_SETTING,
+	EM_SCREEN_RANKING,
+	EM_SCREEN_EXIT,
+	EM_SCREEN_NUM,
+};
 
 static void view_scr_menu();
+static void draw_menu_icon(void);
 
 view_dynamic_t dyn_view_scr_menu = {
     {
@@ -21,22 +29,10 @@ view_screen_t scr_menu = {
 
     .focus_item = 0,
 };
-
-static uint8_t current_location = 0;
-static const char* const items_name[NUMBER_ITEMS] = {
-    "<<   Play   >>",
-    "<<  Setting >>",
-    "<<   Rank   >>",
-    "<<   Exit   >>",
-};
-
-const unsigned char* toggle_frame(
-    const unsigned char* current,
-    const unsigned char* frame1,
-    const unsigned char* frame2)
-{
-    return (current == frame1) ? frame2 : frame1;
-}
+static uint8_t current_location;
+static const uint8_t MENU_BOX_X[] = {10, 38, 68, 99};
+static const uint8_t MENU_BOX_W[] = {19, 20, 21, 20};
+static const uint8_t ICON_BITMAP_IDEX[] = {BITMAP_T_REX_STAND, BITMAP_GAME_SETTING_ICON, BITMAP_GAME_RANKING_ICON, BITMAP_GAME_EXIT_ICON};
 
 static void view_scr_menu()
 {
@@ -44,15 +40,12 @@ static void view_scr_menu()
     view_render.setTextSize(1);
     view_render.setTextColor(WHITE);
     // Title
-    view_render.setCursor(39, 8);
+    view_render.setCursor(30,2);
     view_render.print("T-Rex Game");
-    // Mode
-    view_render.setCursor(22, 23);
-    view_render.print(items_name[current_location]);
+	/* Draw line for seperate */
+	view_render.drawLine(0,15,128,15,WHITE);
     /* Draw object */
-    draw_tiny_rex_object();
-    draw_tree_object();
-    draw_bird_object();
+    draw_menu_icon();
 }
 
 void scr_menu_handle(ak_msg_t* msg)
@@ -62,36 +55,25 @@ void scr_menu_handle(ak_msg_t* msg)
     case SCREEN_ENTRY:
     {
         APP_DBG_SIG("SCREEN_MENU_ENTRY\n");
-        // Init Variable
-        current_location = 0;
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_SETUP);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_SETUP);
-        task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
-        task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_SETUP);
-        timer_set(
-            AC_TASK_DISPLAY_ID,
-            AC_DISPLAY_MENU_ANIMATION_UPDATE,
-            AC_DISPLAY_MENU_ANIMATION_UPDATE_INTERVAL,
-            TIMER_PERIODIC);
-    }
-    break;
-
-    case AC_DISPLAY_BUTON_DOWN_PRESSED:
-    {
-        current_location++;
-        if (current_location >= NUMBER_ITEMS)
-        {
-            current_location = 0;
-        }
-        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     }
     break;
 
     case AC_DISPLAY_BUTON_UP_PRESSED:
     {
-        if (current_location == 0)
+        current_location++;
+        if (current_location >= EM_SCREEN_NUM)
         {
-            current_location = NUMBER_ITEMS - 1;
+            current_location = EM_SCREEN_PLAY;
+        }
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    }
+    break;
+
+    case AC_DISPLAY_BUTON_DOWN_PRESSED:
+    {
+        if (current_location == EM_SCREEN_PLAY)
+        {
+            current_location = EM_SCREEN_NUM - 1;
         }
         else
         {
@@ -103,25 +85,54 @@ void scr_menu_handle(ak_msg_t* msg)
 
     case AC_DISPLAY_BUTON_MODE_PRESSED:
     {
-        if (current_location == 0)
+        if (current_location == EM_SCREEN_PLAY)
         {
-            // BUZZER_PlaySound(BUZZER_SOUND_CLICK);
             SCREEN_TRAN(scr_play_handle_signal, &scr_play);
         }
-        timer_remove_attr(
-            AC_TASK_DISPLAY_ID,
-            AC_DISPLAY_MENU_ANIMATION_UPDATE);
-    }
-    break;
+        else if (current_location == EM_SCREEN_SETTING)
+        {
+            SCREEN_TRAN(scr_setting_handle, &scr_setting);
+        }
+        else if (current_location == EM_SCREEN_RANKING)
+        {
+            SCREEN_TRAN(scr_ranking_handle, &scr_ranking);
+        }
+        else if (current_location == EM_SCREEN_EXIT)
+        {
+        }
 
-    case AC_DISPLAY_MENU_ANIMATION_UPDATE:
-    {
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_UPDATE);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     }
     break;
 
     default:
         break;
     }
+}
+static void draw_menu_icon(void)
+{
+  // Draw the 4 cards horizontally
+  for (uint8_t i = 0; i < EM_SCREEN_NUM; i++)
+  {
+    uint8_t bx = MENU_BOX_X[i];
+    uint8_t bx_w = MENU_BOX_W[i];
+    
+    if (i == current_location)
+    {
+      // Highlighted item: solid white background
+      view_render.fillRoundRect(bx, 32, bx_w, 20, 0, WHITE);
+    }
+    else
+    {
+      // Unselected item: outline only
+      view_render.drawRoundRect(bx, 32, bx_w, 20, 0, WHITE);
+    }
+      view_render.drawBitmap(
+        bx+2,
+        34,
+        g_bitmap_table[ICON_BITMAP_IDEX[i]].bitmap,
+        g_bitmap_table[ICON_BITMAP_IDEX[i]].width,
+        g_bitmap_table[ICON_BITMAP_IDEX[i]].height,
+        (i == current_location)?BLACK:WHITE);
+  }
 }
