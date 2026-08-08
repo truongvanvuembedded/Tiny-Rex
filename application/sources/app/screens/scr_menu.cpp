@@ -63,7 +63,6 @@ void scr_menu_handle(ak_msg_t* msg)
     {
     case SCREEN_ENTRY:
     {
-        current_location = 0;
         APP_DBG_SIG("SCREEN_MENU_ENTRY\n");
     }
     break;

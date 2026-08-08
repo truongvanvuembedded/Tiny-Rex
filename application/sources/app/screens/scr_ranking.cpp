@@ -86,14 +86,14 @@ static void drawRanking(void)
 void udpate_high_score(uint32_t score)
 {
     /* Draw ranking list */
-    for (uint8_t i = 0; i<RANKING_MAX ; i++)
+    for (int8_t i = 0; i<RANKING_MAX ; i++)
     {
         if(score >= g_ranking[i].score)
         {
-            for (uint8_t y = i; y<RANKING_MAX-1 ; y++)
+            for (int8_t y = RANKING_MAX-1; y>i ; y--)
             {
-                memcpy(g_ranking[y+1].name, g_ranking[y].name, SETTING_MAX_NAME);
-                g_ranking[y+1].score = g_ranking[y].score;
+                memcpy(g_ranking[y].name, g_ranking[y-1].name, SETTING_MAX_NAME);
+                g_ranking[y].score = g_ranking[y-1].score;
             }
             memcpy(g_ranking[i].name, user_name, SETTING_MAX_NAME);
             g_ranking[i].score = score;
