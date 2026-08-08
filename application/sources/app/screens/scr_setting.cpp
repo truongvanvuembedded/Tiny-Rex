@@ -10,7 +10,6 @@
 #define SETTING_ITEM_MAX        (4)
 
 #define ALPHABET_SIZE           (26)
-#define SETTING_MAX_NAME        (6)
 /*==================================================================================================
  * Local Type
  *================================================================================================*/
@@ -24,7 +23,7 @@ typedef struct
  *================================================================================================*/
 static int8_t setting_item;
 /* Name setting */
-static char user_name[SETTING_MAX_NAME+1];
+char user_name[SETTING_MAX_NAME+1];
 static uint8_t len_name;
 static uint8_t curr_name_idx;
 static int8_t alphabet_idx[SETTING_MAX_NAME];

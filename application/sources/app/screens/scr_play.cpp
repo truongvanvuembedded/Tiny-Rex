@@ -22,6 +22,7 @@
 //	Header File
 //==================================================================================================
 #include "scr_play.h"
+#include "scr_ranking.h"
 //==================================================================================================
 //	Local define
 //==================================================================================================
@@ -219,11 +220,9 @@ static bool tiny_rex_collision_check(void)
         over_check_object.y = (HEIGHT-g_bitmap_table[over_check_object.action_image].height) / 2;;
         timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_PLAYING_UPDATE);
         BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
-        /* Save new highest score */
-        if(score_object.current_score > score_object.high_score)
-        {
-            score_object.high_score = score_object.current_score;
-        }
+        /* Save new score */
+        udpate_high_score(score_object.current_score);
+		score_object.high_score = get_highest_score();
     }
     return (rex_tree_collistion || rex_bird_collistion)?true:false;
 }
