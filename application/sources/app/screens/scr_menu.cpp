@@ -33,15 +33,24 @@ static uint8_t current_location;
 static const uint8_t MENU_BOX_X[] = {10, 38, 68, 99};
 static const uint8_t MENU_BOX_W[] = {19, 20, 21, 20};
 static const uint8_t ICON_BITMAP_IDEX[] = {BITMAP_T_REX_STAND, BITMAP_GAME_SETTING_ICON, BITMAP_GAME_RANKING_ICON, BITMAP_GAME_EXIT_ICON};
+// Menu items name
+static const char *menu_items_name[EM_SCREEN_NUM] = {
+    "T-REX GAME", // item 1
+    "SETTING",    // item 2
+    "RANKING",    // item 3
+    "EXIT",       // item 4
+};
 
 static void view_scr_menu()
 {
-    // Configure text properties
+	// Draw selected menu item name centered at Y=50
     view_render.setTextSize(1);
-    view_render.setTextColor(WHITE);
-    // Title
-    view_render.setCursor(30,2);
-    view_render.print("T-Rex Game");
+	view_render.setTextColor(WHITE);
+	const char* name = menu_items_name[current_location];
+	uint8_t name_len = strlen(name);
+	uint8_t name_x = 64 - (name_len * 6) / 2;
+	view_render.setCursor(name_x, 2);
+	view_render.print(name);
 	/* Draw line for seperate */
 	view_render.drawLine(0,15,128,15,WHITE);
     /* Draw object */
