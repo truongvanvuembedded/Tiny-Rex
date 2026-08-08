@@ -131,7 +131,7 @@ void draw_tiny_rex_object(void)
     view_render.fillRoundRect(
         tiny_rex_object.x,
         tiny_rex_object.y,
-        g_bitmap_table[tiny_rex_object.action_image].width,
+        (g_bitmap_table[tiny_rex_object.action_image].width) + ((tiny_rex_object.state == EM_TINY_REX_STATE_BEND_OVER)?2:0),
         g_bitmap_table[tiny_rex_object.action_image].height,
         0,
         BLACK);

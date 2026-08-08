@@ -269,7 +269,7 @@ static void draw_score(void)
         score_blink_on = ((score_object.animation_timer / 5) & 0x01);
         score_object.animation_timer--;
     }
-    if(score_blink_on)
+    if(score_blink_on || over_check_object.state == EM_GAME_STATE_OVER)
     {
         snprintf(str, sizeof(str), "%04lu", score_object.current_score);
         view_render.setCursor(102, 6);
