@@ -93,9 +93,9 @@ static void update_score(void);
 static void view_scr_play()
 {
     /* Draw object */
+    draw_line_object();
     draw_tiny_rex_object();
     draw_tree_object();
-    draw_line_object();
     draw_bird_object();
     draw_over_icon();
     draw_score();

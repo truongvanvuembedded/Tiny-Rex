@@ -93,6 +93,14 @@ void draw_tree_object(void)
 {
     if(tree_object.visible == BLACK)
         return;
+    /* Clear image before write for avoid line ground over write to object */
+    view_render.fillRoundRect(
+        tree_object.x,
+        tree_object.y,
+        g_bitmap_table[tree_object.action_image].width,
+        g_bitmap_table[tree_object.action_image].height,
+        0,
+        BLACK);
     // Draw bit-map of tree
     view_render.drawBitmap(
         tree_object.x,
@@ -100,7 +108,7 @@ void draw_tree_object(void)
         g_bitmap_table[tree_object.action_image].bitmap,
         g_bitmap_table[tree_object.action_image].width,
         g_bitmap_table[tree_object.action_image].height,
-        tree_object.visible);
+        WHITE);
 }
 static void tree_update(void)
 {
