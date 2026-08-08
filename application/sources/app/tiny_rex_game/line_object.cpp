@@ -68,7 +68,7 @@ void line_object_handle(ak_msg_t* msg)
     }
     break;
 
-    case EVENT_LINE_OBJECT_START:
+    case EVENT_LINE_OBJECT_PLAY:
     {
         line_object.visible = WHITE;
         line_object.state = EM_LINE_STATE_RUNNING;
