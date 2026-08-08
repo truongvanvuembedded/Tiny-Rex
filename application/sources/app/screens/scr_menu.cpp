@@ -6,11 +6,11 @@
 
 enum
 {
-	EM_SCREEN_PLAY,
-	EM_SCREEN_SETTING,
-	EM_SCREEN_RANKING,
-	EM_SCREEN_EXIT,
-	EM_SCREEN_NUM,
+    EM_SCREEN_PLAY,
+    EM_SCREEN_SETTING,
+    EM_SCREEN_RANKING,
+    EM_SCREEN_EXIT,
+    EM_SCREEN_NUM,
 };
 
 static void view_scr_menu();
@@ -43,16 +43,16 @@ static const char *menu_items_name[EM_SCREEN_NUM] = {
 
 static void view_scr_menu()
 {
-	// Draw selected menu item name centered at Y=50
+    // Draw selected menu item name centered at Y=50
     view_render.setTextSize(1);
-	view_render.setTextColor(WHITE);
-	const char* name = menu_items_name[current_location];
-	uint8_t name_len = strlen(name);
-	uint8_t name_x = 64 - (name_len * 6) / 2;
-	view_render.setCursor(name_x, 2);
-	view_render.print(name);
-	/* Draw line for seperate */
-	view_render.drawLine(0,15,128,15,WHITE);
+    view_render.setTextColor(WHITE);
+    const char* name = menu_items_name[current_location];
+    uint8_t name_len = strlen(name);
+    uint8_t name_x = 64 - (name_len * 6) / 2;
+    view_render.setCursor(name_x, 2);
+    view_render.print(name);
+    /* Draw line for seperate */
+    view_render.drawLine(0,15,128,15,WHITE);
     /* Draw object */
     draw_menu_icon();
 }
@@ -63,6 +63,7 @@ void scr_menu_handle(ak_msg_t* msg)
     {
     case SCREEN_ENTRY:
     {
+        current_location = 0;
         APP_DBG_SIG("SCREEN_MENU_ENTRY\n");
     }
     break;

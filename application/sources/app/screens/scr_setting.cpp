@@ -4,10 +4,13 @@
  * Local Define
  *================================================================================================*/
 #define SETTING_ITEM_NAME       (0)
-#define SETTING_ITEM_MUTE       (1)
-#define SETTING_ITEM_EXIT       (2)
-#define SETTING_ITEM_MAX        (3)
+#define SETTING_ITEM_LEN        (1)
+#define SETTING_ITEM_MUTE       (2)
+#define SETTING_ITEM_EXIT       (3)
+#define SETTING_ITEM_MAX        (4)
 
+#define ALPHABET_SIZE           (26)
+#define SETTING_MAX_NAME        (6)
 /*==================================================================================================
  * Local Type
  *================================================================================================*/
@@ -19,23 +22,35 @@ typedef struct
 /*==================================================================================================
  * Local Variable
  *================================================================================================*/
-static int8_t setting_item = SETTING_ITEM_NAME;
-
-static char user_name[6] = "VU";
+static int8_t setting_item;
+/* Name setting */
+static char user_name[SETTING_MAX_NAME+1];
+static uint8_t len_name;
+static uint8_t curr_name_idx;
+static int8_t alphabet_idx[SETTING_MAX_NAME];
+static bool change_name;
+/* Sound */
 static bool mute_enable = true;
 
 static const setting_item_info_t setting_item_table[SETTING_ITEM_MAX] =
 {
     [SETTING_ITEM_NAME] = {"NAME"},
+    [SETTING_ITEM_LEN]  = {"LEN"},
     [SETTING_ITEM_MUTE] = {"MUTE"},
     [SETTING_ITEM_EXIT] = {"EXIT"},
 };
-
+static const char g_alphabet[ALPHABET_SIZE] =
+{
+    'A', 'B', 'C', 'D', 'E', 'F', 'G',
+    'H', 'I', 'J', 'K', 'L', 'M', 'N',
+    'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+    'V', 'W', 'X', 'Y', 'Z'
+};
 /*==================================================================================================
  * Local Function
  *================================================================================================*/
 static void view_scr_setting(void);
-
+static void udpate_user_name(void);
 /*==================================================================================================
  * Global Variable
  *================================================================================================*/
@@ -65,18 +80,26 @@ void scr_setting_handle(ak_msg_t *msg)
     {
         case AC_DISPLAY_INITIAL:
         {
+            change_name = false;
         }
         break;
 
         case AC_DISPLAY_BUTON_DOWN_PRESSED:
         {
             APP_DBG_SIG("AC_DISPLAY_BUTON_DOWN_PRESSED\n");
-
-            setting_item++;
-
-            if (setting_item >= SETTING_ITEM_MAX)
-            {
-                setting_item = 0;
+            if(change_name){
+                /* Udpate charater */
+                alphabet_idx[curr_name_idx]++;
+                if(alphabet_idx[curr_name_idx] >= ALPHABET_SIZE){
+                    alphabet_idx[curr_name_idx] = 0;
+                }
+            }else{
+                /* Move pointer to next item */
+                setting_item++;
+                if (setting_item >= SETTING_ITEM_MAX)
+                {
+                    setting_item = 0;
+                }
             }
             BUZZER_PlaySound(BUZZER_SOUND_CLICK);
         }
@@ -85,12 +108,20 @@ void scr_setting_handle(ak_msg_t *msg)
         case AC_DISPLAY_BUTON_UP_PRESSED:
         {
             APP_DBG_SIG("AC_DISPLAY_BUTON_UP_PRESSED\n");
+            if(change_name){
+                /* Udpate charater */
+                alphabet_idx[curr_name_idx]--;
+                if(alphabet_idx[curr_name_idx] < 0){
+                    alphabet_idx[curr_name_idx] = ALPHABET_SIZE-1;
 
-            setting_item--;
-
-            if (setting_item < 0)
-            {
-                setting_item = SETTING_ITEM_MAX - 1;
+                }
+            }else{
+                /* Move pointer to next item */
+                setting_item--;
+                if (setting_item < 0)
+                {
+                    setting_item = SETTING_ITEM_MAX - 1;
+                }
             }
             BUZZER_PlaySound(BUZZER_SOUND_CLICK);
         }
@@ -104,12 +135,37 @@ void scr_setting_handle(ak_msg_t *msg)
             {
                 SCREEN_TRAN(scr_menu_handle, &scr_menu);
             }
+            else if (setting_item == SETTING_ITEM_NAME)
+            {
+                if(change_name){
+                    curr_name_idx++;
+                    if(curr_name_idx >= len_name){
+                        curr_name_idx = 0;
+                    }
+                }
+            }
+            else if (setting_item == SETTING_ITEM_LEN)
+            {
+                len_name++;
+                if(len_name > SETTING_MAX_NAME){
+                    len_name = 0;
+                }
+            }
             else if (setting_item == SETTING_ITEM_MUTE)
             {
                 mute_enable = !mute_enable;
                 BUZZER_Silent(mute_enable);
             }
             BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+        }
+        break;
+
+        case AC_DISPLAY_BUTON_MODE_LONG_PRESS:
+        {
+            if (setting_item == SETTING_ITEM_NAME)
+            {
+                change_name = !change_name;
+            }
         }
         break;
 
@@ -129,7 +185,8 @@ static void view_scr_setting(void)
     /* Title */
     view_render.setCursor(45, 5);
     view_render.print("SETTING");
-
+    /* Update user name */
+    udpate_user_name();
     /* Setting item */
     for (uint8_t i = 0; i < SETTING_ITEM_MAX; i++)
     {
@@ -153,6 +210,12 @@ static void view_scr_setting(void)
         {
             view_render.print(": ");
             view_render.print(user_name);
+            //view_render.drawLine()
+        }
+        else if (i == SETTING_ITEM_LEN)
+        {
+            view_render.print(" : ");
+            view_render.print(len_name);
         }
         else if (i == SETTING_ITEM_MUTE)
         {
@@ -168,4 +231,18 @@ static void view_scr_setting(void)
             }
         }
     }
+}
+static void udpate_user_name(void)
+{
+    uint8_t au1_ForC;
+    for(au1_ForC = 0; au1_ForC < SETTING_MAX_NAME; au1_ForC++)
+    {
+        if(au1_ForC < len_name){
+            user_name[au1_ForC] = g_alphabet[alphabet_idx[au1_ForC]];
+        }else{
+            user_name[au1_ForC] = ' ';
+            alphabet_idx[au1_ForC] = 0;
+        }
+    }
+    user_name[SETTING_MAX_NAME] = '\0';
 }
