@@ -27,12 +27,6 @@
 #include "tree_object.h"
 #include "bird_object.h"
 
-#ifdef REAL_RAM
-	#define EXTERN
-#else
-	#define EXTERN extern
-#endif
-
 // scr_menu.cpp
 extern view_screen_t scr_menu;
 extern void scr_menu_handle(ak_msg_t* msg);

@@ -1,10 +1,36 @@
+//==================================================================================================
+//	File Name	: scr_ranking.cpp
+//	CPU Type	:
+//	Builder		:
+//	Coding		: V.Vu
+//	History		: 08/09/2026 New
+//	Outline		:
+//==================================================================================================
+//==================================================================================================
+//	#pragma section
+//==================================================================================================
+
+//==================================================================================================
+//	Local Compile Option
+//==================================================================================================
+
+//==================================================================================================
+//	Header File
+//==================================================================================================
 #include "scr_ranking.h"
 #include "scr_setting.h"
+//==================================================================================================
+//	Local define
+//==================================================================================================
+#define RANKING_MAX (5)
+//==================================================================================================
+//	Local define I/O
+//==================================================================================================
 
-#define RANKING_MAX 5
-
+//==================================================================================================
+//	Struct Template
+//==================================================================================================
 static void view_scr_ranking();
-
 view_dynamic_t dyn_view_ranking = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
@@ -19,47 +45,38 @@ view_screen_t scr_ranking = {
 
     .focus_item = 0,
 };
-
+/* Ranking structure */
 typedef struct
 {
     char name[SETTING_MAX_NAME+1];
     uint32_t score;
 } ranking_t;
+//==================================================================================================
+//	Local RAM
+//==================================================================================================
 
-static ranking_t g_ranking[RANKING_MAX] =
-{
-    {" ", 0},
-    {" ", 0},
-    {" ", 0},
-    {" ", 0},
-    {" ", 0},
-};
+//==================================================================================================
+//	Local ROM
+//==================================================================================================
+/* Default ranking table */
+static ranking_t g_ranking[RANKING_MAX];
+//==================================================================================================
+//	Local Function Prototype
+//==================================================================================================
 
-static void drawRanking(void);
-
-void view_scr_ranking() {
-    drawRanking();
-}
-
-void scr_ranking_handle(ak_msg_t *msg) {
-    switch (msg->sig) {
-    case AC_DISPLAY_INITIAL: {
-    } break;
-
-    case AC_DISPLAY_BUTON_MODE_PRESSED:
-    case AC_DISPLAY_BUTON_UP_PRESSED:
-    case AC_DISPLAY_BUTON_DOWN_PRESSED:
-    {
-        SCREEN_TRAN(scr_menu_handle, &scr_menu);
-        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-    } break;
-
-    default:
-        break;
-    }
-}
-
-static void drawRanking(void)
+//==================================================================================================
+//	Source Code
+//==================================================================================================
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Name    : view_scr_ranking
+//    Function: Render ranking in screen
+//    Argument: None
+//    Return  : None
+//    Created : V.Vu
+//    Change  : 
+//    Note    : 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void view_scr_ranking()
 {
     view_render.setTextSize(1);
     view_render.setTextColor(WHITE);
@@ -83,6 +100,41 @@ static void drawRanking(void)
         view_render.print(g_ranking[i].score);
     }
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Name    : scr_ranking_handle
+//    Function: Handle message send to ranking screen
+//    Argument: None
+//    Return  : None
+//    Created : V.Vu
+//    Change  : 
+//    Note    : 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void scr_ranking_handle(ak_msg_t *msg) {
+    switch (msg->sig) {
+    case AC_DISPLAY_INITIAL: {
+    } break;
+
+    case AC_DISPLAY_BUTON_MODE_PRESSED:
+    case AC_DISPLAY_BUTON_UP_PRESSED:
+    case AC_DISPLAY_BUTON_DOWN_PRESSED:
+    {
+        SCREEN_TRAN(scr_menu_handle, &scr_menu);
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    } break;
+
+    default:
+        break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Name    : udpate_high_score
+//    Function: Udpate highest score table
+//    Argument: uint32_t score: New score
+//    Return  : None
+//    Created : V.Vu
+//    Change  : 
+//    Note    : 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 void udpate_high_score(uint32_t score)
 {
     /* Draw ranking list */
@@ -101,6 +153,21 @@ void udpate_high_score(uint32_t score)
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Name    : get_highest_score
+//    Function: Get highest scrore
+//    Argument: None
+//    Return  : Highest score
+//    Created : V.Vu
+//    Change  : 
+//    Note    : 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 uint32_t get_highest_score(void){
     return g_ranking[0].score;
 }
+/* ************************************* End of File ******************************************** */
+
+
+
+
+

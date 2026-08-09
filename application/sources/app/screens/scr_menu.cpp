@@ -1,9 +1,28 @@
-// Define varaible
-#define REAL_RAM
-#include "screens.h"
-#undef REAL_RAM
-#include "scr_menu.h"
+//==================================================================================================
+//	File Name	: scr_menu
+//	CPU Type	: 
+//	Builder		:
+//	Coding		: V.Vu
+//	History		: 08/09/2026 New
+//	Outline		: Handle message and render objects in menu screen.
+//==================================================================================================
+//==================================================================================================
+//	#pragma section
+//==================================================================================================
 
+//==================================================================================================
+//	Local Compile Option
+//==================================================================================================
+
+//==================================================================================================
+//	Header File
+//==================================================================================================
+#include "screens.h"
+#include "scr_menu.h"
+//==================================================================================================
+//	Local define
+//==================================================================================================
+/* Screens */
 enum
 {
     EM_SCREEN_PLAY,
@@ -12,10 +31,14 @@ enum
     EM_SCREEN_EXIT,
     EM_SCREEN_NUM,
 };
+//==================================================================================================
+//	Local define I/O
+//==================================================================================================
 
+//==================================================================================================
+//	Struct Template
+//==================================================================================================
 static void view_scr_menu();
-static void draw_menu_icon(void);
-
 view_dynamic_t dyn_view_scr_menu = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
@@ -29,7 +52,13 @@ view_screen_t scr_menu = {
 
     .focus_item = 0,
 };
+//==================================================================================================
+//	Local RAM
+//==================================================================================================
 static uint8_t current_location;
+//==================================================================================================
+//	Local ROM
+//==================================================================================================
 static const uint8_t MENU_BOX_X[] = {10, 38, 68, 99};
 static const uint8_t MENU_BOX_W[] = {19, 20, 21, 20};
 static const uint8_t ICON_BITMAP_IDEX[] = {BITMAP_T_REX_STAND, BITMAP_GAME_SETTING_ICON, BITMAP_GAME_RANKING_ICON, BITMAP_GAME_EXIT_ICON};
@@ -40,23 +69,22 @@ static const char *menu_items_name[EM_SCREEN_NUM] = {
     "RANKING",    // item 3
     "EXIT",       // item 4
 };
-
-static void view_scr_menu()
-{
-    // Draw selected menu item name centered at Y=50
-    view_render.setTextSize(1);
-    view_render.setTextColor(WHITE);
-    const char* name = menu_items_name[current_location];
-    uint8_t name_len = strlen(name);
-    uint8_t name_x = 64 - (name_len * 6) / 2;
-    view_render.setCursor(name_x, 2);
-    view_render.print(name);
-    /* Draw line for seperate */
-    view_render.drawLine(0,15,128,15,WHITE);
-    /* Draw object */
-    draw_menu_icon();
-}
-
+//==================================================================================================
+//	Local Function Prototype
+//==================================================================================================
+static void draw_menu_icon(void);
+//==================================================================================================
+//	Source Code
+//==================================================================================================
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Name     : scr_menu_handle
+//	Function : Handle message send to menu screen
+//	Argument : ak_msg_t* msg: Message information
+//	Return   : None
+//	Created  : 13/07/2026 V.Vu
+//	Changed  : -
+//	Remarks  : -
+////////////////////////////////////////////////////////////////////////////////////////////////////
 void scr_menu_handle(ak_msg_t* msg)
 {
     switch (msg->sig)
@@ -118,6 +146,39 @@ void scr_menu_handle(ak_msg_t* msg)
         break;
     }
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Name     : view_scr_menu
+//	Function : Draw objects in menu screen
+//	Argument : None
+//	Return   : None
+//	Created  : 13/07/2026 V.Vu
+//	Changed  : -
+//	Remarks  : -
+////////////////////////////////////////////////////////////////////////////////////////////////////
+static void view_scr_menu()
+{
+    // Draw selected menu item name centered at Y=50
+    view_render.setTextSize(1);
+    view_render.setTextColor(WHITE);
+    const char* name = menu_items_name[current_location];
+    uint8_t name_len = strlen(name);
+    uint8_t name_x = 64 - (name_len * 6) / 2;
+    view_render.setCursor(name_x, 2);
+    view_render.print(name);
+    /* Draw line for seperate */
+    view_render.drawLine(0,15,128,15,WHITE);
+    /* Draw object */
+    draw_menu_icon();
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Name     : draw_menu_icon
+//	Function : Draw menu icon
+//	Argument : None
+//	Return   : None
+//	Created  : 13/07/2026 V.Vu
+//	Changed  : -
+//	Remarks  : -
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void draw_menu_icon(void)
 {
   // Draw the 4 cards horizontally
@@ -145,3 +206,4 @@ static void draw_menu_icon(void)
         (i == current_location)?BLACK:WHITE);
   }
 }
+/* ************************************* End of File ******************************************** */

@@ -1,6 +1,6 @@
 //==================================================================================================
 //
-//	File Name	:	led.c
+//	File Name	:	scr_play.c
 //	CPU Type	:
 //	IDE			:
 //	Customer
@@ -52,12 +52,19 @@ view_screen_t scr_play = {
 
     .focus_item = 0,
 };
-game_object_t over_check_object;
-score_t score_object;
+/* Score */
+typedef struct{
+	uint32_t skip_count;
+	uint32_t threshold;
+	uint32_t current_score;
+	uint32_t high_score;
+	uint8_t animation_timer;
+}score_t;
 //==================================================================================================
 //	Local RAM
 //==================================================================================================
-
+game_object_t over_check_object;
+score_t score_object;
 //==================================================================================================
 //	Local ROM
 //==================================================================================================
@@ -181,7 +188,18 @@ void scr_play_handle_signal(ak_msg_t* msg)
         break;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Name     : object_collision
+//	Function : Check collision between two object
+//	Argument : const game_object_t *obj1: Information of object 1
+//             const bitmap_info_t *bmp1: Bitmap of object 1
+//             const game_object_t *obj2: Information of object 2
+//             const bitmap_info_t *bmp2: Bitmap of object 2
+//	Return   : None
+//	Created  : 13/07/2026 V.Vu
+//	Changed  : -
+//	Remarks  : -
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static bool object_collision(const game_object_t *obj1,
                              const bitmap_info_t *bmp1,
                              const game_object_t *obj2,
@@ -197,6 +215,15 @@ static bool object_collision(const game_object_t *obj1,
               (obj1->y + bmp1->height <= obj2->y) ||
               (obj2->y + bmp2->height <= obj1->y) );
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Name     : tiny_rex_collision_check
+//	Function : Check collistion between tiny rex with other objects
+//	Argument : None
+//	Return   : None
+//	Created  : 13/07/2026 V.Vu
+//	Changed  : -
+//	Remarks  : -
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static bool tiny_rex_collision_check(void)
 {
 
@@ -226,6 +253,15 @@ static bool tiny_rex_collision_check(void)
     }
     return (rex_tree_collistion || rex_bird_collistion)?true:false;
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Name     : draw_over_icon
+//	Function : Draw over icon when collistion detected
+//	Argument : None
+//	Return   : None
+//	Created  : 13/07/2026 V.Vu
+//	Changed  : -
+//	Remarks  : -
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void draw_over_icon(void)
 {
     if(over_check_object.visible == BLACK)
@@ -247,6 +283,15 @@ static void draw_over_icon(void)
         g_bitmap_table[over_check_object.action_image].height,
         WHITE);
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Name     : draw_score
+//	Function : Draw current and highest score
+//	Argument : None
+//	Return   : None
+//	Created  : 13/07/2026 V.Vu
+//	Changed  : -
+//	Remarks  : -
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void draw_score(void)
 {
     char str[5];
@@ -277,6 +322,15 @@ static void draw_score(void)
         view_render.print(str);
     }
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Name     : update_score
+//	Function : Update score and play sound if high score exceeded
+//	Argument : None
+//	Return   : None
+//	Created  : 13/07/2026 V.Vu
+//	Changed  : -
+//	Remarks  : -
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void update_score(void)
 {
     /* Update score */
@@ -298,6 +352,15 @@ static void update_score(void)
         BUZZER_PlaySound(BUZZER_SOUND_HIGHSCORE);
     }
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Name     : reset
+//	Function : Reset overcheck object and score to default value
+//	Argument : None
+//	Return   : None
+//	Created  : 13/07/2026 V.Vu
+//	Changed  : -
+//	Remarks  : -
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void reset(void)
 {
     /* Reset over check object */
