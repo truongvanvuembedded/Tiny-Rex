@@ -1,5 +1,5 @@
 #include "scr_setting.h"
-
+#include "scr_ranking.h"
 /*==================================================================================================
  * Local Define
  *================================================================================================*/
@@ -86,7 +86,7 @@ void scr_setting_handle(ak_msg_t *msg)
 {
     switch (msg->sig)
     {
-        case AC_DISPLAY_INITIAL:
+        case SCREEN_ENTRY:
         {
             change_name = false;
         }
