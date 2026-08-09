@@ -19,10 +19,11 @@
 //==================================================================================================
 #include "scr_ranking.h"
 #include "scr_setting.h"
+#include "app_eeprom.h"
 //==================================================================================================
 //	Local define
 //==================================================================================================
-#define RANKING_MAX (5)
+
 //==================================================================================================
 //	Local define I/O
 //==================================================================================================
@@ -45,12 +46,6 @@ view_screen_t scr_ranking = {
 
     .focus_item = 0,
 };
-/* Ranking structure */
-typedef struct
-{
-    char name[SETTING_MAX_NAME+1];
-    uint32_t score;
-} ranking_t;
 //==================================================================================================
 //	Local RAM
 //==================================================================================================
@@ -60,6 +55,7 @@ typedef struct
 //==================================================================================================
 /* Default ranking table */
 static ranking_t g_ranking[RANKING_MAX];
+static bool ranking_updated;
 //==================================================================================================
 //	Local Function Prototype
 //==================================================================================================
@@ -111,7 +107,10 @@ void view_scr_ranking()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void scr_ranking_handle(ak_msg_t *msg) {
     switch (msg->sig) {
-    case AC_DISPLAY_INITIAL: {
+    case SCREEN_ENTRY: {
+        if(ranking_updated == false){
+            ranking_updated = tinyRex_game_score_read((eeprom_ranking_t*)g_ranking);
+        }
     } break;
 
     case AC_DISPLAY_BUTON_MODE_PRESSED:
@@ -135,24 +134,19 @@ void scr_ranking_handle(ak_msg_t *msg) {
 //    Change  : 
 //    Note    : 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void udpate_high_score(uint32_t score)
+extern void udpate_high_score(ranking_t* data)
 {
-    char name[SETTING_MAX_NAME];
-    if(!get_current_user_name(name, SETTING_MAX_NAME)){
-        return;
-    }
     /* Draw ranking list */
     for (int8_t i = 0; i<RANKING_MAX ; i++)
     {
-        if(score >= g_ranking[i].score)
+        if(data->score >= g_ranking[i].score)
         {
             for (int8_t y = RANKING_MAX-1; y>i ; y--)
             {
-                memcpy(g_ranking[y].name, g_ranking[y-1].name, SETTING_MAX_NAME);
-                g_ranking[y].score = g_ranking[y-1].score;
+                g_ranking[y] = g_ranking[y-1];
             }
-            memcpy(g_ranking[i].name, &name[0], SETTING_MAX_NAME);
-            g_ranking[i].score = score;
+            g_ranking[i] = *data;
+            tinyRex_game_score_write((eeprom_ranking_t*)g_ranking);
             return;
         }
     }
@@ -167,6 +161,9 @@ void udpate_high_score(uint32_t score)
 //    Note    : 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 uint32_t get_highest_score(void){
+    if(ranking_updated == false){
+        ranking_updated = tinyRex_game_score_read((eeprom_ranking_t*)g_ranking);
+    }
     return g_ranking[0].score;
 }
 /* ************************************* End of File ******************************************** */
