@@ -1,14 +1,10 @@
 # Tiny-Rex - Game built on AK Embedded Base Kit
 
-<center><img width="3353" height="1890" alt="CODING GAME ZOMWAR" src="resources/images/screens/banner_game_zomwar.gif" />
-</center>
-
-<hr>
 
 ## Gameplay Demo
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/1f219060-ba05-4864-b85f-053c3afea595" controls width="480"></video>
+  <video src="resource/playgame.mp4" controls width="480"></video>
 </div>
 
 ## Documentation
@@ -21,20 +17,35 @@
 | [docs/03-design-sequence-object.md](docs/03-design-sequence-object.md) | Runtime sequence diagrams for gameplay objects: Gunner, Bullet, Zombie, Car, Bang, Tombstone, and Border. |
 | [docs/04-design-sequence-runtime.md](docs/04-design-sequence-runtime.md) | Runtime signal-processing flow for button input, AK task messages, timers, game-loop ticks, object updates, and Mermaid sequence diagrams. |
 
-## Introduction
+## Objects in the Game:
 
-### Hardware
-- This kit integrates 1.54" Oled LCD, 3 push buttons, and 1 buzzer, which would be sufficient to create a small video game with an event driven paradigm.
-- It also includes RS485, Qwiic Connect System, and Grove Ecosystems, suitable for prototyping other practical applications in embedded systems.
+| Bitmap | Object Name | Description |
+| :---: | :--- |:--- |
+| <img src="resource/gif/tiny_rex_run.gif" width="60" height="61"/> | **Tiny-Rex** | The player character. The Tiny-Rex can move vertically by jumping or ducking to avoid obstacles. The player controls the Tiny-Rex using the **[Up]** **[Down]** and **[Mode]** buttons. |
+| <img src="resource/gif/bird.gif" width="60" height="55"/> | **Bird** | A flying obstacle that moves from the right side of the screen toward the Tiny-Rex. The player must duck or avoid the Bird to prevent a collision. |
+| <img src="resource/gif/one_tree.gif" width="30" height="60"/> | **Tree** | A ground obstacle that moves from the right side of the screen toward the Tiny-Rex. The player must jump over the Tree to avoid a collision. |
+| <img src="resource/images/object/line_ground.png" width="60" height="5"/> | **Line** | The ground line of the game. It continuously moves from right to left to create the scrolling background effect while the Tiny-Rex is running. |
 
-[<img src="hardware/images/ak-embedded-base-kit-version-3.jpg" width="480"/>](<https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu>)
+# Introduction
 
-[AK base kit's schematic](/hardware/schematic/schematic-ak-embedded-base-kit-version-3.pdf)
+## Hardware
 
-[<img src="hardware/images/board-view-top.png" width="480"/>](<https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu>)
+- Integrates a 1.54" OLED display, 3 push buttons, and 1 buzzer, sufficient to create a small video game with an event-driven paradigm.
+- Includes RS485, Qwiic Connect System, and Grove Ecosystems, suitable for prototyping other practical applications in embedded systems.
 
-[<img src="hardware/images/board-view-bottom.png" width="480"/>](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu)
+<p align="center">
+  <a href="https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu">
+    <img src="hardware/images/ak-embedded-base-kit-version-3.jpg" width="30%" alt="AK Embedded Base Kit Version 3"/>
+  </a>
+  <a href="https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu">
+    <img src="hardware/images/board-view-top.png" width="30%" alt="Board Top View"/>
+  </a>
+  <a href="https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu">
+    <img src="hardware/images/board-view-bottom.png" width="30%" alt="Board Bottom View"/>
+  </a>
+</p>
 
+**Schematic:** [AK Base Kit Schematic](hardware/schematic/schematic-ak-embedded-base-kit-version-3.pdf)
 ## Memory map
 
 AK base kit uses the following memory map to run its application code
@@ -54,7 +65,7 @@ ak_flash /dev/ttyUSB0 Tiny-Rex-application.bin 0x08003000
 
 To ensure a consistent and reproducible build environment, the project is developed using a Docker-based toolchain setup instead of local installation.
 
-### Toolchain in Docker
+## Toolchain in Docker
 
 The Docker image includes:
 
@@ -85,17 +96,17 @@ You can also use a VSCode Dev Container to build and work on this project withou
 Open pallet (Ctrl+Shift+P) -> dev Containers: Reopen in Container
 ```
 
-# Build project
+## Build project
 ```bash
 make
 ```
 
-# Flash firmware via st-link
+## Flash firmware via st-link
 ```bash
 make flash
 ```
 
-# Flash firmware via ak-flash
+## Flash firmware via ak-flash
 ```bash
 make flash dev=dev/ttyUSB0
 ```
