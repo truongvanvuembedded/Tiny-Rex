@@ -30,6 +30,8 @@ static int8_t alphabet_idx[SETTING_MAX_NAME];
 static bool change_name;
 /* Sound */
 static bool mute_enable = true;
+/* Character blink */
+static bool animation_character_blink;
 
 static const setting_item_info_t setting_item_table[SETTING_ITEM_MAX] =
 {
@@ -142,6 +144,7 @@ void scr_setting_handle(ak_msg_t *msg)
             if (setting_item == SETTING_ITEM_EXIT)
             {
                 SCREEN_TRAN(scr_menu_handle, &scr_menu);
+                animation_character_blink = false;
             }
             else if (setting_item == SETTING_ITEM_NAME)
             {
@@ -170,10 +173,23 @@ void scr_setting_handle(ak_msg_t *msg)
 
         case AC_DISPLAY_BUTON_MODE_LONG_PRESS:
         {
-            if (setting_item == SETTING_ITEM_NAME)
+            if (setting_item == SETTING_ITEM_NAME && len_name)
             {
                 change_name = !change_name;
+                if(change_name){
+                    timer_set(AC_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME, AC_DISPLAY_SETTITNG_ANIMCATION_UPDATE_INTERVAL, TIMER_PERIODIC);
+                    animation_character_blink = true;
+                }else{
+                    timer_remove_attr(AC_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME);
+                    animation_character_blink = false;
+                }
             }
+        }
+        break;
+
+        case EVENT_DISPLAY_SETTING_NAME:
+        {
+            animation_character_blink = !animation_character_blink;
         }
         break;
 
@@ -267,6 +283,11 @@ static void udpate_user_name(void)
         }
     }
     current_user_name[SETTING_MAX_NAME] = '\0';
+    /* Udpate animation blink character */
+    if(animation_character_blink){
+        current_user_name[curr_name_idx] = ' ';
+    }
+
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //    Name    : get_current_user_name
@@ -279,9 +300,9 @@ static void udpate_user_name(void)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 bool get_current_user_name(char* user_name, uint8_t len)
 {
-	if(!user_name || len < SETTING_MAX_NAME || !len_name){
-		return false;
-	}
-	memcpy(user_name, &current_user_name[0], SETTING_MAX_NAME);
-	return true;
+    if(!user_name || len < SETTING_MAX_NAME || !len_name){
+        return false;
+    }
+    memcpy(user_name, &current_user_name[0], SETTING_MAX_NAME);
+    return true;
 }
