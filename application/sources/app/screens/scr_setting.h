@@ -2,7 +2,6 @@
 #define __SCR_SETTING_H__
 
 #include "screens.h"
-
 #define SETTING_MAX_NAME        (6)
-extern char user_name[SETTING_MAX_NAME+1];
+bool get_current_user_name(char* user_name, uint8_t len);
 #endif //__SCR_SETTING_H__

@@ -23,7 +23,7 @@ typedef struct
  *================================================================================================*/
 static int8_t setting_item;
 /* Name setting */
-char user_name[SETTING_MAX_NAME+1];
+static char current_user_name[SETTING_MAX_NAME+1];
 static uint8_t len_name;
 static uint8_t curr_name_idx;
 static int8_t alphabet_idx[SETTING_MAX_NAME];
@@ -73,6 +73,15 @@ view_screen_t scr_setting =
 /*==================================================================================================
  * Function
  *================================================================================================*/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Name    : scr_setting_handle
+//    Function: Handle message for screen setting
+//    Argument: ak_msg_t *msg: Message information
+//    Return  : None
+//    Created : V.Vu
+//    Change  : 
+//    Note    : 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 void scr_setting_handle(ak_msg_t *msg)
 {
     switch (msg->sig)
@@ -172,10 +181,15 @@ void scr_setting_handle(ak_msg_t *msg)
         break;
     }
 }
-
-/*==================================================================================================
- * View
- *================================================================================================*/
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Name    : view_scr_setting
+//    Function: Draw object in setting screen
+//    Argument: None
+//    Return  : None
+//    Created : V.Vu
+//    Change  : 
+//    Note    : 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void view_scr_setting(void)
 {
     view_render.setTextSize(1);
@@ -208,7 +222,7 @@ static void view_scr_setting(void)
         if (i == SETTING_ITEM_NAME)
         {
             view_render.print(": ");
-            view_render.print(user_name);
+            view_render.print(current_user_name);
             //view_render.drawLine()
         }
         else if (i == SETTING_ITEM_LEN)
@@ -231,17 +245,43 @@ static void view_scr_setting(void)
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Name    : udpate_user_name
+//    Function: Update current user name when user enter or delete
+//    Argument: None
+//    Return  : None
+//    Created : V.Vu
+//    Change  : 
+//    Note    : 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 static void udpate_user_name(void)
 {
     uint8_t au1_ForC;
     for(au1_ForC = 0; au1_ForC < SETTING_MAX_NAME; au1_ForC++)
     {
         if(au1_ForC < len_name){
-            user_name[au1_ForC] = g_alphabet[alphabet_idx[au1_ForC]];
+            current_user_name[au1_ForC] = g_alphabet[alphabet_idx[au1_ForC]];
         }else{
-            user_name[au1_ForC] = ' ';
+            current_user_name[au1_ForC] = ' ';
             alphabet_idx[au1_ForC] = 0;
         }
     }
-    user_name[SETTING_MAX_NAME] = '\0';
+    current_user_name[SETTING_MAX_NAME] = '\0';
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Name    : get_current_user_name
+//    Function: Get current user name
+//    Argument: None
+//    Return  : None
+//    Created : V.Vu
+//    Change  : 
+//    Note    : Only get user name correct when name updated before game play.
+////////////////////////////////////////////////////////////////////////////////////////////////////
+bool get_current_user_name(char* user_name, uint8_t len)
+{
+	if(!user_name || len < SETTING_MAX_NAME || !len_name){
+		return false;
+	}
+	memcpy(user_name, &current_user_name[0], SETTING_MAX_NAME);
+	return true;
 }

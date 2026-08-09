@@ -137,6 +137,10 @@ void scr_ranking_handle(ak_msg_t *msg) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void udpate_high_score(uint32_t score)
 {
+    char name[SETTING_MAX_NAME];
+    if(!get_current_user_name(name, SETTING_MAX_NAME)){
+        return;
+    }
     /* Draw ranking list */
     for (int8_t i = 0; i<RANKING_MAX ; i++)
     {
@@ -147,7 +151,7 @@ void udpate_high_score(uint32_t score)
                 memcpy(g_ranking[y].name, g_ranking[y-1].name, SETTING_MAX_NAME);
                 g_ranking[y].score = g_ranking[y-1].score;
             }
-            memcpy(g_ranking[i].name, user_name, SETTING_MAX_NAME);
+            memcpy(g_ranking[i].name, &name[0], SETTING_MAX_NAME);
             g_ranking[i].score = score;
             return;
         }
