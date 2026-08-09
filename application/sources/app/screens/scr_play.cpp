@@ -247,13 +247,13 @@ static bool tiny_rex_collision_check(void)
         over_check_object.x = (WIDTH-g_bitmap_table[over_check_object.action_image].width) / 2;
         over_check_object.y = (HEIGHT-g_bitmap_table[over_check_object.action_image].height) / 2;;
         timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_PLAYING_UPDATE);
-        BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
         /* Save new score */
         if(get_current_user_name(new_data.name, SETTING_MAX_NAME)){
             new_data.score = score_object.current_score;
             udpate_high_score(&new_data);
             score_object.high_score = get_highest_score();
         }
+        BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
     }
     return (rex_tree_collistion || rex_bird_collistion)?true:false;
 }

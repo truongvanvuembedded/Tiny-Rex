@@ -134,7 +134,7 @@ void scr_ranking_handle(ak_msg_t *msg) {
 //    Change  : 
 //    Note    : 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-extern void udpate_high_score(ranking_t* data)
+void udpate_high_score(ranking_t* data)
 {
     /* Draw ranking list */
     for (int8_t i = 0; i<RANKING_MAX ; i++)
