@@ -12,23 +12,23 @@
 | File | Description |
 |---|---|
 | [README.md](README.md) | Main project overview, hardware information, gameplay rules, and object descriptions. |
-| [docs/01-guide-getting-started.md](docs/01-guide-getting-started.md) | Game programming getting started guide. |
-| [docs/02-guide-coding-rules.md](docs/02-guide-coding-rules.md) | Some rules for coding game. |
-| [docs/03-design-sequence-object.md](docs/03-design-sequence-object.md) | Runtime sequence diagrams for gameplay objects: Gunner, Bullet, Zombie, Car, Bang, Tombstone, and Border. |
-| [docs/04-design-sequence-runtime.md](docs/04-design-sequence-runtime.md) | Runtime signal-processing flow for button input, AK task messages, timers, game-loop ticks, object updates, and Mermaid sequence diagrams. |
+| [resource/guide/01-guide-getting-started.md](resource/guide/01-guide-getting-started.md) | Game programming getting started guide. |
+| [resource/guide/02-guide-coding-rules.md](resource/guide/02-guide-coding-rules.md) | Some rules for coding game. |
+| [resource/guide/03-design-sequence-object.md](resource/guide/03-design-sequence-object.md) | Runtime sequence diagrams for gameplay objects: T-Rex, Obstacle and Horizon |
+| [resource/guide/04-design-sequence-runtime.md](resource/guide/04-design-sequence-runtime.md) | Runtime signal-processing flow for button input, AK task messages, timers, game-loop ticks, object updates, and Mermaid sequence diagrams. |
+| [esource/guide/06-guide-debug.md](resource/guide/06-guide-debug.md) | Guide for instruction debug kit using st-link with vscode + ArmCortex_Debug (Externsion) |
 
-## Objects in the Game:
 
-| Bitmap | Object Name | Description |
-| :---: | :--- |:--- |
-| <img src="resource/gif/tiny_rex_run.gif" width="60" height="61"/> | **Tiny-Rex** | The player character. The Tiny-Rex can move vertically by jumping or ducking to avoid obstacles. The player controls the Tiny-Rex using the **[Up]** **[Down]** and **[Mode]** buttons. |
-| <img src="resource/gif/bird.gif" width="60" height="55"/> | **Bird** | A flying obstacle that moves from the right side of the screen toward the Tiny-Rex. The player must duck or avoid the Bird to prevent a collision. |
-| <img src="resource/gif/one_tree.gif" width="30" height="60"/> | **Tree** | A ground obstacle that moves from the right side of the screen toward the Tiny-Rex. The player must jump over the Tree to avoid a collision. |
-| <img src="resource/images/object/line_ground.png" width="60" height="5"/> | **Line** | The ground line of the game. It continuously moves from right to left to create the scrolling background effect while the Tiny-Rex is running. |
+## Introduction
 
-# Introduction
+T-Rex game is an action survival game built on top of the AK Embedded Base Kit hands-on platform for embedded programming enthusiasts to explore event-driven design in depth. While building and playing T-Rex, you put the following core concepts of modern embedded engineering into practice:
 
-## Hardware
+- **System design:** Modelling complex logic flows with UML.
+- **Process management:** Coordinating cooperative Tasks and scheduling them efficiently.
+- **Communication:** Using Signals, Timers, and Messages to react in real time.
+- **Control logic:** Building robust state machines for the player with obstacle in game.
+
+### I. Hardware
 
 - Integrates a 1.54" OLED display, 3 push buttons, and 1 buzzer, sufficient to create a small video game with an event-driven paradigm.
 - Includes RS485, Qwiic Connect System, and Grove Ecosystems, suitable for prototyping other practical applications in embedded systems.
@@ -37,6 +37,41 @@
   <a href="https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu">
     <img src="hardware/images/ak-embedded-base-kit-version-3.jpg" width="30%" alt="AK Embedded Base Kit Version 3"/>
   </a>
+</p>
+
+**Schematic:** [AK Base Kit Schematic](hardware/schematic/schematic-ak-embedded-base-kit-version-3.pdf)
+
+**MCU Overview:**
+
+```text
+SoC Name : STM32L151CBT6
+RAM      : 16 KB
+
+Flash Partitions Layout
+----------------------
+[ 0x08000000 - 0x08001FFF ] : Bootloader Partition (8 KB)
+=> AK Bootloader
+
+[ 0x08002000 - 0x08002FFF ] : BSF Shared Partition (4 KB)
+=> Used for data sharing between Bootloader and Application
+
+[ 0x08003000 - 0x0801FFFF ] : Application Partition (116 KB)
+=> T-Rex firmware
+```
+
+**MCU Naming Convention:**
+
+| Part | Meaning |
+|---|---|
+| `STM32` | STMicroelectronics 32-bit MCU family. |
+| `L` | Low-power series. |
+| `151` | STM32L151 product line. |
+| `C` | 48-pin package. |
+| `B` | 128 KB Flash memory. |
+| `T` | LQFP package. |
+| `6` | Industrial temperature grade. |
+
+<p align="center">
   <a href="https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu">
     <img src="hardware/images/board-view-top.png" width="30%" alt="Board Top View"/>
   </a>
@@ -45,312 +80,161 @@
   </a>
 </p>
 
-**Schematic:** [AK Base Kit Schematic](hardware/schematic/schematic-ak-embedded-base-kit-version-3.pdf)
-## Memory map
+### II. Game Description and Objects
+The following section describes the gameplay and core mechanics of **"Zomwar"**. It serves as a reference for ongoing game design and firmware development.
 
-AK base kit uses the following memory map to run its application code
+<table align="center">
+  <tr>
+    <td align="center"><img src="resource/gif/menu_game.gif" alt="Game menu" width="480"/></td>
+  </tr>
+</table>
+<p align="center"><strong><em>Figure 3:</em></strong> Menu screen</p>
 
-- [ 0x08000000 ] : **Boot** [[Tiny-Rex-boot.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/Tiny-Rex-boot.bin)
-- [ 0x08002000 ] : **BSF** [ Memory for data sharing between Boot and Application ]
-- [ 0x08003000 ] : **Application** [[Tiny-Rex-application.bin]](https://github.com/ak-embedded-software/ak-base-kit-stm32l151/blob/main/hardware/bin/Tiny-Rex-application.bin)                                             |
+The game opens on the **Main Menu**, which offers the following options:
 
->**Note:** After loading the boot and application firmware, you can use [AK - Flash](https://github.com/ak-embedded-software/ak-flash), a CLI to work with the AK base kit, to load the application directly through the kit's USB port. Once installed, the following command will flash user's defined code into the kit's application's memory region.
+- **Play:** Start a new match.
+- **Setting:** Configure name for save high score such as sound and character.
+- **Rank:** View the top 5 player with highest score.
+- **Exit:** Leave the menu and return to the idle screen.
 
-```sh
-ak_flash /dev/ttyUSB0 Tiny-Rex-application.bin 0x08003000
+<table align="center">
+  <tr>
+    <td align="center"><img src="resource/images/play_screen/Playing.png" alt="Gameplay" width="600"/></td>
+  </tr>
+</table>
+<p align="center"><strong><em>Figure 4:</em></strong> Gameplay screen</p>
+
+#### Objects in the Game:
+
+| Bitmap | Object Name | Description |
+| :---: | :--- |:--- |
+| <img src="resource/gif/tiny_rex_run.gif" width="60" height="61"/> | **Tiny-Rex** | The player character. The Tiny-Rex can move vertically by jumping or ducking to avoid obstacles. The player controls the Tiny-Rex using the **[Up]** **[Down]** and **[Mode]** buttons. |
+| <img src="resource/gif/bird.gif" width="60" height="55"/> | **Bird** | A flying obstacle that moves from the right side of the screen toward the Tiny-Rex. The player must duck or avoid the Bird to prevent a collision. |
+| <img src="resource/gif/one_tree.gif" width="30" height="60"/> | **Tree** | A ground obstacle that moves from the right side of the screen toward the Tiny-Rex. The player must jump over the Tree to avoid a collision. |
+| <img src="resource/images/object/line_ground.png" width="60" height="5"/> | **Line** | The ground line of the game. It continuously moves from right to left to create the scrolling background effect while the Tiny-Rex is running. |
+
+### III. How to Play
+
+- You control the **Tiny-Rex**. Use the **[Up]**, **[Down]**, and **[Mode]** buttons to avoid obstacles.
+- Press the **[Up]** button to jump over **Trees**.
+- Press the **[Down]** button while jumping to make the Tiny-Rex fall faster.
+- Press the **[Mode]** button to duck and avoid **Birds**.
+- **Trees** and **Birds** appear randomly from the right side of the screen and move toward the Tiny-Rex.
+- Avoid collisions with obstacles to keep the game running.
+- The game continues indefinitely until the Tiny-Rex collides with an obstacle.
+- The game speed increases as the score reaches predefined thresholds, making the game progressively more challenging.
+
+#### Game Mechanics:
+
+- **Scoring:** The score increases continuously until Game Over, based on the distance traveled by the Tiny-Rex.
+- **Difficulty:** Every **100 points (meters)**, the current score blinks and a sound is played to celebrate the player's progress. The game then increases the speed and adjusts the distance between obstacles.
+- **Animation:** To keep the gameplay lively, the Tiny-Rex and obstacles use animation frames to create movement.
+- **Game Over:** When the Tiny-Rex collides with an obstacle, the game state changes to **Game Over** and waits for the player to press any button before returning to the **Waiting** screen for restart new match.
+
+### IV. Basic Game Sequence Logic
+
+```mermaid
+sequenceDiagram
+    autonumber
+
+    participant Act as Player / Input
+    participant Scr as Game Screen
+    participant Rex as T-Rex
+    participant Obs as Obstacle
+    participant Hor as Horizon
+
+    %% ===== Idle Screen =====
+    rect rgb(46, 11, 3)
+		    Note over Scr: IDLE
+        Act->>Scr: POWER_ON / RESET
+        activate Scr
+        Note right of Scr: State = IDLE <br/> Screen = IDLE <br/> Arm timer for switch to WAITING
+        deactivate Scr
+    end
+
+    %% ===== Waiting Screen =====
+    rect rgb(56, 50, 4)
+		    Note over Scr: WAITING
+        Act->>Scr: ANY BUTTON / TIME OUT
+        activate Scr
+        Note right of Scr: State = WAITING <br/> Screen = MENU
+        deactivate Scr
+
+		    %% ===== Swich screen base on button input =====
+        Act->>Scr: SETTING
+        activate Scr
+        Note right of Scr: Screen = SETTING
+        deactivate Scr
+        Act->>Scr: RANKING
+        activate Scr
+        Note right of Scr: Screen = RANKING
+        deactivate Scr
+        Act->>Scr: EXIT
+        activate Scr
+        Note right of Scr: Screen = IDLE
+        deactivate Scr
+    end
+
+    %% ===== Playing Screen =====
+    rect rgb(12, 40, 117)
+		    Note over Scr: PLAYING
+        Act->>Scr: START
+        activate Scr
+        Note right of Scr: State = PLAYING <br/> Screen = PLAYING <br/> Arm timer for udpate screen
+        deactivate Scr
+
+        Scr->>Rex: TINY_REX_PLAY_EVENT
+        Scr->>Obs: OBSTACLE_PLAY_EVENT
+        Scr->>Hor: HORIZON_PLAY_EVENT
+
+        loop UPDATE SCREEN
+            Scr->>Rex: TINY_REX_MOVE_EVENT
+            Scr->>Obs: OBSTACLE_MOVE_EVENT
+            Scr->>Hor: HORIZON_MOVE_EVENT
+            Scr->>Obs: COLLISION_CHECK_EVENT
+            alt Collision detected
+                Obs->>Scr: GAME_OVER_EVENT
+				        activate Scr
+                Note right of Scr: State = Over <br/> Screen: Over <br/> Save score <br/> Delete udpate screen timer
+			          deactivate Scr
+            end
+            Note over Scr: Increase score
+            alt Score exceed threshold
+              Note over Scr: Increase new score threshold
+	            Scr->>Rex: TINY_REX_INC_SPEED_EVENT
+	            Scr->>Obs: OBSTACLE_INC_SPEED_EVENT
+			        Scr->>Hor: HORIZON_INC_SPEED_EVENT
+            end
+        end
+        
+		    %% ===== Button handler =====
+        Act->>Scr: BUTTON_UP_PRESS
+	        activate Scr
+	        Scr->>Rex: TINY_REX_JUMP
+	        deactivate Scr
+        Act->>Scr: BUTTON_DOWN_PRESS
+	        activate Scr
+	        Scr->>Rex: TINY_REX_FALL
+	        deactivate Scr
+        Act->>Scr: BUTTON_MOVE_PRESS
+	        activate Scr
+	        Scr->>Rex: TINY_REX_DUCK
+	        deactivate Scr
+    end
+
+    %% ===== GameOver Screen =====
+    rect rgb(11, 95, 66)
+		    Note over Scr: OVER
+        Act->>Scr: ANY_BUTTON
+        activate Scr
+        Note right of Scr: State = WAITING <br/> Screen = WAITING
+        deactivate Scr
+    end
 ```
-
-
-## Development Environment
-
-To ensure a consistent and reproducible build environment, the project is developed using a Docker-based toolchain setup instead of local installation.
-
-## Toolchain in Docker
-
-The Docker image includes:
-
-- GCC ARM Embedded toolchain (arm-none-eabi-gcc)
-- GDB multiarch debugger
-- Build tools (make)
-- Git for source control
-- Ak-Flash utility
-
-## Build Workflow
-
-```bash
-# Build Docker image
-docker build -t tiny-rex-game .
-
-# Run container with mounted source code
-docker run -it --rm \
-    -v $(pwd):/workspace/source \
-    --privileged \
-    -w /workspace/source \
-    tiny-rex-game
-```
-
-## Using Dev Container
-You can also use a VSCode Dev Container to build and work on this project without installing toolchains locally.
-- Build and run container
-```bash
-Open pallet (Ctrl+Shift+P) -> dev Containers: Reopen in Container
-```
-
-## Build project
-```bash
-make
-```
-
-## Flash firmware via st-link
-```bash
-make flash
-```
-
-## Flash firmware via ak-flash
-```bash
-make flash dev=dev/ttyUSB0
-```
-
-## UI Design
+### IV. UI Design
 
 - [Lopaka.app](https://lopaka.app/) to create and preview screen layouts.
 - [image2cpp](https://javl.github.io/image2cpp/) to scale the image to the exact display size and export it as a bitmap array for the embedded firmware.
-
-## Debug flow
-For a step-by-step debugging guide, see:
-[Debug Guideline](./debug-guiline.md)
-## Basic Game Sequence Logic
-
-```mermaid
-sequenceDiagram
-    autonumber
-
-    participant Act as Player/<br/>Msg Pool
-    participant Scr as Game Screen
-    participant Rex as Tiny-Rex Object
-    participant Bird as Bird Object
-    participant Tree as Tree Object
-    participant Line as Line Object
-
-    %%========================
-    %% Reset Game
-    %%========================
-    rect rgb(46, 11, 3)
-    Act->>Scr: RESET_EVENT
-    activate Scr
-    Note right of Scr: game_state = IDLE_STATE<br/>current_screen = MENU_SCREEN
-    deactivate Scr
-
-    Note over Scr: IDLE_STATE
-    Scr->>Rex: TINY_REX_SETUP_EVENT
-    Scr->>Bird: BIRD_SETUP_EVENT
-    Scr->>Tree: TREE_SETUP_EVENT
-    Scr->>Line: LINE_SETUP_EVENT
-
-    loop Every GAME_TICK (50 ms)
-        Scr->>Rex: TINY_REX_UPDATE_EVENT
-        Scr->>Bird: BIRD_UPDATE_EVENT
-        Scr->>Tree: TREE_UPDATE_EVENT
-    end
-    end
-
-    %%========================
-    %% Start Game
-    %%========================
-    rect rgb(12, 40, 117)
-    Act->>Scr: PLAY_EVENT
-    activate Scr
-    Note right of Scr: game_state = PLAY_STATE<br/>current_screen = PLAY_SCREEN
-    deactivate Scr
-
-    Note over Scr: PLAY_STATE
-    Scr->>Rex: TINY_REX_PLAY_EVENT
-    Scr->>Bird: BIRD_PLAY_EVENT
-    Scr->>Tree: TREE_PLAY_EVENT
-    Scr->>Line: LINE_PLAY_EVENT
-
-    Note over Scr: Create timer 50ms for update
-
-    loop Every GAME_TICK (50 ms)
-
-        Scr->>Rex: TINY_REX_UPDATE_EVENT
-        Scr->>Bird: BIRD_UPDATE_EVENT
-        Scr->>Tree: TREE_UPDATE_EVENT
-        Scr->>Line: LINE_UPDATE_EVENT
-
-        Note over Scr: Increase Score
-
-        opt Reach Score Threshold
-            Note over Scr: Increase Game Speed<br/>Play High Score Sound
-        end
-
-        Note over Scr: Collision Check
-
-        opt Collision detected
-            Note over Scr: game_state = OVER_STATE<br/>Delete timer 50ms update<br/>Save Highest Score
-        end
-
-    end
-    end
-
-    %%========================
-    %% Player Input
-    %%========================
-    rect rgb(56, 50, 4)
-    Act->>Scr: BUTTON_UP_PRESS_EVENT
-    Scr->>Rex: BUTTON_UP_PRESS_EVENT
-
-    Act->>Scr: BUTTON_DOWN_PRESS_EVENT
-    Scr->>Rex: BUTTON_DOWN_PRESS_EVENT
-
-    Act->>Scr: BUTTON_MODE_PRESS_EVENT
-    Scr->>Rex: BUTTON_MODE_PRESS_EVENT
-    end
-
-    %%========================
-    %% Game Over
-    %%========================
-    rect rgb(11, 95, 66)
-    Note over Scr: OVER_STATE
-
-    Act->>Scr: BUTTON_MODE_PRESS_EVENT<br/>BUTTON_UP_PRESS_EVENT<br/>BUTTON_DOWN_PRESS_EVENT
-
-    activate Scr
-    Scr->>Scr: RESET_EVENT
-    deactivate Scr
-    end
-```
-
-## Tiny-Rex Object Sequence
-
-```mermaid
-sequenceDiagram
-    autonumber
-
-    participant Scr as Game Screen
-    participant Rex as Tiny-Rex Object
-
-    %%========================
-    %% Setup
-    %%========================
-    Scr->>Rex: TINY_REX_SETUP_EVENT
-    activate Rex
-    Note right of Rex: state = RUN_STATE<br/>x = INIT_X<br/>y = INIT_Y<br/>visible = ON
-    deactivate Rex
-
-    %%========================
-    %% Up Button
-    %%========================
-    Scr->>Rex: BUTTON_UP_PRESS_EVENT
-    activate Rex
-    Note right of Rex: if state == RUN_STATE<br/>state = JUMP_STATE
-    deactivate Rex
-
-    %%========================
-    %% Down Button
-    %%========================
-    Scr->>Rex: BUTTON_DOWN_PRESS_EVENT
-    activate Rex
-    Note right of Rex: if state == JUMP_STATE<br/>state = FALL_STATE
-    deactivate Rex
-
-    %%========================
-    %% Mode Button
-    %%========================
-    Scr->>Rex: BUTTON_MODE_PRESS_EVENT
-    activate Rex
-    Note right of Rex: if state == RUN_STATE<br/>state = BEND_OVER_STATE
-    deactivate Rex
-
-    %%========================
-    %% Release Button
-    %%========================
-    Scr->>Rex: BUTTON_MODE_RELEASE_EVENT
-    activate Rex
-    Note right of Rex: if state == BEND_OVER_STATE<br/>state = RUN_STATE
-    deactivate Rex
-
-    %%========================
-    %% Game Tick
-    %%========================
-    loop Every GAME_TICK (50 ms)
-
-        Scr->>Rex: TINY_REX_UPDATE_EVENT
-
-        activate Rex
-
-        alt state == RUN_STATE
-            Note right of Rex: Run animation
-        else state == JUMP_STATE
-            Note right of Rex: y -= speed
-            opt y <= 0
-                Note right of Rex: state = FALL_STATE
-            end
-        else state == FALL_STATE
-            Note right of Rex: y += speed
-            opt y >= GROUND_Y
-                Note right of Rex: y = GROUND_Y<br/>state = RUN_STATE
-            end
-        else state == BEND_OVER_STATE
-            Note right of Rex: Run animation
-        end
-
-        deactivate Rex
-
-    end
-```
-
-## Bird Object Sequence
-
-```mermaid
-sequenceDiagram
-    autonumber
-
-    participant Scr as Game Screen
-    participant Bird as Bird Object
-
-    %%========================
-    %% Setup
-    %%========================
-    Scr->>Bird: BIRD_SETUP_EVENT
-    activate Bird
-    Note right of Bird: state = STAND_FLY_STATE<br/>x = INIT_X<br/>y = INIT_Y<br/>visible = ON
-    deactivate Bird
-
-    %%========================
-    %% Play
-    %%========================
-    Scr->>Bird: BIRD_PLAY_EVENT
-    activate Bird
-    Note right of Bird: state = HIDDEN_FLY_STATE<br/>hidden_timer = RANDOM_TIME<br/>visible = OFF
-    deactivate Bird
-
-    %%========================
-    %% Game Tick
-    %%========================
-    loop Every GAME_TICK (50 ms)
-
-        Scr->>Bird: BIRD_UPDATE_EVENT
-
-        activate Bird
-
-        alt state == HIDDEN_FLY_STATE
-            Note right of Bird: hidden_timer -= GAME_TICK
-            opt hidden_timer <= 0
-                Note right of Bird: state = FLY_STATE<br/>visible = ON<br/>x = SCREEN_WIDTH<br/>y = RANDOM_Y
-            end
-        else state == FLY_STATE
-            Note right of Bird: x -= speed
-            Note right of Bird: Fly animation
-            opt x <= LEFT_EDGE
-                Note right of Bird: state = HIDDEN_FLY_STATE<br/>visible = OFF<br/>hidden_timer = RANDOM_TIME
-            end
-        end
-
-        deactivate Bird
-
-    end
-````
 
 ## Contact & Support
 
