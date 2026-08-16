@@ -16,7 +16,8 @@
 | [resource/guide/02-guide-coding-rules.md](resource/guide/02-guide-coding-rules.md) | Some rules for coding game. |
 | [resource/guide/03-design-sequence-object.md](resource/guide/03-design-sequence-object.md) | Runtime sequence diagrams for gameplay objects: T-Rex, Obstacle and Horizon |
 | [resource/guide/04-design-sequence-runtime.md](resource/guide/04-design-sequence-runtime.md) | Runtime signal-processing flow for button input, AK task messages, timers, game-loop ticks, object updates, and Mermaid sequence diagrams. |
-| [esource/guide/06-guide-debug.md](resource/guide/06-guide-debug.md) | Guide for instruction debug kit using st-link with vscode + ArmCortex_Debug (Externsion) |
+| [Resource/guide/05-guide-development-environment.md](resource/guide/05-guide-development-environment.md) | Guide for instruction debug kit using st-link with vscode + ArmCortex_Debug (Externsion) |
+| [Resource/guide/06-guide-debug.md](resource/guide/06-guide-debug.md) | Guide for instruction debug kit using st-link with vscode + ArmCortex_Debug (Externsion) |
 
 
 ## Introduction

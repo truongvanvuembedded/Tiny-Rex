@@ -7,7 +7,6 @@ CPPFLAGS	+= -I./sources/app
 VPATH += sources/app
 
 # CPP source files
-SOURCES_CPP += sources/app/task_system.cpp
 SOURCES_CPP += sources/app/app.cpp
 SOURCES_CPP += sources/app/app_data.cpp
 SOURCES_CPP += sources/app/app_non_clear_ram.cpp

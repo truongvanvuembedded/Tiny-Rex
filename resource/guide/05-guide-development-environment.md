@@ -1,5 +1,5 @@
 
-### IV. Development Environment
+### Development Environment
 
 To ensure a consistent and reproducible build environment, the project is developed using a Docker-based toolchain setup instead of local installation.
 

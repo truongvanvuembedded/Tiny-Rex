@@ -284,12 +284,6 @@ int main_app() {
  * when all ak message queue empty, task_polling_xxx() will be called.
  */
 /*****************************************************************************/
-void task_polling_zigbee() {
-#if defined(TASK_ZIGBEE_EN)
-	zigbee_network.update();
-#endif
-}
-
 void task_polling_console() {
 	volatile uint8_t c = 0;
 

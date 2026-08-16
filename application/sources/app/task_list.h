@@ -17,14 +17,12 @@ enum {
 	TASK_TIMER_TICK_ID,
 
 	/* APP TASKS */
-	AC_TASK_SYSTEM_ID,
 	AC_TASK_FW_ID,
 	AC_TASK_SHELL_ID,
 	AC_TASK_LIFE_ID,
 	AC_TASK_IF_ID,
 	AC_TASK_RF24_IF_ID,
 	AC_TASK_UART_IF_ID,
-	AC_TASK_DBG_ID,
 	AC_TASK_DISPLAY_ID,
 
 #if defined(TASK_ZIGBEE_EN)
@@ -61,7 +59,6 @@ enum {
 /*****************************************************************************/
 enum {
 	/* APP TASKS */
-	AC_TASK_POLLING_ZIGBEE_ID,
 	AC_TASK_POLLING_CONSOLE_ID,
 
 	/* EOT polling task ID */
@@ -73,7 +70,6 @@ enum {
  */
 /*****************************************************************************/
 /* APP TASKS */
-extern void task_system(ak_msg_t*);
 extern void task_fw(ak_msg_t*);
 extern void task_shell(ak_msg_t*);
 extern void task_life(ak_msg_t*);
@@ -107,7 +103,6 @@ extern void over_check_handle(ak_msg_t* msg);
 /*  DECLARE: Task polling
  */
 /*****************************************************************************/
-extern void task_polling_zigbee();
 extern void task_polling_console();
 
 #endif //__TASK_LIST_H__
