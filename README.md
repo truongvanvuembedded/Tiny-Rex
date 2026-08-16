@@ -211,15 +211,15 @@ sequenceDiagram
 		    %% ===== Button handler =====
         Act->>Scr: BUTTON_UP_PRESS
 	        activate Scr
-	        Scr->>Rex: TINY_REX_JUMP
+	        Scr->>Rex: TINY_REX_JUMP_EVENT
 	        deactivate Scr
         Act->>Scr: BUTTON_DOWN_PRESS
 	        activate Scr
-	        Scr->>Rex: TINY_REX_FALL
+	        Scr->>Rex: TINY_REX_FALL_EVENT
 	        deactivate Scr
         Act->>Scr: BUTTON_MOVE_PRESS
 	        activate Scr
-	        Scr->>Rex: TINY_REX_DUCK
+	        Scr->>Rex: TINY_REX_DUCK_EVENT
 	        deactivate Scr
     end
 

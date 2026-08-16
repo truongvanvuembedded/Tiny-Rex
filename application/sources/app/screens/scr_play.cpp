@@ -126,8 +126,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
     {
         APP_DBG_SIG("SCREEN_PLAY_ENTRY\n");
         reset();
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_SETUP);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_PLAY);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_PLAY_EVENT);
         task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_SETUP);
         task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_PLAY);
         task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
@@ -145,30 +144,31 @@ void scr_play_handle_signal(ak_msg_t* msg)
     case AC_DISPLAY_BUTON_UP_PRESSED:
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_BUTTON_UP_PRESS);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_JUMP_EVENT);
     }
     break;
 
     case AC_DISPLAY_BUTON_MODE_PRESSED:
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_BUTTON_MODE_PRESS);
         if (over_check_object.state == EM_GAME_STATE_OVER)
         {
             SCREEN_TRAN(scr_menu_handle, &scr_menu);
+        }else{
+            task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_DUCK_EVENT);
         }
     }
     break;
     case AC_DISPLAY_BUTON_MODE_RELEASE:
     {
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_BUTTON_MODE_RELEASE);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_DUCK_RELEASE_EVENT);
     }
     break;
 
     case AC_DISPLAY_BUTON_DOWN_PRESSED:
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-        task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_BUTTON_DOWN_PRESS);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_FALL_EVENT);
     }
     break;
 
@@ -177,7 +177,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
         if(tiny_rex_collision_check() == false)
         {
             update_score();
-            task_post_pure_msg(TINY_REX_OBJECT_ID, EVENT_TINY_REX_UPDATE);
+            task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_MOVE_EVENT);
             task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);
             task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
             task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_UPDATE);

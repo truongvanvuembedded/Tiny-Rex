@@ -68,8 +68,14 @@ sequenceDiagram
 		Note right of Rex: Update running animation frame
 	else State = JUMPING
 		Note right of Rex: Update Y position (Y--)
+		alt Y position reach to top Y
+			Note right of Rex: State = FALLING <br/> Speed = fall-velocity
+		end
 	else State = FALLING
 		Note right of Rex: Update Y position (Y++)
+		alt Y position reach to ground Y
+			Note right of Rex: State = RUNNING
+		end
 	else State = DUCKING
 		Note right of Rex: Update duck animation frame
 	end
@@ -89,8 +95,8 @@ sequenceDiagram
 	else BUTTON_DOWN_PRESS
 		Scr->>Rex: TINY_REX_FALL
 		activate Rex
-		alt State == JUMPING
-			Note right of Rex: State = FALLING <br/> Set fall velocity
+		alt State == JUMPING <br/> State == FALLING
+			Note right of Rex: State = FALLING <br/> Set fast-fall speed
 		end
 		deactivate Rex
 

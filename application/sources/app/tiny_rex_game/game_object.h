@@ -11,6 +11,7 @@ typedef struct {
     uint8_t speed;
     int8_t x, y;
     uint8_t action_image;
+    uint8_t level;
 } game_object_t;
 
 #endif //__OBJECT_H_
