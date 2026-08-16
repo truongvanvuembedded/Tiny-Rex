@@ -15,7 +15,6 @@
 | [resource/guide/01-guide-getting-started.md](resource/guide/01-guide-getting-started.md) | Game programming getting started guide. |
 | [resource/guide/02-guide-coding-rules.md](resource/guide/02-guide-coding-rules.md) | Some rules for coding game. |
 | [resource/guide/03-design-sequence-object.md](resource/guide/03-design-sequence-object.md) | Runtime sequence diagrams for gameplay objects: T-Rex, Obstacle and Horizon |
-| [resource/guide/04-design-sequence-runtime.md](resource/guide/04-design-sequence-runtime.md) | Runtime signal-processing flow for button input, AK task messages, timers, game-loop ticks, object updates, and Mermaid sequence diagrams. |
 | [Resource/guide/05-guide-development-environment.md](resource/guide/05-guide-development-environment.md) | Guide for instruction debug kit using st-link with vscode + ArmCortex_Debug (Externsion) |
 | [Resource/guide/06-guide-debug.md](resource/guide/06-guide-debug.md) | Guide for instruction debug kit using st-link with vscode + ArmCortex_Debug (Externsion) |
 
@@ -135,6 +134,7 @@ The game opens on the **Main Menu**, which offers the following options:
 ### IV. Basic Game Sequence Logic
 
 ```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'18px','primaryColor':'#1565c0','primaryTextColor':'#ffffff','primaryBorderColor':'#0d47a1','lineColor':'#90a4ae','signalColor':'#ffc107','signalTextColor':'#ffc107','actorBkg':'#1565c0','actorBorder':'#0d47a1','actorTextColor':'#ffffff','actorLineColor':'#90caf9','noteBkgColor':'#fff59d','noteTextColor':'#000000','noteBorderColor':'#f57f17','activationBkgColor':'#66bb6a','activationBorderColor':'#2e7d32','sequenceNumberColor':'#ffffff','loopTextColor':'#ffc107','labelBoxBkgColor':'#37474f','labelBoxBorderColor':'#90a4ae','labelTextColor':'#ffffff'},'sequence':{'actorMargin':120,'messageFontSize':17,'noteFontSize':15,'actorFontSize':17,'boxMargin':15,'boxTextMargin':8,'noteMargin':12,'useMaxWidth':false}}}%%
 sequenceDiagram
     autonumber
 
