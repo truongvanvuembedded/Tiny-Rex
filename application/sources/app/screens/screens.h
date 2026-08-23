@@ -23,9 +23,8 @@
 #include "screens_bitmap.h"
 /* game */
 #include "tiny_rex_object.h"
-#include "line_object.h"
-#include "tree_object.h"
-#include "bird_object.h"
+#include "obstacles_object.h"
+#include "horizon_object.h"
 
 // scr_menu.cpp
 extern view_screen_t scr_menu;

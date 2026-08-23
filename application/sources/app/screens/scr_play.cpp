@@ -74,11 +74,6 @@ score_t score_object;
 //	Local Function Prototype
 //==================================================================================================
 static void reset(void);
-static bool tiny_rex_collision_check(void);
-static bool object_collision(const game_object_t *obj1,
-                             const bitmap_info_t *bmp1,
-                             const game_object_t *obj2,
-                             const bitmap_info_t *bmp2);
 static void draw_over_icon(void);
 /* Score */
 static void draw_score(void);
@@ -102,9 +97,8 @@ static void update_score(void);
 static void view_scr_play()
 {
     /* Draw object */
-    draw_line_object();
-    draw_bird_object();
-    draw_tree_object();
+    draw_horizon_objects();
+    draw_obstacle_objects();
     draw_tiny_rex_object();
     draw_score();
     draw_over_icon();
@@ -127,12 +121,8 @@ void scr_play_handle_signal(ak_msg_t* msg)
         APP_DBG_SIG("SCREEN_PLAY_ENTRY\n");
         reset();
         task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_PLAY_EVENT);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_SETUP);
-        task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_PLAY);
-        task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_SETUP);
-        task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_PLAY);
-        task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_SETUP);
-        task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_PLAY);
+        task_post_pure_msg(OBSTACLE_OBJECT_ID, OBSTACLE_PLAY_EVENT);
+        task_post_pure_msg(HORIZON_OBJECT_ID, EVENT_HORIZON_OBJECT_PLAY);
         timer_set(
             AC_TASK_DISPLAY_ID,
             AC_DISPLAY_PLAYING_UPDATE,
@@ -174,71 +164,14 @@ void scr_play_handle_signal(ak_msg_t* msg)
 
     case AC_DISPLAY_PLAYING_UPDATE:
     {
-        if(tiny_rex_collision_check() == false)
-        {
-            update_score();
-            task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_MOVE_EVENT);
-            task_post_pure_msg(BIRD_OBJECT_ID, EVENT_BIRD_OBJECT_UPDATE);
-            task_post_pure_msg(TREE_OBJECT_ID, EVENT_TREE_OBJECT_UPDATE);
-            task_post_pure_msg(LINE_OBJECT_ID, EVENT_LINE_OBJECT_UPDATE);
-        }
+        update_score();
+        task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_MOVE_EVENT);
+        task_post_pure_msg(OBSTACLE_OBJECT_ID, OBSTACLE_MOVE_EVENT);
+        task_post_pure_msg(HORIZON_OBJECT_ID, EVENT_HORIZON_OBJECT_UPDATE);
     }
     break;
 
-    default:
-        break;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//	Name     : object_collision
-//	Function : Check collision between two object
-//	Argument : const game_object_t *obj1: Information of object 1
-//             const bitmap_info_t *bmp1: Bitmap of object 1
-//             const game_object_t *obj2: Information of object 2
-//             const bitmap_info_t *bmp2: Bitmap of object 2
-//	Return   : None
-//	Created  : 13/07/2026 V.Vu
-//	Changed  : -
-//	Remarks  : -
-////////////////////////////////////////////////////////////////////////////////////////////////////
-static bool object_collision(const game_object_t *obj1,
-                             const bitmap_info_t *bmp1,
-                             const game_object_t *obj2,
-                             const bitmap_info_t *bmp2)
-{
-    if ((!obj1->visible) || (!obj2->visible))
-    {
-        return false;
-    }
-
-    return !( (obj1->x + bmp1->width  <= obj2->x) ||
-              (obj2->x + bmp2->width  <= obj1->x) ||
-              (obj1->y + bmp1->height <= obj2->y) ||
-              (obj2->y + bmp2->height <= obj1->y) );
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//	Name     : tiny_rex_collision_check
-//	Function : Check collistion between tiny rex with other objects
-//	Argument : None
-//	Return   : None
-//	Created  : 13/07/2026 V.Vu
-//	Changed  : -
-//	Remarks  : -
-////////////////////////////////////////////////////////////////////////////////////////////////////
-static bool tiny_rex_collision_check(void)
-{
-    ranking_t new_data;
-    /* Rex <-> Bird */
-    uint8_t rex_bird_collistion = object_collision(&tiny_rex_object,
-                        &g_bitmap_table[tiny_rex_object.action_image],
-                        &bird_object,
-                        &g_bitmap_table[bird_object.action_image]);
-    /* Rex <-> Tree */
-    uint8_t rex_tree_collistion = object_collision(&tiny_rex_object,
-                        &g_bitmap_table[tiny_rex_object.action_image],
-                        &tree_object,
-                        &g_bitmap_table[tree_object.action_image]);
-    if (rex_tree_collistion || rex_bird_collistion)
+    case AC_DISPLAY_PLAYING_GAME_OVER:
     {
         /* Game Over */
         over_check_object.state = EM_GAME_STATE_OVER;
@@ -248,6 +181,7 @@ static bool tiny_rex_collision_check(void)
         over_check_object.y = (HEIGHT-g_bitmap_table[over_check_object.action_image].height) / 2;;
         timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_PLAYING_UPDATE);
         /* Save new score */
+        ranking_t new_data;
         if(get_current_user_name(new_data.name, SETTING_MAX_NAME)){
             new_data.score = score_object.current_score;
             udpate_high_score(&new_data);
@@ -255,7 +189,11 @@ static bool tiny_rex_collision_check(void)
         }
         BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
     }
-    return (rex_tree_collistion || rex_bird_collistion)?true:false;
+    break;
+
+    default:
+        break;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //	Name     : draw_over_icon
@@ -354,6 +292,9 @@ static void update_score(void)
         score_object.threshold += 100;
         score_object.animation_timer = 25;
         BUZZER_PlaySound(BUZZER_SOUND_HIGHSCORE);
+        task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_INC_SPEED_EVENT);
+        task_post_pure_msg(OBSTACLE_OBJECT_ID, OBSTACLE_INC_SPEED_EVENT);
+        task_post_pure_msg(HORIZON_OBJECT_ID, EVENT_HORIZON_INC_SPEED);
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////

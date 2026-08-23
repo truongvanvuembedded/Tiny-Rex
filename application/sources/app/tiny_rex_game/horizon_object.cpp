@@ -17,7 +17,7 @@
 //==================================================================================================
 //	Header File
 //==================================================================================================
-#include "line_object.h"
+#include "horizon_object.h"
 //==================================================================================================
 //	Local define
 //==================================================================================================
@@ -57,30 +57,14 @@ game_object_t cloud_object[CLOUD_OBJECT_COUNT];
 //==================================================================================================
 //	Source Code
 //==================================================================================================
-void line_object_handle(ak_msg_t* msg)
+void horizon_object_handle(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
-    case EVENT_LINE_OBJECT_SETUP:
+    case EVENT_HORIZON_OBJECT_PLAY:
     {
         /* line object */
-        line_object.visible = BLACK;
-        line_object.state = EM_HORIZONE_STATE_IDLE;
-        /* cloud object */
-        line_object.state = EM_HORIZONE_STATE_IDLE;
-        /* Cloud */
-        for (uint8_t i = 0; i < CLOUD_OBJECT_COUNT; i++)
-        {
-            cloud_object[i].visible = BLACK;
-        }
-    }
-    break;
-
-    case EVENT_LINE_OBJECT_PLAY:
-    {
-        /* line object */
-        line_object.state = EM_HORIZONE_STATE_RUNNING;
-        line_object.speed = 4;
+        line_object.speed = obstacle_objects_speed;
         line_object.visible = WHITE;
         line_object.action_image = BITMAP_LINE;
         line_object.x = AXIS_X_LINE_OBJECT;
@@ -89,7 +73,6 @@ void line_object_handle(ak_msg_t* msg)
         /* Cloud */
         for (uint8_t i = 0; i < CLOUD_OBJECT_COUNT; i++)
         {
-            cloud_object[i].state = EM_HORIZONE_STATE_RUNNING;
             cloud_object[i].speed = 1;
             cloud_object[i].visible = WHITE;
             cloud_object[i].action_image = BITMAP_GAME_CLOUD_ICON;
@@ -99,29 +82,29 @@ void line_object_handle(ak_msg_t* msg)
     }
     break;
 
-    case EVENT_LINE_OBJECT_UPDATE:
+    case EVENT_HORIZON_OBJECT_UPDATE:
     {
-        if(line_object.state == EM_HORIZONE_STATE_RUNNING)
+        line_object.x -= line_object.speed;
+        if (line_object.x <= -g_bitmap_table[BITMAP_LINE].width)
         {
-            line_object.x -= line_object.speed;
-            if (line_object.x <= -WIDTH)
-            {
-                line_object.x = 0;
-            }
+            line_object.x = 0;
         }
         /* Cloud */
         for (uint8_t i = 0; i < CLOUD_OBJECT_COUNT; i++)
         {
-            if (cloud_object[i].state == EM_HORIZONE_STATE_RUNNING)
-            {
-                cloud_object[i].x -= cloud_object[i].speed;
+            cloud_object[i].x -= cloud_object[i].speed;
 
-                if (cloud_object[i].x <= -g_bitmap_table[BITMAP_GAME_CLOUD_ICON].width)
-                {
-                    cloud_object[i].x = WIDTH;
-                }
+            if (cloud_object[i].x <= -g_bitmap_table[BITMAP_GAME_CLOUD_ICON].width)
+            {
+                cloud_object[i].x = WIDTH;
             }
         }
+    }
+    break;
+
+    case EVENT_HORIZON_INC_SPEED:
+    {
+        line_object.speed = obstacle_objects_speed;
     }
     break;
 
@@ -129,7 +112,7 @@ void line_object_handle(ak_msg_t* msg)
         break;
     }
 }
-void draw_line_object(void)
+void draw_horizon_objects(void)
 {
     // Draw bit-map of line
     view_render.drawBitmap(

@@ -178,8 +178,8 @@ extern "C"
         AC_DISPLAY_SHOW_MENU,
         AC_DISPLAY_MENU_ANIMATION_UPDATE,
 		AC_DISPLAY_PLAYING_UPDATE,
+		AC_DISPLAY_PLAYING_GAME_OVER,
 		EVENT_DISPLAY_SETTING_NAME,
-		EVENT_TINY_REX_GAME_OVER,
     };
 
     /*****************************************************************************/
@@ -231,33 +231,21 @@ enum
 /* Define signal */
 enum
 {
-	EVENT_LINE_OBJECT_SETUP = TINY_REX_DEFINE_SIG,
-	EVENT_LINE_OBJECT_PLAY,
-	EVENT_LINE_OBJECT_UPDATE,
+	EVENT_HORIZON_OBJECT_PLAY = TINY_REX_DEFINE_SIG,
+	EVENT_HORIZON_OBJECT_UPDATE,
+	EVENT_HORIZON_INC_SPEED,
 };
 
 /*****************************************************************************/
-/*  Tree object signal define
+/*  Obstacle objects signal define
  */
 /*****************************************************************************/
 /* Define signal */
 enum
 {
-	EVENT_TREE_OBJECT_SETUP = TINY_REX_DEFINE_SIG,
-	EVENT_TREE_OBJECT_PLAY,
-	EVENT_TREE_OBJECT_UPDATE,
-};
-
-/*****************************************************************************/
-/*  Bird object signal define
- */
-/*****************************************************************************/
-/* Define signal */
-enum
-{
-	EVENT_BIRD_OBJECT_SETUP = TINY_REX_DEFINE_SIG,
-	EVENT_BIRD_OBJECT_PLAY,
-	EVENT_BIRD_OBJECT_UPDATE,
+	OBSTACLE_PLAY_EVENT = TINY_REX_DEFINE_SIG,
+	OBSTACLE_MOVE_EVENT,
+	OBSTACLE_INC_SPEED_EVENT
 };
 
 /*****************************************************************************/

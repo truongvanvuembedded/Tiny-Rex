@@ -23,18 +23,18 @@ The Game Screen controls the gameplay flow and sends events to the T-Rex object.
 
 **Per-move tick.** Each `TINY_REX_MOVE_EVENT` updates the T-Rex according to its current state:
 
-- `RUNNING` ? Updates the running animation frame.
-- `JUMPING` ? Updates the Y position upward (`Y--`).
-- `FALLING` ? Updates the Y position downward (`Y++`).
-- `DUCKING` ? Updates the duck animation frame.
+- `RUNNING`: Updates the running animation frame.
+- `JUMPING`: Updates the Y position upward (`Y--`).
+- `FALLING`: Updates the Y position downward (`Y++`).
+- `DUCKING`: Updates the duck animation frame.
 
 **Button control.** The Game Screen sends control events directly to the T-Rex:
 
-- `BUTTON_UP_PRESS` ¨ `TINY_REX_JUMP`
+- `BUTTON_UP_PRESS` -> `TINY_REX_JUMP`
   - If `state == RUNNING`, changes the state to `JUMPING` and sets the jump velocity.
-- `BUTTON_DOWN_PRESS` ¨ `TINY_REX_FALL`
+- `BUTTON_DOWN_PRESS` -> `TINY_REX_FALL`
   - If `state == JUMPING`, changes the state to `FALLING` and sets the fall velocity.
-- `BUTTON_MODE_PRESS` ¨ `TINY_REX_DUCK`
+- `BUTTON_MODE_PRESS` -> `TINY_REX_DUCK`
   - If `state == RUNNING`, changes the state to `DUCKING`.
 
 **Difficulty increase.** `TINY_REX_INC_SPEED_EVENT` increases the jumping and falling velocity to increase game difficulty.

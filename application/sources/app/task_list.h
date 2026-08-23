@@ -43,11 +43,10 @@ enum {
 	AC_LINK_ID,
 #endif
 
-	/* ARCHERY GAME ID */
+	/* TINY_REX GAME ID */
 	TINY_REX_OBJECT_ID,
-	LINE_OBJECT_ID,
-	TREE_OBJECT_ID,
-	BIRD_OBJECT_ID,
+	OBSTACLE_OBJECT_ID,
+	HORIZON_OBJECT_ID,
 	/* EOT task ID */
 	AK_TASK_EOT_ID,
 };
@@ -95,10 +94,8 @@ extern void task_rf24_demo(ak_msg_t*);
 
 /* GAME HANDLE */
 extern void tiny_rex_object_handle(ak_msg_t* msg);
-extern void line_object_handle(ak_msg_t* msg);
-extern void tree_object_handle(ak_msg_t* msg);
-extern void bird_object_handle(ak_msg_t* msg);
-extern void over_check_handle(ak_msg_t* msg);
+extern void horizon_object_handle(ak_msg_t* msg);
+extern void obstacle_objects_handle(ak_msg_t* msg);
 /*****************************************************************************/
 /*  DECLARE: Task polling
  */

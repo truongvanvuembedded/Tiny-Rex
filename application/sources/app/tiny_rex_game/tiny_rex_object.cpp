@@ -66,11 +66,11 @@ game_object_t tiny_rex_object;
 /* Speed table */
 static const ST_TREX_SPEED g_st_TrexSpeed[TREX_LEVEL_MAX] =
 {
-    /* L0 - Start */
+    /* L1 - Easy */
     {
-        .u1_JumpSpeed    = 6,
-        .u1_FallSpeed    = 3,
-        .u1_FastFallSpeed = 6
+        .u1_JumpSpeed    = 5,
+        .u1_FallSpeed    = 2,
+        .u1_FastFallSpeed = 5
     },
 
     /* L1 - Easy */

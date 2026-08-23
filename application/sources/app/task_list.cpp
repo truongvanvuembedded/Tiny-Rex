@@ -44,9 +44,8 @@ const task_t app_task_table[] = {
 	/* GAME */
 	/*************************************************************************/
 	{TINY_REX_OBJECT_ID		,	TASK_PRI_LEVEL_4	,	tiny_rex_object_handle},
-	{LINE_OBJECT_ID			,	TASK_PRI_LEVEL_4	,	line_object_handle},
-	{TREE_OBJECT_ID			,	TASK_PRI_LEVEL_4	,	tree_object_handle},
-	{BIRD_OBJECT_ID			,	TASK_PRI_LEVEL_4	,	bird_object_handle},
+	{OBSTACLE_OBJECT_ID		,	TASK_PRI_LEVEL_4	,	obstacle_objects_handle},
+	{HORIZON_OBJECT_ID			,	TASK_PRI_LEVEL_4	,	horizon_object_handle},
 
 	/*************************************************************************/
 	/* END OF TABLE */
