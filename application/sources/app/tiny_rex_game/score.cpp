@@ -69,7 +69,7 @@ void score_handle(ak_msg_t* msg)
             /* Reset score */
             score_object.skip_count = 0;
             score_object.current_score = 0;
-            score_object.high_score = 0;
+            score_object.high_score = get_highest_score();;
             score_object.threshold = 100;
             score_object.animation_timer = 0;
         }
