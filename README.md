@@ -143,10 +143,11 @@ sequenceDiagram
     participant Rex as T-Rex
     participant Obs as Obstacle
     participant Hor as Horizon
+    participant Score as Score
 
     %% ===== Idle Screen =====
     rect rgb(46, 11, 3)
-		    Note over Scr: IDLE
+            Note over Scr: IDLE
         Act->>Scr: POWER_ON / RESET
         activate Scr
         Note right of Scr: State = IDLE <br/> Screen = IDLE <br/> Arm timer for switch to WAITING
@@ -155,13 +156,13 @@ sequenceDiagram
 
     %% ===== Waiting Screen =====
     rect rgb(56, 50, 4)
-		    Note over Scr: WAITING
+            Note over Scr: WAITING
         Act->>Scr: ANY BUTTON / TIME OUT
         activate Scr
         Note right of Scr: State = WAITING <br/> Screen = MENU
         deactivate Scr
 
-		    %% ===== Swich screen base on button input =====
+            %% ===== Swich screen base on button input =====
         Act->>Scr: SETTING
         activate Scr
         Note right of Scr: Screen = SETTING
@@ -178,7 +179,7 @@ sequenceDiagram
 
     %% ===== Playing Screen =====
     rect rgb(12, 40, 117)
-		    Note over Scr: PLAYING
+            Note over Scr: PLAYING
         Act->>Scr: START
         activate Scr
         Note right of Scr: State = PLAYING <br/> Screen = PLAYING <br/> Arm timer for udpate screen
@@ -189,43 +190,46 @@ sequenceDiagram
         Scr->>Hor: HORIZON_PLAY_EVENT
 
         loop UPDATE SCREEN
+            Scr->>Obs: COLLISION_CHECK_EVENT
             Scr->>Rex: TINY_REX_MOVE_EVENT
             Scr->>Obs: OBSTACLE_MOVE_EVENT
             Scr->>Hor: HORIZON_MOVE_EVENT
-            Scr->>Obs: COLLISION_CHECK_EVENT
+            Scr->>Score: SCORE_UPDATE_EVENT
+            activate Score
+              Note over Score: Increase score
+            alt Score exceed threshold
+              Note over Score: Increase new score threshold
+                Score->>Rex: TINY_REX_INC_SPEED_EVENT
+                Score->>Obs: OBSTACLE_INC_SPEED_EVENT
+                Score->>Hor: HORIZON_INC_SPEED_EVENT
+            end
+            deactivate Score
             alt Collision detected
                 Obs->>Scr: GAME_OVER_EVENT
-				        activate Scr
+                        activate Scr
                 Note right of Scr: State = Over <br/> Screen: Over <br/> Save score <br/> Delete udpate screen timer
-			          deactivate Scr
-            end
-            Note over Scr: Increase score
-            alt Score exceed threshold
-              Note over Scr: Increase new score threshold
-	            Scr->>Rex: TINY_REX_INC_SPEED_EVENT
-	            Scr->>Obs: OBSTACLE_INC_SPEED_EVENT
-			        Scr->>Hor: HORIZON_INC_SPEED_EVENT
+                      deactivate Scr
             end
         end
         
-		    %% ===== Button handler =====
+            %% ===== Button handler =====
         Act->>Scr: BUTTON_UP_PRESS
-	        activate Scr
-	        Scr->>Rex: TINY_REX_JUMP_EVENT
-	        deactivate Scr
+            activate Scr
+            Scr->>Rex: TINY_REX_JUMP_EVENT
+            deactivate Scr
         Act->>Scr: BUTTON_DOWN_PRESS
-	        activate Scr
-	        Scr->>Rex: TINY_REX_FALL_EVENT
-	        deactivate Scr
+            activate Scr
+            Scr->>Rex: TINY_REX_FALL_EVENT
+            deactivate Scr
         Act->>Scr: BUTTON_MOVE_PRESS
-	        activate Scr
-	        Scr->>Rex: TINY_REX_DUCK_EVENT
-	        deactivate Scr
+            activate Scr
+            Scr->>Rex: TINY_REX_DUCK_EVENT
+            deactivate Scr
     end
 
     %% ===== GameOver Screen =====
     rect rgb(11, 95, 66)
-		    Note over Scr: OVER
+            Note over Scr: OVER
         Act->>Scr: ANY_BUTTON
         activate Scr
         Note right of Scr: State = WAITING <br/> Screen = WAITING

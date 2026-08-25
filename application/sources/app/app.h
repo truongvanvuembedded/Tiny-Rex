@@ -225,18 +225,6 @@ enum
 };
 
 /*****************************************************************************/
-/*  Line object signal define
- */
-/*****************************************************************************/
-/* Define signal */
-enum
-{
-	HORIZON_OBJECT_PLAY_EVENT = TINY_REX_DEFINE_SIG,
-	HORIZON_OBJECT_UPDATE_EVENT,
-	HORIZON_INC_SPEED_EVENT,
-};
-
-/*****************************************************************************/
 /*  Obstacle objects signal define
  */
 /*****************************************************************************/
@@ -248,6 +236,31 @@ enum
 	OBSTACLE_CHECK_COLLISSION_EVENT,
 	OBSTACLE_INC_SPEED_EVENT
 };
+
+/*****************************************************************************/
+/*  Horizon object signal define
+ */
+/*****************************************************************************/
+/* Define signal */
+enum
+{
+	HORIZON_OBJECT_PLAY_EVENT = TINY_REX_DEFINE_SIG,
+	HORIZON_OBJECT_UPDATE_EVENT,
+	HORIZON_INC_SPEED_EVENT,
+};
+
+/*****************************************************************************/
+/*  Score object signal define
+ */
+/*****************************************************************************/
+/* Define signal */
+enum
+{
+	SCORE_SETUP = TINY_REX_DEFINE_SIG,
+	SCORE_UPDATE,
+	SCORE_GAME_OVER,
+};
+
 /*****************************************************************************/
 /*  app function declare
  */

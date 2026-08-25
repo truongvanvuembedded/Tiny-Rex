@@ -7,3 +7,4 @@ VPATH += sources/app/tiny_rex_game
 SOURCES_CPP += sources/app/tiny_rex_game/tiny_rex_object.cpp
 SOURCES_CPP += sources/app/tiny_rex_game/horizon_object.cpp
 SOURCES_CPP += sources/app/tiny_rex_game/obstacles_object.cpp
+SOURCES_CPP += sources/app/tiny_rex_game/score.cpp

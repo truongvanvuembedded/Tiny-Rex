@@ -46,78 +46,79 @@ sequenceDiagram
 
     participant Scr as Game Screen
     participant Rex as T-Rex
+    participant Score as Score
 
     %% ==================================================
     %% T-Rex setup
     %% ==================================================
 
-	Scr->>Rex: TINY_REX_PLAY_EVENT
-	activate Rex
-	Note right of Rex: State = RUNNING<br/>Set initial position<br/>Set initial image<br/>Set speed
-	deactivate Rex
+    Scr->>Rex: TINY_REX_PLAY_EVENT
+    activate Rex
+    Note right of Rex: State = RUNNING<br/>Set initial position<br/>Set initial image<br/>Set speed
+    deactivate Rex
 
     %% ==================================================
     %% T-Rex Running
     %% ==================================================
-	Note over Scr,Rex: T-Rex Running
+    Note over Scr,Rex: T-Rex Running
 
-	Scr->>Rex: TINY_REX_MOVE_EVENT
-	activate Rex
+    Scr->>Rex: TINY_REX_MOVE_EVENT
+    activate Rex
 
-	alt State = RUNNING
-		Note right of Rex: Update running animation frame
-	else State = JUMPING
-		Note right of Rex: Update Y position (Y--)
-		alt Y position reach to top Y
-			Note right of Rex: State = FALLING <br/> Speed = fall-velocity
-		end
-	else State = FALLING
-		Note right of Rex: Update Y position (Y++)
-		alt Y position reach to ground Y
-			Note right of Rex: State = RUNNING
-		end
-	else State = DUCKING
-		Note right of Rex: Update duck animation frame
-	end
-	deactivate Rex
+    alt State = RUNNING
+        Note right of Rex: Update running animation frame
+    else State = JUMPING
+        Note right of Rex: Update Y position (Y--)
+        alt Y position reach to top Y
+            Note right of Rex: State = FALLING <br/> Speed = fall-velocity
+        end
+    else State = FALLING
+        Note right of Rex: Update Y position (Y++)
+        alt Y position reach to ground Y
+            Note right of Rex: State = RUNNING
+        end
+    else State = DUCKING
+        Note right of Rex: Update duck animation frame
+    end
+    deactivate Rex
 
     %% ==================================================
     %% Button Control
     %% ==================================================
-	alt BUTTON_UP_PRESS
-		Scr->>Rex: TINY_REX_JUMP
-		activate Rex
-		alt State == RUNNING
-			Note right of Rex: State = JUMPING <br/> Set jump velocity
-		end
-		deactivate Rex
+    alt BUTTON_UP_PRESS
+        Scr->>Rex: TINY_REX_JUMP
+        activate Rex
+        alt State == RUNNING
+            Note right of Rex: State = JUMPING <br/> Set jump velocity
+        end
+        deactivate Rex
 
-	else BUTTON_DOWN_PRESS
-		Scr->>Rex: TINY_REX_FALL
-		activate Rex
-		alt State == JUMPING <br/> State == FALLING
-			Note right of Rex: State = FALLING <br/> Set fast-fall speed
-		end
-		deactivate Rex
+    else BUTTON_DOWN_PRESS
+        Scr->>Rex: TINY_REX_FALL
+        activate Rex
+        alt State == JUMPING <br/> State == FALLING
+            Note right of Rex: State = FALLING <br/> Set fast-fall speed
+        end
+        deactivate Rex
 
-	else BUTTON_MODE_PRESS
-		Scr->>Rex: TINY_REX_DUCK
-		activate Rex
-		alt State == RUNNING
-			Note right of Rex: State = DUCKING
-		end
-		deactivate Rex
-	end
+    else BUTTON_MODE_PRESS
+        Scr->>Rex: TINY_REX_DUCK
+        activate Rex
+        alt State == RUNNING
+            Note right of Rex: State = DUCKING
+        end
+        deactivate Rex
+    end
 
     %% ==================================================
     %% Speed Increase
     %% ==================================================
-	Note over Scr,Rex: Difficulty Increase
+    Note over Scr,Rex: Difficulty Increase
 
-	Scr->>Rex: TINY_REX_INC_SPEED_EVENT
-	activate Rex
-	Note right of Rex: Increase jumping and falling velocity
-	deactivate Rex
+    Score->>Rex: TINY_REX_INC_SPEED_EVENT
+    activate Rex
+    Note right of Rex: Increase jumping and falling velocity
+    deactivate Rex
 ```
 
 <p align="center"><strong><em>Figure 1:</em></strong> Tiny-Rex sequence logic</p>
@@ -214,10 +215,10 @@ end
 %% Speed Increase
 %% ==================================================
 
-Scr->>Obs: OBSTACLE_INC_SPEED_EVENT
+Score->>Obs: OBSTACLE_INC_SPEED_EVENT
 activate Obs
 
-Note right of Obs: Increase obstacle speed<br/>Decrease minimum gap distance
+Note left of Obs: Increase obstacle speed<br/>Decrease minimum gap distance
 
 deactivate Obs
 ```
@@ -283,6 +284,60 @@ loop UPDATE SCREEN
 end
 ```
 
+# V. Score Sequence
+
+The Game Screen controls the gameplay flow and sends events to the Score handler. The Score handler manages the score, update highest score from memory and difficult level.
+
+**Start-Play.** `SCORE_SETUP` initializes the Score handler to default:
+
+* Clear Current score
+
+**Per-move tick.** Each `SCORE_UPDATE` updates the score and it will compare with score threshold for increase difficult level. When difficult level increase, It will send event to object for increase velocity.
+* Score -> T-Rex: `TINY_REX_INC_SPEED_EVENT`
+* Score -> Obstacles: `OBSTACLE_INC_SPEED_EVENT`
+
+**Game Over** `GAME_OVER_EVENT` It will save current socre. If current socre exceed highest score then it save score to memroy. And display GAME OVER icon
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'18px','primaryColor':'#1565c0','primaryTextColor':'#ffffff','primaryBorderColor':'#0d47a1','lineColor':'#90a4ae','signalColor':'#ffc107','signalTextColor':'#ffc107','actorBkg':'#1565c0','actorBorder':'#0d47a1','actorTextColor':'#ffffff','actorLineColor':'#90caf9','noteBkgColor':'#fff59d','noteTextColor':'#000000','noteBorderColor':'#f57f17','activationBkgColor':'#66bb6a','activationBorderColor':'#2e7d32','sequenceNumberColor':'#ffffff','loopTextColor':'#ffc107','labelBoxBkgColor':'#37474f','labelBoxBorderColor':'#90a4ae','labelTextColor':'#ffffff'},'sequence':{'actorMargin':120,'messageFontSize':17,'noteFontSize':15,'actorFontSize':17,'boxMargin':15,'boxTextMargin':8,'noteMargin':12,'useMaxWidth':false}}}%%
+
+sequenceDiagram
+autonumber
+
+participant Scr as Game Screen
+participant Score as Score
+
+%% ==================================================
+%% Score Play / Initial Setup
+%% ==================================================
+
+Scr->>Score: SCORE_SETUP
+activate Score
+Note right of Score: Clear current score
+deactivate Score
+
+%% ==================================================
+%% Score Update
+%% ==================================================
+
+Note over Scr,Score: Game Playing
+
+loop UPDATE SCORE
+
+    Scr->>Score: SCORE_UPDATE_EVENT
+    activate Score
+    Note over Score: Increase score
+    alt current score > threshlod
+        Note over Score: Increase threshold
+        Score->>T-Rex: TINY_REX_INC_SPEED_EVENT
+        Score->>Obstacle: OBSTACLE_INC_SPEED_EVENT
+    end
+
+    deactivate Score
+
+end
+```
+
 ## V. Code References
 
 | Object   | Source file                                            | Header file                                          |
@@ -290,3 +345,4 @@ end
 | T-Rex    | `application/sources/app/tiny_rex/tiny_rex_object.cpp` | `application/sources/app/tiny_rex/tiny_rex_object.h` |
 | Obstacle | `application/sources/app/obstacle/obstacle_object.cpp` | `application/sources/app/obstacle/obstacle_object.h` |
 | Horizon  | `application/sources/app/horizon/horizon_object.cpp`   | `application/sources/app/horizon/horizon_object.h`   |
+| Scire    | `application/sources/app/horizon/score.cpp`            | `application/sources/app/horizon/score.h`             |
