@@ -55,7 +55,6 @@ view_screen_t scr_ranking = {
 //==================================================================================================
 /* Default ranking table */
 static ranking_t g_ranking[RANKING_MAX];
-static bool ranking_updated;
 //==================================================================================================
 //	Local Function Prototype
 //==================================================================================================
@@ -74,6 +73,7 @@ static bool ranking_updated;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void view_scr_ranking()
 {
+    char str[SETTING_MAX_NAME+1];
     view_render.setTextSize(1);
     view_render.setTextColor(WHITE);
 
@@ -89,8 +89,10 @@ void view_scr_ranking()
         view_render.setCursor(10, y);
         view_render.print(i + 1);
 
+        memcpy(str, g_ranking[i].name, sizeof(str));
+        str[SETTING_MAX_NAME] = '\0';
         view_render.setCursor(25, y);
-        view_render.print(g_ranking[i].name);
+        view_render.print(str);
 
         view_render.setCursor(80, y);
         view_render.print(g_ranking[i].score);
@@ -108,9 +110,7 @@ void view_scr_ranking()
 void scr_ranking_handle(ak_msg_t *msg) {
     switch (msg->sig) {
     case SCREEN_ENTRY: {
-        if(ranking_updated == false){
-            ranking_updated = tinyRex_game_score_read((eeprom_ranking_t*)g_ranking);
-        }
+        tinyRex_game_score_read((eeprom_ranking_t*)g_ranking);
     } break;
 
     case AC_DISPLAY_BUTON_MODE_PRESSED:
@@ -161,9 +161,7 @@ void udpate_high_score(ranking_t* data)
 //    Note    : 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 uint32_t get_highest_score(void){
-    if(ranking_updated == false){
-        ranking_updated = tinyRex_game_score_read((eeprom_ranking_t*)g_ranking);
-    }
+    tinyRex_game_score_read((eeprom_ranking_t*)g_ranking);
     return g_ranking[0].score;
 }
 /* ************************************* End of File ******************************************** */

@@ -208,6 +208,7 @@ void scr_setting_handle(ak_msg_t *msg)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void view_scr_setting(void)
 {
+    char name[SETTING_MAX_NAME+1];
     view_render.setTextSize(1);
     view_render.setTextColor(WHITE);
 
@@ -237,9 +238,14 @@ static void view_scr_setting(void)
         /* Value */
         if (i == SETTING_ITEM_NAME)
         {
+            memcpy(name, current_user_name, sizeof(name));
+            /* Udpate animation blink character */
+            if(animation_character_blink){
+                name[curr_name_idx] = ' ';
+            }
+            name[SETTING_MAX_NAME] = '\0';
             view_render.print(": ");
-            view_render.print(current_user_name);
-            //view_render.drawLine()
+            view_render.print(name);
         }
         else if (i == SETTING_ITEM_LEN)
         {
@@ -278,16 +284,11 @@ static void udpate_user_name(void)
         if(au1_ForC < len_name){
             current_user_name[au1_ForC] = g_alphabet[alphabet_idx[au1_ForC]];
         }else{
-            current_user_name[au1_ForC] = ' ';
+            current_user_name[au1_ForC] = '\0';
             alphabet_idx[au1_ForC] = 0;
         }
     }
     current_user_name[SETTING_MAX_NAME] = '\0';
-    /* Udpate animation blink character */
-    if(animation_character_blink){
-        current_user_name[curr_name_idx] = ' ';
-    }
-
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //    Name    : get_current_user_name
