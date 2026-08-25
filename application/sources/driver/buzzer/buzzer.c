@@ -7,6 +7,7 @@ volatile       uint32_t          _beep_duration;
 volatile       bool              _tones_playing;
 volatile const Tone_TypeDef     *_tones;
 volatile       bool              _buzzer_silent = BUZZER_SILENT_OFF;
+volatile       bool              _tone_priority = false;
 
 GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -66,6 +67,7 @@ void buzzer_irq( void ) {
 					BUZZER_Disable();
 					_tones_playing = false;
 					_tones = NULL;
+					_tone_priority = false;
 				} else {
 					if (_tones->frequency == 0) {
 						// Silence period
@@ -172,18 +174,33 @@ void BUZZER_Disable(void) {
 // Start playing tones sequence
 // input:
 //   tones - pointer to tones array
-static void BUZZER_PlayTones(const Tone_TypeDef * tones) {
+static bool BUZZER_PlayTones(const Tone_TypeDef * tones) {
 	if (_buzzer_silent != BUZZER_SILENT_ON) {
 		_tones = tones;
 		_tones_playing = true;
 		BUZZER_Enable(_tones->frequency,_tones->duration);
+		return true;
 	}
+	return false;
 }
 
 void BUZZER_PlaySound(buzzer_sound_t sound) {
 	const Tone_TypeDef* tones = buzzer_get_music(sound);
+	if(_tone_priority == false)
+	{
+		if (tones != NULL) {
+			(void)BUZZER_PlayTones(tones);
+		}
+	}
+}
+
+void BUZZER_PlaySound_Priority(buzzer_sound_t sound)
+{
+	const Tone_TypeDef* tones = buzzer_get_music(sound);
 	if (tones != NULL) {
-		BUZZER_PlayTones(tones);
+		if(BUZZER_PlayTones(tones)){
+			_tone_priority = true;
+		}
 	}
 }
 

@@ -18,6 +18,7 @@ void BUZZER_Init(void);
 void BUZZER_Enable(uint16_t freq, uint32_t duration);
 void BUZZER_Disable(void);
 void BUZZER_PlaySound(buzzer_sound_t sound);
+void BUZZER_PlaySound_Priority(buzzer_sound_t sound);
 void BUZZER_Silent(bool isSilent);
 
 extern void buzzer_irq( void );
