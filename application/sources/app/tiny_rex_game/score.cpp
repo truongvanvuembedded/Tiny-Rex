@@ -92,7 +92,7 @@ void score_handle(ak_msg_t* msg)
             {
                 score_object.threshold += 100;
                 score_object.animation_timer = 25;
-                BUZZER_PlaySound(BUZZER_SOUND_HIGHSCORE);
+                BUZZER_PlaySound_Priority(BUZZER_SOUND_HIGHSCORE);
                 task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_INC_SPEED_EVENT);
                 task_post_pure_msg(OBSTACLE_OBJECT_ID, OBSTACLE_INC_SPEED_EVENT);
                 task_post_pure_msg(HORIZON_OBJECT_ID, HORIZON_INC_SPEED_EVENT);

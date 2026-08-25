@@ -167,7 +167,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
         /* Game Over */
         Game_State = EM_GAME_STATE_OVER;
         task_post_pure_msg(SCORE_ID, SCORE_GAME_OVER);
-        BUZZER_PlaySound(BUZZER_SOUND_GOODBYE);
+        BUZZER_PlaySound_Priority(BUZZER_SOUND_GOODBYE);
     }
     break;
 
