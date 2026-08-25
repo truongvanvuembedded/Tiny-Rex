@@ -101,8 +101,13 @@ void obstacle_objects_handle(ak_msg_t* msg)
 
     case OBSTACLE_MOVE_EVENT:
     {
-        collision_detect();
         obstacle_objects_update();
+    }
+    break;
+
+    case OBSTACLE_CHECK_COLLISSION_EVENT:
+    {
+        collision_detect();
     }
     break;
 

@@ -122,7 +122,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
         reset();
         task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_PLAY_EVENT);
         task_post_pure_msg(OBSTACLE_OBJECT_ID, OBSTACLE_PLAY_EVENT);
-        task_post_pure_msg(HORIZON_OBJECT_ID, EVENT_HORIZON_OBJECT_PLAY);
+        task_post_pure_msg(HORIZON_OBJECT_ID, HORIZON_OBJECT_PLAY_EVENT);
         timer_set(
             AC_TASK_DISPLAY_ID,
             AC_DISPLAY_PLAYING_UPDATE,
@@ -165,9 +165,10 @@ void scr_play_handle_signal(ak_msg_t* msg)
     case AC_DISPLAY_PLAYING_UPDATE:
     {
         update_score();
+        task_post_pure_msg(OBSTACLE_OBJECT_ID, OBSTACLE_CHECK_COLLISSION_EVENT);
         task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_MOVE_EVENT);
         task_post_pure_msg(OBSTACLE_OBJECT_ID, OBSTACLE_MOVE_EVENT);
-        task_post_pure_msg(HORIZON_OBJECT_ID, EVENT_HORIZON_OBJECT_UPDATE);
+        task_post_pure_msg(HORIZON_OBJECT_ID, HORIZON_OBJECT_UPDATE_EVENT);
     }
     break;
 
@@ -294,7 +295,7 @@ static void update_score(void)
         BUZZER_PlaySound(BUZZER_SOUND_HIGHSCORE);
         task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_INC_SPEED_EVENT);
         task_post_pure_msg(OBSTACLE_OBJECT_ID, OBSTACLE_INC_SPEED_EVENT);
-        task_post_pure_msg(HORIZON_OBJECT_ID, EVENT_HORIZON_INC_SPEED);
+        task_post_pure_msg(HORIZON_OBJECT_ID, HORIZON_INC_SPEED_EVENT);
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////

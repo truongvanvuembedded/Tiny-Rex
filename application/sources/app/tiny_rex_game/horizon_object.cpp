@@ -61,7 +61,7 @@ void horizon_object_handle(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
-    case EVENT_HORIZON_OBJECT_PLAY:
+    case HORIZON_OBJECT_PLAY_EVENT:
     {
         /* line object */
         line_object.speed = obstacle_objects_speed;
@@ -82,7 +82,7 @@ void horizon_object_handle(ak_msg_t* msg)
     }
     break;
 
-    case EVENT_HORIZON_OBJECT_UPDATE:
+    case HORIZON_OBJECT_UPDATE_EVENT:
     {
         line_object.x -= line_object.speed;
         if (line_object.x <= -g_bitmap_table[BITMAP_LINE].width)
@@ -102,7 +102,7 @@ void horizon_object_handle(ak_msg_t* msg)
     }
     break;
 
-    case EVENT_HORIZON_INC_SPEED:
+    case HORIZON_INC_SPEED_EVENT:
     {
         line_object.speed = obstacle_objects_speed;
     }

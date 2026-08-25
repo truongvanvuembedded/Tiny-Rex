@@ -231,9 +231,9 @@ enum
 /* Define signal */
 enum
 {
-	EVENT_HORIZON_OBJECT_PLAY = TINY_REX_DEFINE_SIG,
-	EVENT_HORIZON_OBJECT_UPDATE,
-	EVENT_HORIZON_INC_SPEED,
+	HORIZON_OBJECT_PLAY_EVENT = TINY_REX_DEFINE_SIG,
+	HORIZON_OBJECT_UPDATE_EVENT,
+	HORIZON_INC_SPEED_EVENT,
 };
 
 /*****************************************************************************/
@@ -245,21 +245,9 @@ enum
 {
 	OBSTACLE_PLAY_EVENT = TINY_REX_DEFINE_SIG,
 	OBSTACLE_MOVE_EVENT,
+	OBSTACLE_CHECK_COLLISSION_EVENT,
 	OBSTACLE_INC_SPEED_EVENT
 };
-
-/*****************************************************************************/
-/*  Over check signal define
- */
-/*****************************************************************************/
-/* Define signal */
-enum
-{
-	EVENT_OVER_CHECK_SETUP = TINY_REX_DEFINE_SIG,
-	EVENT_OVER_CHECK_COLLISTION_DETECT,
-	EVENT_OVER_CHECK_UPDATE,
-};
-
 /*****************************************************************************/
 /*  app function declare
  */
