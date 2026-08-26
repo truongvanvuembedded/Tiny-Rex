@@ -4,7 +4,9 @@
 ## Gameplay Demo
 
 <div align="center">
-  <video src="resource/playgame.mp4" controls width="480"></video>
+  <video controls width="480">
+    <source src="https://github.com/user-attachments/assets/aeda37a9-95ff-4896-bd56-b53e5ca4aa56" type="video/mp4">
+  </video>
 </div>
 
 ## Documentation
