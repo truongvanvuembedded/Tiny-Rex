@@ -3,11 +3,7 @@
 
 ## Gameplay Demo
 
-<div align="center">
-  <video controls width="480">
-    <source src="https://github.com/user-attachments/assets/aeda37a9-95ff-4896-bd56-b53e5ca4aa56" type="video/mp4">
-  </video>
-</div>
+<video src="https://github.com/user-attachments/assets/aeda37a9-95ff-4896-bd56-b53e5ca4aa56" controls type="video/mp4"></video>
 
 ## Documentation
 
