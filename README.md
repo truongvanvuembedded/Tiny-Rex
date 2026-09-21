@@ -15,6 +15,7 @@
 | [resource/guide/03-design-sequence-object.md](resource/guide/03-design-sequence-object.md) | Runtime sequence diagrams for gameplay objects: T-Rex, Obstacle and Horizon |
 | [Resource/guide/05-guide-development-environment.md](resource/guide/05-guide-development-environment.md) | Guide for instruction debug kit using st-link with vscode + ArmCortex_Debug (Externsion) |
 | [Resource/guide/06-guide-debug.md](resource/guide/06-guide-debug.md) | Guide for instruction debug kit using st-link with vscode + ArmCortex_Debug (Externsion) |
+| [resource/guide/07-design-ak-kernel.md](resource/guide/07-design-ak-kernel.md) | Architecture of the AK active-object kernel: tasks, messages, timers and state machine helpers. |
 
 
 ## Introduction
