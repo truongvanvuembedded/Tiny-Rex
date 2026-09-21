@@ -97,21 +97,21 @@ void view_scr_startup()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void scr_startup_handle(ak_msg_t *msg) {
 	switch (msg->sig) {
-	case AC_DISPLAY_INITIAL: {
-		APP_DBG_SIG("AC_DISPLAY_INITIAL\n");
+	case TINY_REX_DISPLAY_INITIAL: {
+		APP_DBG_SIG("TINY_REX_DISPLAY_INITIAL\n");
 		view_render.initialize();
 		view_render_display_on();
-		timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_MENU, AC_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
+		timer_set(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_SHOW_MENU, TINY_REX_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
 	} break;
 
-	case AC_DISPLAY_BUTON_MODE_PRESSED: {
-		APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_PRESSED\n");
-		timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_MENU);
+	case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED: {
+		APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_MODE_PRESSED\n");
+		timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_SHOW_MENU);
 		SCREEN_TRAN(scr_menu_handle, &scr_menu);
 	} break;
 
-	case AC_DISPLAY_SHOW_MENU: {
-		APP_DBG_SIG("AC_DISPLAY_SHOW_MENU\n");
+	case TINY_REX_DISPLAY_SHOW_MENU: {
+		APP_DBG_SIG("TINY_REX_DISPLAY_SHOW_MENU\n");
 		SCREEN_TRAN(scr_menu_handle, &scr_menu);
 	} break;
 

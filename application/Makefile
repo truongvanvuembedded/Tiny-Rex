@@ -55,22 +55,12 @@ IRQ_DEBUG_OPTION = -UAK_IO_IRQ_ANALYZER
 # Enable to using USB hareware configuration.
 USB_OPTION = -UUSING_USB_MOD
 
-# Interface compile option.
-IF_LINK_OPTION = -UIF_LINK_UART_EN
-IF_NETWORK_NRF24_OPTION = -UIF_NETWORK_NRF24_EN
-
-# Task compile option.
-TASK_ZIGBEE_OPTION = -UTASK_ZIGBEE_EN
-TASK_MBMASTER_OPTION = -DTASK_MBMASTER_EN
-
 # Include sources file
 include sources/ak/Makefile.mk
 include sources/app/Makefile.mk
 include sources/common/Makefile.mk
 include sources/driver/Makefile.mk
-include sources/libraries/Makefile.mk
 include sources/sys/Makefile.mk
-include sources/networks/Makefile.mk
 include sources/platform/stm32l/Makefile.mk
 
 OBJECTS_DIR = build
@@ -160,14 +150,6 @@ endef
 CPU = -mthumb -march=armv7-m
 FPU = -mfloat-abi=soft
 
-# Interface option
-IF_OPTION +=	$(IF_LINK_OPTION)		\
-		$(IF_NETWORK_NRF24_OPTION)	\
-
-# App option
-TASK_OPTION +=	$(TASK_ZIGBEE_OPTION)
-TASK_OPTION +=	$(TASK_MBMASTER_OPTION)
-
 # Hardware option
 #Ver 2.1 (Oled 1.3" driver SH1106)
 #Ver 3.0 (Oled 1.54" driver SSD1309)
@@ -195,8 +177,6 @@ GENERAL_FLAGS +=			\
 		$(RELEASE_OPTION)	\
 		$(APP_ADDR_OPTION)	\
 		$(USB_OPTION)		\
-		$(IF_OPTION)		\
-		$(TASK_OPTION)		\
 		$(HARDWARE_OPTION)  \
 		-DUSE_STDPERIPH_DRIVER	\
 		-DSTM32L1XX_MD		\

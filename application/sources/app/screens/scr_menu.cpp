@@ -95,7 +95,7 @@ void scr_menu_handle(ak_msg_t* msg)
     }
     break;
 
-    case AC_DISPLAY_BUTON_UP_PRESSED:
+    case TINY_REX_DISPLAY_BUTTON_UP_PRESSED:
     {
         current_location++;
         if (current_location >= EM_SCREEN_NUM)
@@ -106,7 +106,7 @@ void scr_menu_handle(ak_msg_t* msg)
     }
     break;
 
-    case AC_DISPLAY_BUTON_DOWN_PRESSED:
+    case TINY_REX_DISPLAY_BUTTON_DOWN_PRESSED:
     {
         if (current_location == EM_SCREEN_PLAY)
         {
@@ -120,7 +120,7 @@ void scr_menu_handle(ak_msg_t* msg)
     }
     break;
 
-    case AC_DISPLAY_BUTON_MODE_PRESSED:
+    case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED:
     {
         if (current_location == EM_SCREEN_PLAY)
         {

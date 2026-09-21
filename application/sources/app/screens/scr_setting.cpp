@@ -94,9 +94,9 @@ void scr_setting_handle(ak_msg_t *msg)
         }
         break;
 
-        case AC_DISPLAY_BUTON_DOWN_PRESSED:
+        case TINY_REX_DISPLAY_BUTTON_DOWN_PRESSED:
         {
-            APP_DBG_SIG("AC_DISPLAY_BUTON_DOWN_PRESSED\n");
+            APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_DOWN_PRESSED\n");
             if(change_name){
                 /* Udpate charater */
                 alphabet_idx[curr_name_idx]++;
@@ -115,9 +115,9 @@ void scr_setting_handle(ak_msg_t *msg)
         }
         break;
 
-        case AC_DISPLAY_BUTON_UP_PRESSED:
+        case TINY_REX_DISPLAY_BUTTON_UP_PRESSED:
         {
-            APP_DBG_SIG("AC_DISPLAY_BUTON_UP_PRESSED\n");
+            APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_UP_PRESSED\n");
             if(change_name){
                 /* Udpate charater */
                 alphabet_idx[curr_name_idx]--;
@@ -137,9 +137,9 @@ void scr_setting_handle(ak_msg_t *msg)
         }
         break;
 
-        case AC_DISPLAY_BUTON_MODE_PRESSED:
+        case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED:
         {
-            APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_PRESSED\n");
+            APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_MODE_PRESSED\n");
 
             if (setting_item == SETTING_ITEM_EXIT)
             {
@@ -171,16 +171,16 @@ void scr_setting_handle(ak_msg_t *msg)
         }
         break;
 
-        case AC_DISPLAY_BUTON_MODE_LONG_PRESS:
+        case TINY_REX_DISPLAY_BUTTON_MODE_LONG_PRESS:
         {
             if (setting_item == SETTING_ITEM_NAME && len_name)
             {
                 change_name = !change_name;
                 if(change_name){
-                    timer_set(AC_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME, AC_DISPLAY_SETTITNG_ANIMCATION_UPDATE_INTERVAL, TIMER_PERIODIC);
+                    timer_set(TINY_REX_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME, TINY_REX_DISPLAY_SETTING_ANIMATION_UPDATE_INTERVAL, TIMER_PERIODIC);
                     animation_character_blink = true;
                 }else{
-                    timer_remove_attr(AC_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME);
+                    timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME);
                     animation_character_blink = false;
                 }
             }

@@ -114,21 +114,21 @@ void scr_play_handle_signal(ak_msg_t* msg)
         task_post_pure_msg(HORIZON_OBJECT_ID, HORIZON_OBJECT_PLAY_EVENT);
         task_post_pure_msg(SCORE_ID, SCORE_SETUP);
         timer_set(
-            AC_TASK_DISPLAY_ID,
-            AC_DISPLAY_PLAYING_UPDATE,
-            AC_DISPLAY_PLAYING_UPDATE_INTERVAL,
+            TINY_REX_TASK_DISPLAY_ID,
+            TINY_REX_DISPLAY_PLAYING_UPDATE,
+            TINY_REX_DISPLAY_PLAYING_UPDATE_INTERVAL,
             TIMER_PERIODIC);
     }
     break;
 
-    case AC_DISPLAY_BUTON_UP_PRESSED:
+    case TINY_REX_DISPLAY_BUTTON_UP_PRESSED:
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
         task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_JUMP_EVENT);
     }
     break;
 
-    case AC_DISPLAY_BUTON_MODE_PRESSED:
+    case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED:
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
         if (Game_State == EM_GAME_STATE_OVER)
@@ -139,20 +139,20 @@ void scr_play_handle_signal(ak_msg_t* msg)
         }
     }
     break;
-    case AC_DISPLAY_BUTON_MODE_RELEASE:
+    case TINY_REX_DISPLAY_BUTTON_MODE_RELEASE:
     {
         task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_DUCK_RELEASE_EVENT);
     }
     break;
 
-    case AC_DISPLAY_BUTON_DOWN_PRESSED:
+    case TINY_REX_DISPLAY_BUTTON_DOWN_PRESSED:
     {
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
         task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_FALL_EVENT);
     }
     break;
 
-    case AC_DISPLAY_PLAYING_UPDATE:
+    case TINY_REX_DISPLAY_PLAYING_UPDATE:
     {
         task_post_pure_msg(OBSTACLE_OBJECT_ID, OBSTACLE_CHECK_COLLISSION_EVENT);
         task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_MOVE_EVENT);
@@ -162,7 +162,7 @@ void scr_play_handle_signal(ak_msg_t* msg)
     }
     break;
 
-    case AC_DISPLAY_PLAYING_GAME_OVER:
+    case TINY_REX_DISPLAY_PLAYING_GAME_OVER:
     {
         /* Game Over */
         Game_State = EM_GAME_STATE_OVER;

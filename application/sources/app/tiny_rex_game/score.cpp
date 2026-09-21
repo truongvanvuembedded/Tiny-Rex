@@ -105,7 +105,7 @@ void score_handle(ak_msg_t* msg)
             over_icon.action_image = BITMAP_GAME_OVER_ICON;
             over_icon.x = (WIDTH-g_bitmap_table[over_icon.action_image].width) / 2;
             over_icon.y = (HEIGHT-g_bitmap_table[over_icon.action_image].height) / 2;;
-            timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_PLAYING_UPDATE);
+            timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_PLAYING_UPDATE);
             /* Save new score */
             ranking_t new_data;
             if(get_current_user_name(new_data.name, SETTING_MAX_NAME)){

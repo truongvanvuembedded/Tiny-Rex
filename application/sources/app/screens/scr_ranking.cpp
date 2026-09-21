@@ -113,9 +113,9 @@ void scr_ranking_handle(ak_msg_t *msg) {
         tinyRex_game_score_read((eeprom_ranking_t*)g_ranking);
     } break;
 
-    case AC_DISPLAY_BUTON_MODE_PRESSED:
-    case AC_DISPLAY_BUTON_UP_PRESSED:
-    case AC_DISPLAY_BUTON_DOWN_PRESSED:
+    case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED:
+    case TINY_REX_DISPLAY_BUTTON_UP_PRESSED:
+    case TINY_REX_DISPLAY_BUTTON_DOWN_PRESSED:
     {
         SCREEN_TRAN(scr_menu_handle, &scr_menu);
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);

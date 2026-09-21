@@ -249,7 +249,7 @@ static void collision_detect(void)
                             &obstacle_objects[au1_ForC],
                             &g_bitmap_table[obstacle_objects[au1_ForC].action_image]);
             if(collistion_deteced){
-                task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_PLAYING_GAME_OVER);
+                task_post_pure_msg(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_PLAYING_GAME_OVER);
             }
         }
         
