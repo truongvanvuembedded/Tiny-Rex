@@ -61,7 +61,7 @@ static uint8_t current_location;
 //==================================================================================================
 static const uint8_t MENU_BOX_X[] = {10, 38, 68, 99};
 static const uint8_t MENU_BOX_W[] = {19, 20, 21, 20};
-static const uint8_t ICON_BITMAP_IDEX[] = {BITMAP_T_REX_STAND, BITMAP_GAME_SETTING_ICON, BITMAP_GAME_RANKING_ICON, BITMAP_GAME_EXIT_ICON};
+static uint8_t ICON_BITMAP_IDEX[] = {BITMAP_T_REX_RUN_1, BITMAP_GAME_SETTING_ICON, BITMAP_GAME_RANKING_ICON, BITMAP_GAME_EXIT_ICON};
 // Menu items name
 static const char* menu_items_name[EM_SCREEN_NUM] = {
     "T-REX GAME", // item 1
@@ -92,6 +92,16 @@ void scr_menu_handle(ak_msg_t* msg)
     case SCREEN_ENTRY:
     {
         APP_DBG_SIG("SCREEN_MENU_ENTRY\n");
+        timer_set(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_MENU_UPDATE, TINY_REX_DISPLAY_MENU_UPDATE_INTERVAL, TIMER_PERIODIC);
+    }
+    break;
+
+    case TINY_REX_DISPLAY_MENU_UPDATE:
+    {
+        if(current_location == EM_SCREEN_PLAY)
+        {
+            ICON_BITMAP_IDEX[0] = (ICON_BITMAP_IDEX[0] == BITMAP_T_REX_RUN_1 ? BITMAP_T_REX_RUN_2 : BITMAP_T_REX_RUN_1);
+        }
     }
     break;
 
@@ -137,7 +147,7 @@ void scr_menu_handle(ak_msg_t* msg)
         else if (current_location == EM_SCREEN_EXIT)
         {
         }
-
+        timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_MENU_UPDATE);
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
     }
     break;
