@@ -183,7 +183,7 @@ Two lightweight, optional helpers sit above the raw task/message primitives for 
 - **`fsm.h`/`fsm.c`** - a state is just a function pointer (`state_handler`). `FSM(me, init_func)` sets the initial state, `FSM_TRAN(me, target)` transitions by reassigning the pointer, and `fsm_dispatch(me, msg)` simply calls `me->state(msg)`. Minimal overhead, but the state's own code decides what to do with unhandled signals.
 - **`tsm.h`/`tsm.c`** - a table-driven state machine: each state is an array of `{sig, next_state, tsm_func}` rows terminated by `TSM_NULL_MSG`. `tsm_dispatch` looks up the row matching `msg->sig` in the current state's table, transitions to `next_state` if it differs from the current state, and calls `tsm_func` if set. This makes the full transition table visible at a glance instead of scattered across `case` labels.
 
-Neither is mandatory - `task_display`/`scr_*` in this project route through `screen_manager`'s own dispatch rather than `fsm`/`tsm` directly, but both are available to any task.
+Neither is mandatory. In this project all four game objects in `app/tiny_rex_game/` are driven by `tsm`, one table per state, each row mapping a signal to a next state and an action: `tiny_rex_object` (`RUNNING`/`JUMPING`/`FALLING`/`DUCKING`), `obstacles_object` (`RUNNING`/`COLLIDED`), and `horizon_object` and `score` (a single state each, so their table is just a signal-to-action map). `task_display`/`scr_*` route through `screen_manager`'s own dispatch instead, and `fsm` has no user.
 
 ## VII. Scope: not renamed to Tiny-Rex
 

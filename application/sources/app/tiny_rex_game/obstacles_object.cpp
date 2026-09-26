@@ -18,6 +18,7 @@
 //	Header File
 //==================================================================================================
 #include "obstacles_object.h"
+#include "tsm.h"
 //==================================================================================================
 //	Local define
 //==================================================================================================
@@ -58,12 +59,16 @@ static uint8_t min_spawn_distance_meter; /* Minimum distance to create a new obs
 static int8_t cur_dis_meter_last_obj; /* Current distance meter of last object created */
 static uint8_t id_last_obj; /* IDof last object created */
 uint8_t obstacle_objects_speed;
-bool collistion_deteced;
 //==================================================================================================
 //	Local ROM
 //==================================================================================================
 static void obstacle_objects_update(void);
 static void collision_detect(void);
+/* TSM action */
+static void obstacle_on_play(ak_msg_t* msg);
+static void obstacle_on_move(ak_msg_t* msg);
+static void obstacle_on_check_collision(ak_msg_t* msg);
+static void obstacle_on_inc_speed(ak_msg_t* msg);
 static bool collision_check(const game_object_t *obj1,
                              const bitmap_info_t *bmp1,
                              const game_object_t *obj2,
@@ -73,60 +78,96 @@ static bool collision_check(const game_object_t *obj1,
 //==================================================================================================
 
 //==================================================================================================
+//	State Table (TSM)
+//	RUNNING : obstacles move and spawn.
+//	COLLIDED: T-Rex hit an obstacle, obstacles stop moving (MOVE is not in the table).
+//==================================================================================================
+typedef enum
+{
+    EM_OBSTACLE_STATE_RUNNING = 0,
+    EM_OBSTACLE_STATE_COLLIDED,
+} EM_OBSTACLE_STATE;
+
+static tsm_t obstacle_tsm_running[] =
+{
+    {OBSTACLE_PLAY_EVENT,             EM_OBSTACLE_STATE_RUNNING, obstacle_on_play},
+    {OBSTACLE_MOVE_EVENT,             TSM_NULL_STATE,            obstacle_on_move},
+    {OBSTACLE_CHECK_COLLISSION_EVENT, TSM_NULL_STATE,            obstacle_on_check_collision},
+    {OBSTACLE_INC_SPEED_EVENT,        TSM_NULL_STATE,            obstacle_on_inc_speed},
+    {TSM_NULL_MSG,                    TSM_NULL_STATE,            TSM_NULL_ROUTINE},
+};
+
+static tsm_t obstacle_tsm_collided[] =
+{
+    {OBSTACLE_PLAY_EVENT,             EM_OBSTACLE_STATE_RUNNING, obstacle_on_play},
+    {OBSTACLE_CHECK_COLLISSION_EVENT, TSM_NULL_STATE,            obstacle_on_check_collision},
+    {OBSTACLE_INC_SPEED_EVENT,        TSM_NULL_STATE,            obstacle_on_inc_speed},
+    {TSM_NULL_MSG,                    TSM_NULL_STATE,            TSM_NULL_ROUTINE},
+};
+
+/* Index of this table MUST be the same as EM_OBSTACLE_STATE */
+static tsm_t* obstacle_tsm_table[] =
+{
+    obstacle_tsm_running,
+    obstacle_tsm_collided,
+};
+
+static tsm_tbl_t obstacle_tsm =
+{
+    EM_OBSTACLE_STATE_RUNNING,
+    TSM_NULL_ON_STATE,
+    obstacle_tsm_table,
+};
+//==================================================================================================
 //	Source Code
 //==================================================================================================
 void obstacle_objects_handle(ak_msg_t* msg)
 {
-    switch (msg->sig)
+    tsm_dispatch(&obstacle_tsm, msg);
+}
+
+static void obstacle_on_play(ak_msg_t* msg)
+{
+    (void)msg;
+    for(uint8_t au1_ForC = 0; au1_ForC < OBSTAJCLE_MAX; au1_ForC++)
     {
-    case OBSTACLE_PLAY_EVENT:
-    {
-        for(uint8_t au1_ForC = 0; au1_ForC < OBSTAJCLE_MAX; au1_ForC++)
-        {
-            obstacle_objects[au1_ForC].visible = BLACK;
+        obstacle_objects[au1_ForC].visible = BLACK;
+    }
+    obstacle_objects_speed = SPEED_MIN;
+    min_spawn_distance_meter = SPAWN_DISTANCE_MAX;
+    cur_dis_meter_last_obj = 0;
+    id_last_obj = 0;
+    /* Create first object */
+    obstacle_objects[0].visible = WHITE;
+    obstacle_objects[0].speed = obstacle_objects_speed;
+    obstacle_objects[0].action_image = BITMAP_TREE_1;
+    obstacle_objects[0].x = AXIS_X_OBSTACLE_OBJECT_INIT;
+    obstacle_objects[0].y = AXIS_Y_OBSTACLE_OBJECT_INIT(obstacle_objects[0].action_image);
+}
+
+static void obstacle_on_move(ak_msg_t* msg)
+{
+    (void)msg;
+    obstacle_objects_update();
+}
+
+static void obstacle_on_check_collision(ak_msg_t* msg)
+{
+    (void)msg;
+    collision_detect();
+}
+
+static void obstacle_on_inc_speed(ak_msg_t* msg)
+{
+    (void)msg;
+    if(obstacle_objects_speed < SPEED_MAX){
+        obstacle_objects_speed++;
+    }
+    else{
+        min_spawn_distance_meter -= 10;
+        if(min_spawn_distance_meter < SPAWN_DISTANCE_MIN){
+            min_spawn_distance_meter = SPAWN_DISTANCE_MIN;
         }
-        obstacle_objects_speed = SPEED_MIN;
-        min_spawn_distance_meter = SPAWN_DISTANCE_MAX;
-        cur_dis_meter_last_obj = 0;
-        id_last_obj = 0;
-        collistion_deteced = false;
-        /* Create first object */
-        obstacle_objects[0].visible = WHITE;
-        obstacle_objects[0].speed = obstacle_objects_speed;
-        obstacle_objects[0].action_image = BITMAP_TREE_1;
-        obstacle_objects[0].x = AXIS_X_OBSTACLE_OBJECT_INIT;
-        obstacle_objects[0].y = AXIS_Y_OBSTACLE_OBJECT_INIT(obstacle_objects[0].action_image);
-    }
-    break;
-
-    case OBSTACLE_MOVE_EVENT:
-    {
-        obstacle_objects_update();
-    }
-    break;
-
-    case OBSTACLE_CHECK_COLLISSION_EVENT:
-    {
-        collision_detect();
-    }
-    break;
-
-    case OBSTACLE_INC_SPEED_EVENT:
-    {
-        if(obstacle_objects_speed < SPEED_MAX){
-            obstacle_objects_speed++;
-        }
-        else{
-            min_spawn_distance_meter -= 10;
-            if(min_spawn_distance_meter < SPAWN_DISTANCE_MIN){
-                min_spawn_distance_meter = SPAWN_DISTANCE_MIN;
-            }
-        }
-    }
-    break;
-
-    default:
-        break;
     }
 }
 void draw_obstacle_objects(void)
@@ -156,9 +197,6 @@ void draw_obstacle_objects(void)
 }
 static void obstacle_objects_update(void)
 {
-    if(collistion_deteced){
-        return;
-    }
     /* Upte position of each objects */
     for(uint8_t au1_ForC = 0; au1_ForC < OBSTAJCLE_MAX; au1_ForC++)
     {
@@ -239,19 +277,27 @@ static bool collision_check(const game_object_t *obj1,
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void collision_detect(void)
 {
+    bool evaluated = false;
+    bool collision = false;
+
     /* Upte position of each objects */
     for(uint8_t au1_ForC = 0; au1_ForC < OBSTAJCLE_MAX; au1_ForC++)
     {
         if (obstacle_objects[au1_ForC].visible == WHITE)
         {
-            collistion_deteced = collision_check(&tiny_rex_object,
+            evaluated = true;
+            collision = collision_check(&tiny_rex_object,
                             &g_bitmap_table[tiny_rex_object.action_image],
                             &obstacle_objects[au1_ForC],
                             &g_bitmap_table[obstacle_objects[au1_ForC].action_image]);
-            if(collistion_deteced){
+            if(collision){
                 task_post_pure_msg(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_PLAYING_GAME_OVER);
             }
         }
         
+    }
+    /* State follows the result of the last checked obstacle */
+    if(evaluated){
+        TSM_TRAN(&obstacle_tsm, collision ? EM_OBSTACLE_STATE_COLLIDED : EM_OBSTACLE_STATE_RUNNING);
     }
 }
