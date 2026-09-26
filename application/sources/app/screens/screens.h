@@ -46,4 +46,8 @@ extern void scr_setting_handle(ak_msg_t* msg);
 extern view_screen_t scr_ranking;
 extern void scr_ranking_handle(ak_msg_t* msg);
 
+// scr_idle.cpp
+extern view_screen_t scr_idle;
+extern void scr_idle_handle(ak_msg_t* msg);
+
 #endif //__SCREENS_H__

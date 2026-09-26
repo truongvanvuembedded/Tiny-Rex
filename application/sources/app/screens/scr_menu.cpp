@@ -146,6 +146,7 @@ void scr_menu_handle(ak_msg_t* msg)
         }
         else if (current_location == EM_SCREEN_EXIT)
         {
+            SCREEN_TRAN(scr_idle_handle, &scr_idle);
         }
         timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_MENU_UPDATE);
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
