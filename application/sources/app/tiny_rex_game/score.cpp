@@ -33,13 +33,14 @@
 //	Local Struct Template
 //==================================================================================================
 /* Score */
-typedef struct{
+typedef struct
+{
     uint32_t skip_count;
     uint32_t threshold;
     uint32_t current_score;
     uint32_t high_score;
     uint8_t animation_timer;
-}score_t;
+} score_t;
 //==================================================================================================
 //	Local RAM
 //==================================================================================================
@@ -70,24 +71,24 @@ typedef enum
 } EM_SCORE_STATE;
 
 static tsm_t score_tsm_active[] =
-{
-    {SCORE_SETUP,     TSM_NULL_STATE, score_on_setup},
-    {SCORE_UPDATE,    TSM_NULL_STATE, score_on_update},
-    {SCORE_GAME_OVER, TSM_NULL_STATE, score_on_game_over},
-    {TSM_NULL_MSG,    TSM_NULL_STATE, TSM_NULL_ROUTINE},
+    {
+        {SCORE_SETUP, TSM_NULL_STATE, score_on_setup},
+        {SCORE_UPDATE, TSM_NULL_STATE, score_on_update},
+        {SCORE_GAME_OVER, TSM_NULL_STATE, score_on_game_over},
+        {TSM_NULL_MSG, TSM_NULL_STATE, TSM_NULL_ROUTINE},
 };
 
 /* Index of this table MUST be the same as EM_SCORE_STATE */
 static tsm_t* score_tsm_table[] =
-{
-    score_tsm_active,
+    {
+        score_tsm_active,
 };
 
 static tsm_tbl_t score_tsm =
-{
-    EM_SCORE_STATE_ACTIVE,
-    TSM_NULL_ON_STATE,
-    score_tsm_table,
+    {
+        EM_SCORE_STATE_ACTIVE,
+        TSM_NULL_ON_STATE,
+        score_tsm_table,
 };
 //==================================================================================================
 //	Source Code
@@ -104,7 +105,8 @@ static void score_on_setup(ak_msg_t* msg)
     /* Reset score */
     score_object.skip_count = 0;
     score_object.current_score = 0;
-    score_object.high_score = get_highest_score();;
+    score_object.high_score = get_highest_score();
+    ;
     score_object.threshold = 100;
     score_object.animation_timer = 0;
 }
@@ -114,17 +116,17 @@ static void score_on_update(ak_msg_t* msg)
     (void)msg;
     /* Update score */
     score_object.skip_count++;
-    if(score_object.skip_count >= 2)
+    if (score_object.skip_count >= 2)
     {
         score_object.current_score++;
-        if(score_object.current_score > 9999)
+        if (score_object.current_score > 9999)
         {
             score_object.current_score = 9999;
         }
         score_object.skip_count = 0;
     }
     /* Update new high score */
-    if(score_object.current_score > score_object.threshold)
+    if (score_object.current_score > score_object.threshold)
     {
         score_object.threshold += 100;
         score_object.animation_timer = 25;
@@ -140,12 +142,14 @@ static void score_on_game_over(ak_msg_t* msg)
     (void)msg;
     over_icon.visible = WHITE;
     over_icon.action_image = BITMAP_GAME_OVER_ICON;
-    over_icon.x = (WIDTH-g_bitmap_table[over_icon.action_image].width) / 2;
-    over_icon.y = (HEIGHT-g_bitmap_table[over_icon.action_image].height) / 2;;
+    over_icon.x = (WIDTH - g_bitmap_table[over_icon.action_image].width) / 2;
+    over_icon.y = (HEIGHT - g_bitmap_table[over_icon.action_image].height) / 2;
+    ;
     timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_PLAYING_UPDATE);
     /* Save new score */
     ranking_t new_data;
-    if(get_current_user_name(new_data.name, SETTING_MAX_NAME)){
+    if (get_current_user_name(new_data.name, SETTING_MAX_NAME))
+    {
         new_data.score = score_object.current_score;
         udpate_high_score(&new_data);
         score_object.high_score = get_highest_score();
@@ -176,7 +180,7 @@ void draw_score(void)
         score_blink_on = ((score_object.animation_timer / 5) & 0x01);
         score_object.animation_timer--;
     }
-    if(score_blink_on || Game_State == EM_GAME_STATE_OVER)
+    if (score_blink_on || Game_State == EM_GAME_STATE_OVER)
     {
         snprintf(str, sizeof(str), "%04lu", score_object.current_score);
         view_render.setCursor(102, 6);
@@ -186,14 +190,14 @@ void draw_score(void)
 void draw_over_icon(void)
 {
     /* Over icon */
-    if(over_icon.visible == BLACK)
+    if (over_icon.visible == BLACK)
         return;
     // Draw rectangle
     view_render.drawRoundRect(
-        over_icon.x-1,
-        over_icon.y-1,
-        g_bitmap_table[over_icon.action_image].width+2,
-        g_bitmap_table[over_icon.action_image].height+2,
+        over_icon.x - 1,
+        over_icon.y - 1,
+        g_bitmap_table[over_icon.action_image].width + 2,
+        g_bitmap_table[over_icon.action_image].height + 2,
         2,
         WHITE);
     // Draw bit-map of over check icon

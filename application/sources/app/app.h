@@ -57,70 +57,73 @@ extern "C"
         TINY_REX_DISPLAY_SHOW_IDLE,
         /* Tiny game signals */
         TINY_REX_DISPLAY_SHOW_MENU,
-		TINY_REX_DISPLAY_PLAYING_UPDATE,
-		TINY_REX_DISPLAY_PLAYING_GAME_OVER,
-		EVENT_DISPLAY_SETTING_NAME,
+        TINY_REX_DISPLAY_PLAYING_UPDATE,
+        TINY_REX_DISPLAY_PLAYING_GAME_OVER,
+        EVENT_DISPLAY_SETTING_NAME,
     };
 
-/*****************************************************************************/
-/*  Tiny-Rex object signal define
- */
-/*****************************************************************************/
-/* Define signal */
-enum
-{
-    TINY_REX_PLAY_EVENT = TINY_REX_DEFINE_SIG,
-    TINY_REX_MOVE_EVENT,
-    TINY_REX_JUMP_EVENT,
-    TINY_REX_FALL_EVENT,
-    TINY_REX_DUCK_EVENT,
-    TINY_REX_DUCK_RELEASE_EVENT,
-    TINY_REX_INC_SPEED_EVENT,
-};
+    /*****************************************************************************/
+    /*  Tiny-Rex object signal define
+     */
+    /*****************************************************************************/
+    /* Define signal */
+    enum
+    {
+        TINY_REX_PLAY_EVENT = TINY_REX_DEFINE_SIG,
+        TINY_REX_MOVE_EVENT,
+        TINY_REX_JUMP_EVENT,
+        TINY_REX_FALL_EVENT,
+        TINY_REX_DUCK_EVENT,
+        TINY_REX_DUCK_RELEASE_EVENT,
+        TINY_REX_INC_SPEED_EVENT,
+    };
 
-/*****************************************************************************/
-/*  Obstacle objects signal define
- */
-/*****************************************************************************/
-/* Define signal */
-enum
-{
-	OBSTACLE_PLAY_EVENT = TINY_REX_DEFINE_SIG,
-	OBSTACLE_MOVE_EVENT,
-	OBSTACLE_CHECK_COLLISSION_EVENT,
-	OBSTACLE_INC_SPEED_EVENT
-};
+    /*****************************************************************************/
+    /*  Obstacle objects signal define
+     */
+    /*****************************************************************************/
+    /* Define signal */
+    enum
+    {
+        OBSTACLE_PLAY_EVENT = TINY_REX_DEFINE_SIG,
+        OBSTACLE_MOVE_EVENT,
+        OBSTACLE_CHECK_COLLISSION_EVENT,
+        OBSTACLE_INC_SPEED_EVENT
+    };
 
-/*****************************************************************************/
-/*  Horizon object signal define
- */
-/*****************************************************************************/
-/* Define signal */
-enum
-{
-	HORIZON_OBJECT_PLAY_EVENT = TINY_REX_DEFINE_SIG,
-	HORIZON_OBJECT_UPDATE_EVENT,
-	HORIZON_INC_SPEED_EVENT,
-};
+    /*****************************************************************************/
+    /*  Horizon object signal define
+     */
+    /*****************************************************************************/
+    /* Define signal */
+    enum
+    {
+        HORIZON_OBJECT_PLAY_EVENT = TINY_REX_DEFINE_SIG,
+        HORIZON_OBJECT_UPDATE_EVENT,
+        HORIZON_INC_SPEED_EVENT,
+    };
 
-/*****************************************************************************/
-/*  Score object signal define
- */
-/*****************************************************************************/
-/* Define signal */
-enum
-{
-	SCORE_SETUP = TINY_REX_DEFINE_SIG,
-	SCORE_UPDATE,
-	SCORE_GAME_OVER,
-};
+    /*****************************************************************************/
+    /*  Score object signal define
+     */
+    /*****************************************************************************/
+    /* Define signal */
+    enum
+    {
+        SCORE_SETUP = TINY_REX_DEFINE_SIG,
+        SCORE_UPDATE,
+        SCORE_GAME_OVER,
+    };
 
 /*****************************************************************************/
 /*  app function declare
  */
 /*****************************************************************************/
 #define APP_MAGIC_NUMBER 0xAABBCCDD
-#define APP_VER {0, 0, 0, 3}
+#define APP_VER    \
+    {              \
+        0, 0, 0, 3 \
+    }
 
     typedef struct
     {

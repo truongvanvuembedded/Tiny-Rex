@@ -5,7 +5,7 @@
 
 typedef struct
 {
-    const unsigned char *bitmap;
+    const unsigned char* bitmap;
     uint16_t width;
     uint16_t height;
 } bitmap_info_t;

@@ -68,24 +68,24 @@ typedef enum
 } EM_HORIZON_STATE;
 
 static tsm_t horizon_tsm_active[] =
-{
-    {HORIZON_OBJECT_PLAY_EVENT,   TSM_NULL_STATE, horizon_on_play},
-    {HORIZON_OBJECT_UPDATE_EVENT, TSM_NULL_STATE, horizon_on_update},
-    {HORIZON_INC_SPEED_EVENT,     TSM_NULL_STATE, horizon_on_inc_speed},
-    {TSM_NULL_MSG,                TSM_NULL_STATE, TSM_NULL_ROUTINE},
+    {
+        {HORIZON_OBJECT_PLAY_EVENT, TSM_NULL_STATE, horizon_on_play},
+        {HORIZON_OBJECT_UPDATE_EVENT, TSM_NULL_STATE, horizon_on_update},
+        {HORIZON_INC_SPEED_EVENT, TSM_NULL_STATE, horizon_on_inc_speed},
+        {TSM_NULL_MSG, TSM_NULL_STATE, TSM_NULL_ROUTINE},
 };
 
 /* Index of this table MUST be the same as EM_HORIZON_STATE */
 static tsm_t* horizon_tsm_table[] =
-{
-    horizon_tsm_active,
+    {
+        horizon_tsm_active,
 };
 
 static tsm_tbl_t horizon_tsm =
-{
-    EM_HORIZON_STATE_ACTIVE,
-    TSM_NULL_ON_STATE,
-    horizon_tsm_table,
+    {
+        EM_HORIZON_STATE_ACTIVE,
+        TSM_NULL_ON_STATE,
+        horizon_tsm_table,
 };
 //==================================================================================================
 //	Source Code

@@ -1,6 +1,6 @@
 //==================================================================================================
 //	File Name	: scr_menu
-//	CPU Type	: 
+//	CPU Type	:
 //	Builder		:
 //	Coding		: V.Vu
 //	History		: 08/09/2026 New
@@ -63,7 +63,7 @@ static const uint8_t MENU_BOX_X[] = {10, 38, 68, 99};
 static const uint8_t MENU_BOX_W[] = {19, 20, 21, 20};
 static const uint8_t ICON_BITMAP_IDEX[] = {BITMAP_T_REX_STAND, BITMAP_GAME_SETTING_ICON, BITMAP_GAME_RANKING_ICON, BITMAP_GAME_EXIT_ICON};
 // Menu items name
-static const char *menu_items_name[EM_SCREEN_NUM] = {
+static const char* menu_items_name[EM_SCREEN_NUM] = {
     "T-REX GAME", // item 1
     "SETTING",    // item 2
     "RANKING",    // item 3
@@ -166,7 +166,7 @@ static void view_scr_menu()
     view_render.setCursor(name_x, 2);
     view_render.print(name);
     /* Draw line for seperate */
-    view_render.drawLine(0,15,128,15,WHITE);
+    view_render.drawLine(0, 15, 128, 15, WHITE);
     /* Draw object */
     draw_menu_icon();
 }
@@ -181,29 +181,29 @@ static void view_scr_menu()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void draw_menu_icon(void)
 {
-  // Draw the 4 cards horizontally
-  for (uint8_t i = 0; i < EM_SCREEN_NUM; i++)
-  {
-    uint8_t bx = MENU_BOX_X[i];
-    uint8_t bx_w = MENU_BOX_W[i];
-    
-    if (i == current_location)
+    // Draw the 4 cards horizontally
+    for (uint8_t i = 0; i < EM_SCREEN_NUM; i++)
     {
-      // Highlighted item: solid white background
-      view_render.fillRoundRect(bx, 32, bx_w, 20, 0, WHITE);
+        uint8_t bx = MENU_BOX_X[i];
+        uint8_t bx_w = MENU_BOX_W[i];
+
+        if (i == current_location)
+        {
+            // Highlighted item: solid white background
+            view_render.fillRoundRect(bx, 32, bx_w, 20, 0, WHITE);
+        }
+        else
+        {
+            // Unselected item: outline only
+            view_render.drawRoundRect(bx, 32, bx_w, 20, 0, WHITE);
+        }
+        view_render.drawBitmap(
+            bx + 2,
+            34,
+            g_bitmap_table[ICON_BITMAP_IDEX[i]].bitmap,
+            g_bitmap_table[ICON_BITMAP_IDEX[i]].width,
+            g_bitmap_table[ICON_BITMAP_IDEX[i]].height,
+            (i == current_location) ? BLACK : WHITE);
     }
-    else
-    {
-      // Unselected item: outline only
-      view_render.drawRoundRect(bx, 32, bx_w, 20, 0, WHITE);
-    }
-      view_render.drawBitmap(
-        bx+2,
-        34,
-        g_bitmap_table[ICON_BITMAP_IDEX[i]].bitmap,
-        g_bitmap_table[ICON_BITMAP_IDEX[i]].width,
-        g_bitmap_table[ICON_BITMAP_IDEX[i]].height,
-        (i == current_location)?BLACK:WHITE);
-  }
 }
 /* ************************************* End of File ******************************************** */

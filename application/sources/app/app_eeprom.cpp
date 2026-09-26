@@ -39,7 +39,7 @@
 //==================================================================================================
 //	Local define
 //==================================================================================================
-#define TINY_REX_SCORE_CHECKSUM_SIZE	  (sizeof(uint32_t) + sizeof(eeprom_ranking_t))
+#define TINY_REX_SCORE_CHECKSUM_SIZE (sizeof(uint32_t) + sizeof(eeprom_ranking_t))
 //==================================================================================================
 //	Local define I/O
 //==================================================================================================
@@ -47,7 +47,8 @@
 //==================================================================================================
 //	Local Struct Template
 //==================================================================================================
-typedef struct {
+typedef struct
+{
     uint32_t magic_number;
     eeprom_ranking_t data;
     uint8_t check_sum;
@@ -74,13 +75,15 @@ typedef struct {
 //    Argument: uint8_t *data: Input data need get checksum value
 //              uint32_t size: Size of data
 //    Return  : Checksum value
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static uint8_t trex_game_eeprom_checksum(uint8_t *data, uint32_t size) {
+static uint8_t trex_game_eeprom_checksum(uint8_t* data, uint32_t size)
+{
     uint8_t check_sum = 0;
 
-    for (uint32_t i = 0; i < size; i++) {
+    for (uint32_t i = 0; i < size; i++)
+    {
         check_sum += data[i];
     }
 
@@ -93,12 +96,13 @@ static uint8_t trex_game_eeprom_checksum(uint8_t *data, uint32_t size) {
 //              uint8_t *check_sum: Pointer to checksum number for get checksum value
 //              uint32_t check_sum_size: Size need checksum
 //    Return  : None
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static void trex_game_eeprom_update_checksum(uint32_t *magic_number, uint8_t *check_sum, uint32_t check_sum_size) {
+static void trex_game_eeprom_update_checksum(uint32_t* magic_number, uint8_t* check_sum, uint32_t check_sum_size)
+{
     *magic_number = TINY_REX_EEPROM_MAGIC_NUMBER;
-    *check_sum	  = trex_game_eeprom_checksum((uint8_t *)magic_number, check_sum_size);
+    *check_sum = trex_game_eeprom_checksum((uint8_t*)magic_number, check_sum_size);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //    Name    : trex_game_eeprom_is_valid
@@ -107,22 +111,25 @@ static void trex_game_eeprom_update_checksum(uint32_t *magic_number, uint8_t *ch
 //              uint8_t check_sum: Checksum value need check
 //              uint32_t check_sum_size: Size need checksum
 //    Return  : Checksum value
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static bool trex_game_eeprom_is_valid(uint32_t *magic_number, uint8_t check_sum, uint32_t check_sum_size) {
-    return (*magic_number == TINY_REX_EEPROM_MAGIC_NUMBER) && (check_sum == trex_game_eeprom_checksum((uint8_t *)magic_number, check_sum_size));
+static bool trex_game_eeprom_is_valid(uint32_t* magic_number, uint8_t check_sum, uint32_t check_sum_size)
+{
+    return (*magic_number == TINY_REX_EEPROM_MAGIC_NUMBER) && (check_sum == trex_game_eeprom_checksum((uint8_t*)magic_number, check_sum_size));
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //    Name    : trex_game_score_set_default
 //    Function: Clear ranking value if data read not match with checksum or format rule.
 //    Argument: ranking_t *data: Pointer to ranking value need reset
 //    Return  : Checksum value
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static void trex_game_score_set_default(eeprom_ranking_t *data) {
-    for(uint8_t au1_ForC = 0; au1_ForC<RANKING_MAX; au1_ForC++){
+static void trex_game_score_set_default(eeprom_ranking_t* data)
+{
+    for (uint8_t au1_ForC = 0; au1_ForC < RANKING_MAX; au1_ForC++)
+    {
         memset(data->ranking[au1_ForC].name, 0, SETTING_MAX_NAME);
         data->ranking[au1_ForC].score = 0;
     }
@@ -132,36 +139,39 @@ static void trex_game_score_set_default(eeprom_ranking_t *data) {
 //    Function: Read score value from eeprom memory
 //    Argument: ranking_t *data: Pointer to buffer need write when read success
 //    Return  : Checksum value
-//    Change  : 
+//    Change  :
 //    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-bool tinyRex_game_score_read(eeprom_ranking_t* data){
+bool tinyRex_game_score_read(eeprom_ranking_t* data)
+{
     tiny_game_score_eeprom_t eeprom_data;
 
-    uint8_t ret =eeprom_read(EEPROM_SCORE_START_ADDR, (uint8_t *)&eeprom_data, sizeof(eeprom_data));
+    uint8_t ret = eeprom_read(EEPROM_SCORE_START_ADDR, (uint8_t*)&eeprom_data, sizeof(eeprom_data));
 
-    if (ret == EEPROM_DRIVER_OK && trex_game_eeprom_is_valid(&eeprom_data.magic_number, eeprom_data.check_sum, TINY_REX_SCORE_CHECKSUM_SIZE)) {
+    if (ret == EEPROM_DRIVER_OK && trex_game_eeprom_is_valid(&eeprom_data.magic_number, eeprom_data.check_sum, TINY_REX_SCORE_CHECKSUM_SIZE))
+    {
         *data = eeprom_data.data;
         return true;
     }
 
-  trex_game_score_set_default(data);
-  return false; 
+    trex_game_score_set_default(data);
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //    Name    : trex_game_score_write
 //    Function: Write score value to eeprom memory
 //    Argument: tiny_game_score_eeprom_t *data: Pointer to buffer need write to memory
 //    Return  : Checksum value
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-bool tinyRex_game_score_write(eeprom_ranking_t* data){
+bool tinyRex_game_score_write(eeprom_ranking_t* data)
+{
     tiny_game_score_eeprom_t eeprom_data;
 
     eeprom_data.data = *data;
     trex_game_eeprom_update_checksum(&eeprom_data.magic_number, &eeprom_data.check_sum, TINY_REX_SCORE_CHECKSUM_SIZE);
 
-    return eeprom_write(EEPROM_SCORE_START_ADDR, (uint8_t *)&eeprom_data, sizeof(eeprom_data)) == EEPROM_DRIVER_OK;
+    return eeprom_write(EEPROM_SCORE_START_ADDR, (uint8_t*)&eeprom_data, sizeof(eeprom_data)) == EEPROM_DRIVER_OK;
 }
 /* ************************************* End of File ******************************************** */

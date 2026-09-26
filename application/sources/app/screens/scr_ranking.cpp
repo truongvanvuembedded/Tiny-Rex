@@ -36,8 +36,7 @@ view_dynamic_t dyn_view_ranking = {
     {
         .item_type = ITEM_TYPE_DYNAMIC,
     },
-    view_scr_ranking
-};
+    view_scr_ranking};
 
 view_screen_t scr_ranking = {
     &dyn_view_ranking,
@@ -68,12 +67,12 @@ static ranking_t g_ranking[RANKING_MAX];
 //    Argument: None
 //    Return  : None
 //    Created : V.Vu
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void view_scr_ranking()
 {
-    char str[SETTING_MAX_NAME+1];
+    char str[SETTING_MAX_NAME + 1];
     view_render.setTextSize(1);
     view_render.setTextColor(WHITE);
 
@@ -104,14 +103,18 @@ void view_scr_ranking()
 //    Argument: None
 //    Return  : None
 //    Created : V.Vu
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void scr_ranking_handle(ak_msg_t *msg) {
-    switch (msg->sig) {
-    case SCREEN_ENTRY: {
+void scr_ranking_handle(ak_msg_t* msg)
+{
+    switch (msg->sig)
+    {
+    case SCREEN_ENTRY:
+    {
         tinyRex_game_score_read((eeprom_ranking_t*)g_ranking);
-    } break;
+    }
+    break;
 
     case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED:
     case TINY_REX_DISPLAY_BUTTON_UP_PRESSED:
@@ -119,7 +122,8 @@ void scr_ranking_handle(ak_msg_t *msg) {
     {
         SCREEN_TRAN(scr_menu_handle, &scr_menu);
         BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-    } break;
+    }
+    break;
 
     default:
         break;
@@ -131,19 +135,19 @@ void scr_ranking_handle(ak_msg_t *msg) {
 //    Argument: uint32_t score: New score
 //    Return  : None
 //    Created : V.Vu
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void udpate_high_score(ranking_t* data)
 {
     /* Draw ranking list */
-    for (int8_t i = 0; i<RANKING_MAX ; i++)
+    for (int8_t i = 0; i < RANKING_MAX; i++)
     {
-        if(data->score >= g_ranking[i].score)
+        if (data->score >= g_ranking[i].score)
         {
-            for (int8_t y = RANKING_MAX-1; y>i ; y--)
+            for (int8_t y = RANKING_MAX - 1; y > i; y--)
             {
-                g_ranking[y] = g_ranking[y-1];
+                g_ranking[y] = g_ranking[y - 1];
             }
             g_ranking[i] = *data;
             tinyRex_game_score_write((eeprom_ranking_t*)g_ranking);
@@ -157,16 +161,12 @@ void udpate_high_score(ranking_t* data)
 //    Argument: None
 //    Return  : Highest score
 //    Created : V.Vu
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-uint32_t get_highest_score(void){
+uint32_t get_highest_score(void)
+{
     tinyRex_game_score_read((eeprom_ranking_t*)g_ranking);
     return g_ranking[0].score;
 }
 /* ************************************* End of File ******************************************** */
-
-
-
-
-

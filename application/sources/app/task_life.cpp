@@ -13,21 +13,23 @@
 
 led_t led_life;
 
-void task_life(ak_msg_t* msg) {
-	switch (msg->sig) {
-	case TINY_REX_LIFE_SYSTEM_CHECK:
-		/* reset watchdog */
-		sys_ctrl_independent_watchdog_reset();
-		sys_ctrl_soft_watchdog_reset();
+void task_life(ak_msg_t* msg)
+{
+    switch (msg->sig)
+    {
+    case TINY_REX_LIFE_SYSTEM_CHECK:
+        /* reset watchdog */
+        sys_ctrl_independent_watchdog_reset();
+        sys_ctrl_soft_watchdog_reset();
 
 #if defined(AK_IO_IRQ_ANALYZER)
 #else
-		/* toggle led indicator */
-		led_toggle(&led_life);
+        /* toggle led indicator */
+        led_toggle(&led_life);
 #endif
-		break;
+        break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 }

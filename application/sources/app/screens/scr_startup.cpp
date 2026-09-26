@@ -21,8 +21,8 @@
 //==================================================================================================
 //	Local define
 //==================================================================================================
-#define AK_LOGO_AXIS_X		(23)
-#define AK_LOGO_TEXT		(AK_LOGO_AXIS_X + 4)
+#define AK_LOGO_AXIS_X (23)
+#define AK_LOGO_TEXT (AK_LOGO_AXIS_X + 4)
 //==================================================================================================
 //	Local define I/O
 //==================================================================================================
@@ -32,18 +32,17 @@
 //==================================================================================================
 static void view_scr_startup();
 view_dynamic_t dyn_view_startup = {
-	{
-		.item_type = ITEM_TYPE_DYNAMIC,
-	},
-	view_scr_startup
-};
+    {
+        .item_type = ITEM_TYPE_DYNAMIC,
+    },
+    view_scr_startup};
 
 view_screen_t scr_startup = {
-	&dyn_view_startup,
-	ITEM_NULL,
-	ITEM_NULL,
+    &dyn_view_startup,
+    ITEM_NULL,
+    ITEM_NULL,
 
-	.focus_item = 0,
+    .focus_item = 0,
 };
 //==================================================================================================
 //	Local RAM
@@ -66,25 +65,25 @@ view_screen_t scr_startup = {
 //    Argument: None
 //    Return  : None
 //    Created : V.Vu
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void view_scr_startup()
 {
-	/* ak logo */
-	view_render.clear();
-	view_render.setTextSize(1);
-	view_render.setTextColor(WHITE);
-	view_render.setCursor(AK_LOGO_AXIS_X, 3);
-	view_render.print("   __    _  _ ");
-	view_render.setCursor(AK_LOGO_AXIS_X, 10);
-	view_render.print("  /__\\  ( )/ )");
-	view_render.setCursor(AK_LOGO_AXIS_X, 20);
-	view_render.print(" /(__)\\ (   (");
-	view_render.setCursor(AK_LOGO_AXIS_X, 30);
-	view_render.print("(__)(__)(_)\\_)");
-	view_render.setCursor(AK_LOGO_TEXT, 42);
-	view_render.print("Active Kernel");
+    /* ak logo */
+    view_render.clear();
+    view_render.setTextSize(1);
+    view_render.setTextColor(WHITE);
+    view_render.setCursor(AK_LOGO_AXIS_X, 3);
+    view_render.print("   __    _  _ ");
+    view_render.setCursor(AK_LOGO_AXIS_X, 10);
+    view_render.print("  /__\\  ( )/ )");
+    view_render.setCursor(AK_LOGO_AXIS_X, 20);
+    view_render.print(" /(__)\\ (   (");
+    view_render.setCursor(AK_LOGO_AXIS_X, 30);
+    view_render.print("(__)(__)(_)\\_)");
+    view_render.setCursor(AK_LOGO_TEXT, 42);
+    view_render.print("Active Kernel");
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //    Name    : scr_startup_handle
@@ -92,31 +91,39 @@ void view_scr_startup()
 //    Argument: ak_msg_t *msg: Message information
 //    Return  : None
 //    Created : V.Vu
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void scr_startup_handle(ak_msg_t *msg) {
-	switch (msg->sig) {
-	case TINY_REX_DISPLAY_INITIAL: {
-		APP_DBG_SIG("TINY_REX_DISPLAY_INITIAL\n");
-		view_render.initialize();
-		view_render_display_on();
-		timer_set(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_SHOW_MENU, TINY_REX_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
-	} break;
+void scr_startup_handle(ak_msg_t* msg)
+{
+    switch (msg->sig)
+    {
+    case TINY_REX_DISPLAY_INITIAL:
+    {
+        APP_DBG_SIG("TINY_REX_DISPLAY_INITIAL\n");
+        view_render.initialize();
+        view_render_display_on();
+        timer_set(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_SHOW_MENU, TINY_REX_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
+    }
+    break;
 
-	case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED: {
-		APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_MODE_PRESSED\n");
-		timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_SHOW_MENU);
-		SCREEN_TRAN(scr_menu_handle, &scr_menu);
-	} break;
+    case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED:
+    {
+        APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_MODE_PRESSED\n");
+        timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, TINY_REX_DISPLAY_SHOW_MENU);
+        SCREEN_TRAN(scr_menu_handle, &scr_menu);
+    }
+    break;
 
-	case TINY_REX_DISPLAY_SHOW_MENU: {
-		APP_DBG_SIG("TINY_REX_DISPLAY_SHOW_MENU\n");
-		SCREEN_TRAN(scr_menu_handle, &scr_menu);
-	} break;
+    case TINY_REX_DISPLAY_SHOW_MENU:
+    {
+        APP_DBG_SIG("TINY_REX_DISPLAY_SHOW_MENU\n");
+        SCREEN_TRAN(scr_menu_handle, &scr_menu);
+    }
+    break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 }
 /* ************************************* End of File ******************************************** */

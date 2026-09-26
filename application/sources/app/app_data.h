@@ -8,8 +8,9 @@
 #include "app.h"
 #include "buzzer.h"
 
-typedef struct {
-	uint8_t is_power_on_reset;
+typedef struct
+{
+    uint8_t is_power_on_reset;
 } boot_app_share_data_t;
 
 #endif //__APP_DATA_H__

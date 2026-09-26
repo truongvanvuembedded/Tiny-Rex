@@ -134,7 +134,9 @@ void scr_play_handle_signal(ak_msg_t* msg)
         if (Game_State == EM_GAME_STATE_OVER)
         {
             SCREEN_TRAN(scr_menu_handle, &scr_menu);
-        }else{
+        }
+        else
+        {
             task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_DUCK_EVENT);
         }
     }

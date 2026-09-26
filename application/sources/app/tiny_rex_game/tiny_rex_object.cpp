@@ -66,42 +66,36 @@ game_object_t tiny_rex_object;
 //==================================================================================================
 /* Speed table */
 static const ST_TREX_SPEED g_st_TrexSpeed[TREX_LEVEL_MAX] =
-{
-    /* L1 - Easy */
     {
-        .u1_JumpSpeed    = 5,
-        .u1_FallSpeed    = 2,
-        .u1_FastFallSpeed = 5
-    },
+        /* L1 - Easy */
+        {
+            .u1_JumpSpeed = 5,
+            .u1_FallSpeed = 2,
+            .u1_FastFallSpeed = 5},
 
-    /* L1 - Easy */
-    {
-        .u1_JumpSpeed    = 6,
-        .u1_FallSpeed    = 3,
-        .u1_FastFallSpeed = 6
-    },
+        /* L1 - Easy */
+        {
+            .u1_JumpSpeed = 6,
+            .u1_FallSpeed = 3,
+            .u1_FastFallSpeed = 6},
 
-    /* L2 - Normal */
-    {
-        .u1_JumpSpeed    = 7,
-        .u1_FallSpeed    = 4,
-        .u1_FastFallSpeed = 7
-    },
+        /* L2 - Normal */
+        {
+            .u1_JumpSpeed = 7,
+            .u1_FallSpeed = 4,
+            .u1_FastFallSpeed = 7},
 
-    /* L3 - Hard */
-    {
-        .u1_JumpSpeed    = 8,
-        .u1_FallSpeed    = 5,
-        .u1_FastFallSpeed = 8
-    },
+        /* L3 - Hard */
+        {
+            .u1_JumpSpeed = 8,
+            .u1_FallSpeed = 5,
+            .u1_FastFallSpeed = 8},
 
-    /* L4 - Extreme */
-    {
-        .u1_JumpSpeed    = 9,
-        .u1_FallSpeed    = 6,
-        .u1_FastFallSpeed = 9
-    }
-};
+        /* L4 - Extreme */
+        {
+            .u1_JumpSpeed = 9,
+            .u1_FallSpeed = 6,
+            .u1_FastFallSpeed = 9}};
 //==================================================================================================
 //	Local Function Prototype
 //==================================================================================================
@@ -124,57 +118,57 @@ static void tiny_rex_on_move_ducking(ak_msg_t* msg);
 //	is ignored. The row TSM_NULL_MSG ends the table.
 //==================================================================================================
 static tsm_t tiny_rex_tsm_running[] =
-{
-    {TINY_REX_PLAY_EVENT,         EM_TINY_REX_STATE_RUNNING, tiny_rex_on_play},
-    {TINY_REX_JUMP_EVENT,         EM_TINY_REX_STATE_JUMPING, tiny_rex_on_jump},
-    {TINY_REX_DUCK_EVENT,         EM_TINY_REX_STATE_DUCKING, tiny_rex_on_duck},
-    {TINY_REX_INC_SPEED_EVENT,    TSM_NULL_STATE,            tiny_rex_on_inc_speed},
-    {TINY_REX_MOVE_EVENT,         TSM_NULL_STATE,            tiny_rex_on_move_running},
-    {TSM_NULL_MSG,                TSM_NULL_STATE,            TSM_NULL_ROUTINE},
+    {
+        {TINY_REX_PLAY_EVENT, EM_TINY_REX_STATE_RUNNING, tiny_rex_on_play},
+        {TINY_REX_JUMP_EVENT, EM_TINY_REX_STATE_JUMPING, tiny_rex_on_jump},
+        {TINY_REX_DUCK_EVENT, EM_TINY_REX_STATE_DUCKING, tiny_rex_on_duck},
+        {TINY_REX_INC_SPEED_EVENT, TSM_NULL_STATE, tiny_rex_on_inc_speed},
+        {TINY_REX_MOVE_EVENT, TSM_NULL_STATE, tiny_rex_on_move_running},
+        {TSM_NULL_MSG, TSM_NULL_STATE, TSM_NULL_ROUTINE},
 };
 
 static tsm_t tiny_rex_tsm_jumping[] =
-{
-    {TINY_REX_PLAY_EVENT,         EM_TINY_REX_STATE_RUNNING, tiny_rex_on_play},
-    {TINY_REX_FALL_EVENT,         EM_TINY_REX_STATE_FALLING, tiny_rex_on_fall},
-    {TINY_REX_INC_SPEED_EVENT,    TSM_NULL_STATE,            tiny_rex_on_inc_speed},
-    {TINY_REX_MOVE_EVENT,         TSM_NULL_STATE,            tiny_rex_on_move_jumping},
-    {TSM_NULL_MSG,                TSM_NULL_STATE,            TSM_NULL_ROUTINE},
+    {
+        {TINY_REX_PLAY_EVENT, EM_TINY_REX_STATE_RUNNING, tiny_rex_on_play},
+        {TINY_REX_FALL_EVENT, EM_TINY_REX_STATE_FALLING, tiny_rex_on_fall},
+        {TINY_REX_INC_SPEED_EVENT, TSM_NULL_STATE, tiny_rex_on_inc_speed},
+        {TINY_REX_MOVE_EVENT, TSM_NULL_STATE, tiny_rex_on_move_jumping},
+        {TSM_NULL_MSG, TSM_NULL_STATE, TSM_NULL_ROUTINE},
 };
 
 static tsm_t tiny_rex_tsm_falling[] =
-{
-    {TINY_REX_PLAY_EVENT,         EM_TINY_REX_STATE_RUNNING, tiny_rex_on_play},
-    {TINY_REX_FALL_EVENT,         EM_TINY_REX_STATE_FALLING, tiny_rex_on_fall},
-    {TINY_REX_INC_SPEED_EVENT,    TSM_NULL_STATE,            tiny_rex_on_inc_speed},
-    {TINY_REX_MOVE_EVENT,         TSM_NULL_STATE,            tiny_rex_on_move_falling},
-    {TSM_NULL_MSG,                TSM_NULL_STATE,            TSM_NULL_ROUTINE},
+    {
+        {TINY_REX_PLAY_EVENT, EM_TINY_REX_STATE_RUNNING, tiny_rex_on_play},
+        {TINY_REX_FALL_EVENT, EM_TINY_REX_STATE_FALLING, tiny_rex_on_fall},
+        {TINY_REX_INC_SPEED_EVENT, TSM_NULL_STATE, tiny_rex_on_inc_speed},
+        {TINY_REX_MOVE_EVENT, TSM_NULL_STATE, tiny_rex_on_move_falling},
+        {TSM_NULL_MSG, TSM_NULL_STATE, TSM_NULL_ROUTINE},
 };
 
 static tsm_t tiny_rex_tsm_ducking[] =
-{
-    {TINY_REX_PLAY_EVENT,         EM_TINY_REX_STATE_RUNNING, tiny_rex_on_play},
-    {TINY_REX_DUCK_RELEASE_EVENT, EM_TINY_REX_STATE_RUNNING, tiny_rex_on_duck_release},
-    {TINY_REX_INC_SPEED_EVENT,    TSM_NULL_STATE,            tiny_rex_on_inc_speed},
-    {TINY_REX_MOVE_EVENT,         TSM_NULL_STATE,            tiny_rex_on_move_ducking},
-    {TSM_NULL_MSG,                TSM_NULL_STATE,            TSM_NULL_ROUTINE},
+    {
+        {TINY_REX_PLAY_EVENT, EM_TINY_REX_STATE_RUNNING, tiny_rex_on_play},
+        {TINY_REX_DUCK_RELEASE_EVENT, EM_TINY_REX_STATE_RUNNING, tiny_rex_on_duck_release},
+        {TINY_REX_INC_SPEED_EVENT, TSM_NULL_STATE, tiny_rex_on_inc_speed},
+        {TINY_REX_MOVE_EVENT, TSM_NULL_STATE, tiny_rex_on_move_ducking},
+        {TSM_NULL_MSG, TSM_NULL_STATE, TSM_NULL_ROUTINE},
 };
 
 /* Index of this table MUST be the same as EM_TINY_REX_STATE */
 static tsm_t* tiny_rex_tsm_table[] =
-{
-    tiny_rex_tsm_running,
-    tiny_rex_tsm_jumping,
-    tiny_rex_tsm_falling,
-    tiny_rex_tsm_ducking,
+    {
+        tiny_rex_tsm_running,
+        tiny_rex_tsm_jumping,
+        tiny_rex_tsm_falling,
+        tiny_rex_tsm_ducking,
 };
 
 /* Start in RUNNING state, tiny_rex_object.state follows it via tiny_rex_on_state() */
 static tsm_tbl_t tiny_rex_tsm =
-{
-    EM_TINY_REX_STATE_RUNNING,
-    tiny_rex_on_state,
-    tiny_rex_tsm_table,
+    {
+        EM_TINY_REX_STATE_RUNNING,
+        tiny_rex_on_state,
+        tiny_rex_tsm_table,
 };
 //==================================================================================================
 //	Source Code
@@ -293,13 +287,13 @@ static void tiny_rex_on_move_ducking(ak_msg_t* msg)
 }
 void draw_tiny_rex_object(void)
 {
-    if(tiny_rex_object.visible == BLACK)
+    if (tiny_rex_object.visible == BLACK)
         return;
     /* Clear image before write for avoid back-ground over write to object */
     view_render.fillRoundRect(
         tiny_rex_object.x,
         tiny_rex_object.y,
-        (g_bitmap_table[tiny_rex_object.action_image].width) + ((tiny_rex_object.state == EM_TINY_REX_STATE_DUCKING)?2:0),
+        (g_bitmap_table[tiny_rex_object.action_image].width) + ((tiny_rex_object.state == EM_TINY_REX_STATE_DUCKING) ? 2 : 0),
         g_bitmap_table[tiny_rex_object.action_image].height,
         0,
         BLACK);

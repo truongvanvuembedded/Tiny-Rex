@@ -3,19 +3,19 @@
 /*==================================================================================================
  * Local Define
  *================================================================================================*/
-#define SETTING_ITEM_NAME       (0)
-#define SETTING_ITEM_LEN        (1)
-#define SETTING_ITEM_MUTE       (2)
-#define SETTING_ITEM_EXIT       (3)
-#define SETTING_ITEM_MAX        (4)
+#define SETTING_ITEM_NAME (0)
+#define SETTING_ITEM_LEN (1)
+#define SETTING_ITEM_MUTE (2)
+#define SETTING_ITEM_EXIT (3)
+#define SETTING_ITEM_MAX (4)
 
-#define ALPHABET_SIZE           (26)
+#define ALPHABET_SIZE (26)
 /*==================================================================================================
  * Local Type
  *================================================================================================*/
 typedef struct
 {
-    const char *name;
+    const char* name;
 } setting_item_info_t;
 
 /*==================================================================================================
@@ -23,7 +23,7 @@ typedef struct
  *================================================================================================*/
 static int8_t setting_item;
 /* Name setting */
-static char current_user_name[SETTING_MAX_NAME+1];
+static char current_user_name[SETTING_MAX_NAME + 1];
 static uint8_t len_name;
 static uint8_t curr_name_idx;
 static int8_t alphabet_idx[SETTING_MAX_NAME];
@@ -34,19 +34,18 @@ static bool mute_enable = true;
 static bool animation_character_blink;
 
 static const setting_item_info_t setting_item_table[SETTING_ITEM_MAX] =
-{
-    [SETTING_ITEM_NAME] = {"NAME"},
-    [SETTING_ITEM_LEN]  = {"LEN"},
-    [SETTING_ITEM_MUTE] = {"MUTE"},
-    [SETTING_ITEM_EXIT] = {"EXIT"},
+    {
+        [SETTING_ITEM_NAME] = {"NAME"},
+        [SETTING_ITEM_LEN] = {"LEN"},
+        [SETTING_ITEM_MUTE] = {"MUTE"},
+        [SETTING_ITEM_EXIT] = {"EXIT"},
 };
 static const char g_alphabet[ALPHABET_SIZE] =
-{
-    'A', 'B', 'C', 'D', 'E', 'F', 'G',
-    'H', 'I', 'J', 'K', 'L', 'M', 'N',
-    'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-    'V', 'W', 'X', 'Y', 'Z'
-};
+    {
+        'A', 'B', 'C', 'D', 'E', 'F', 'G',
+        'H', 'I', 'J', 'K', 'L', 'M', 'N',
+        'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+        'V', 'W', 'X', 'Y', 'Z'};
 /*==================================================================================================
  * Local Function
  *================================================================================================*/
@@ -56,20 +55,19 @@ static void udpate_user_name(void);
  * Global Variable
  *================================================================================================*/
 view_dynamic_t dyn_view_setting =
-{
     {
-        .item_type = ITEM_TYPE_DYNAMIC,
-    },
-    view_scr_setting
-};
+        {
+            .item_type = ITEM_TYPE_DYNAMIC,
+        },
+        view_scr_setting};
 
 view_screen_t scr_setting =
-{
-    &dyn_view_setting,
-    ITEM_NULL,
-    ITEM_NULL,
+    {
+        &dyn_view_setting,
+        ITEM_NULL,
+        ITEM_NULL,
 
-    .focus_item = 0,
+        .focus_item = 0,
 };
 
 /*==================================================================================================
@@ -81,119 +79,132 @@ view_screen_t scr_setting =
 //    Argument: ak_msg_t *msg: Message information
 //    Return  : None
 //    Created : V.Vu
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void scr_setting_handle(ak_msg_t *msg)
+void scr_setting_handle(ak_msg_t* msg)
 {
     switch (msg->sig)
     {
-        case SCREEN_ENTRY:
+    case SCREEN_ENTRY:
+    {
+        change_name = false;
+    }
+    break;
+
+    case TINY_REX_DISPLAY_BUTTON_DOWN_PRESSED:
+    {
+        APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_DOWN_PRESSED\n");
+        if (change_name)
         {
-            change_name = false;
-        }
-        break;
-
-        case TINY_REX_DISPLAY_BUTTON_DOWN_PRESSED:
-        {
-            APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_DOWN_PRESSED\n");
-            if(change_name){
-                /* Udpate charater */
-                alphabet_idx[curr_name_idx]++;
-                if(alphabet_idx[curr_name_idx] >= ALPHABET_SIZE){
-                    alphabet_idx[curr_name_idx] = 0;
-                }
-            }else{
-                /* Move pointer to next item */
-                setting_item++;
-                if (setting_item >= SETTING_ITEM_MAX)
-                {
-                    setting_item = 0;
-                }
-            }
-            BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-        }
-        break;
-
-        case TINY_REX_DISPLAY_BUTTON_UP_PRESSED:
-        {
-            APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_UP_PRESSED\n");
-            if(change_name){
-                /* Udpate charater */
-                alphabet_idx[curr_name_idx]--;
-                if(alphabet_idx[curr_name_idx] < 0){
-                    alphabet_idx[curr_name_idx] = ALPHABET_SIZE-1;
-
-                }
-            }else{
-                /* Move pointer to next item */
-                setting_item--;
-                if (setting_item < 0)
-                {
-                    setting_item = SETTING_ITEM_MAX - 1;
-                }
-            }
-            BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-        }
-        break;
-
-        case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED:
-        {
-            APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_MODE_PRESSED\n");
-
-            if (setting_item == SETTING_ITEM_EXIT)
+            /* Udpate charater */
+            alphabet_idx[curr_name_idx]++;
+            if (alphabet_idx[curr_name_idx] >= ALPHABET_SIZE)
             {
-                SCREEN_TRAN(scr_menu_handle, &scr_menu);
+                alphabet_idx[curr_name_idx] = 0;
+            }
+        }
+        else
+        {
+            /* Move pointer to next item */
+            setting_item++;
+            if (setting_item >= SETTING_ITEM_MAX)
+            {
+                setting_item = 0;
+            }
+        }
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    }
+    break;
+
+    case TINY_REX_DISPLAY_BUTTON_UP_PRESSED:
+    {
+        APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_UP_PRESSED\n");
+        if (change_name)
+        {
+            /* Udpate charater */
+            alphabet_idx[curr_name_idx]--;
+            if (alphabet_idx[curr_name_idx] < 0)
+            {
+                alphabet_idx[curr_name_idx] = ALPHABET_SIZE - 1;
+            }
+        }
+        else
+        {
+            /* Move pointer to next item */
+            setting_item--;
+            if (setting_item < 0)
+            {
+                setting_item = SETTING_ITEM_MAX - 1;
+            }
+        }
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    }
+    break;
+
+    case TINY_REX_DISPLAY_BUTTON_MODE_PRESSED:
+    {
+        APP_DBG_SIG("TINY_REX_DISPLAY_BUTTON_MODE_PRESSED\n");
+
+        if (setting_item == SETTING_ITEM_EXIT)
+        {
+            SCREEN_TRAN(scr_menu_handle, &scr_menu);
+            animation_character_blink = false;
+        }
+        else if (setting_item == SETTING_ITEM_NAME)
+        {
+            if (change_name)
+            {
+                curr_name_idx++;
+                if (curr_name_idx >= len_name)
+                {
+                    curr_name_idx = 0;
+                }
+            }
+        }
+        else if (setting_item == SETTING_ITEM_LEN)
+        {
+            len_name++;
+            if (len_name > SETTING_MAX_NAME)
+            {
+                len_name = 0;
+            }
+        }
+        else if (setting_item == SETTING_ITEM_MUTE)
+        {
+            mute_enable = !mute_enable;
+            BUZZER_Silent(mute_enable);
+        }
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    }
+    break;
+
+    case TINY_REX_DISPLAY_BUTTON_MODE_LONG_PRESS:
+    {
+        if (setting_item == SETTING_ITEM_NAME && len_name)
+        {
+            change_name = !change_name;
+            if (change_name)
+            {
+                timer_set(TINY_REX_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME, TINY_REX_DISPLAY_SETTING_ANIMATION_UPDATE_INTERVAL, TIMER_PERIODIC);
+                animation_character_blink = true;
+            }
+            else
+            {
+                timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME);
                 animation_character_blink = false;
             }
-            else if (setting_item == SETTING_ITEM_NAME)
-            {
-                if(change_name){
-                    curr_name_idx++;
-                    if(curr_name_idx >= len_name){
-                        curr_name_idx = 0;
-                    }
-                }
-            }
-            else if (setting_item == SETTING_ITEM_LEN)
-            {
-                len_name++;
-                if(len_name > SETTING_MAX_NAME){
-                    len_name = 0;
-                }
-            }
-            else if (setting_item == SETTING_ITEM_MUTE)
-            {
-                mute_enable = !mute_enable;
-                BUZZER_Silent(mute_enable);
-            }
-            BUZZER_PlaySound(BUZZER_SOUND_CLICK);
         }
-        break;
+    }
+    break;
 
-        case TINY_REX_DISPLAY_BUTTON_MODE_LONG_PRESS:
-        {
-            if (setting_item == SETTING_ITEM_NAME && len_name)
-            {
-                change_name = !change_name;
-                if(change_name){
-                    timer_set(TINY_REX_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME, TINY_REX_DISPLAY_SETTING_ANIMATION_UPDATE_INTERVAL, TIMER_PERIODIC);
-                    animation_character_blink = true;
-                }else{
-                    timer_remove_attr(TINY_REX_TASK_DISPLAY_ID, EVENT_DISPLAY_SETTING_NAME);
-                    animation_character_blink = false;
-                }
-            }
-        }
-        break;
+    case EVENT_DISPLAY_SETTING_NAME:
+    {
+        animation_character_blink = !animation_character_blink;
+    }
+    break;
 
-        case EVENT_DISPLAY_SETTING_NAME:
-        {
-            animation_character_blink = !animation_character_blink;
-        }
-        break;
-
-        default:
+    default:
         break;
     }
 }
@@ -203,12 +214,12 @@ void scr_setting_handle(ak_msg_t *msg)
 //    Argument: None
 //    Return  : None
 //    Created : V.Vu
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void view_scr_setting(void)
 {
-    char name[SETTING_MAX_NAME+1];
+    char name[SETTING_MAX_NAME + 1];
     view_render.setTextSize(1);
     view_render.setTextColor(WHITE);
 
@@ -240,7 +251,8 @@ static void view_scr_setting(void)
         {
             memcpy(name, current_user_name, sizeof(name));
             /* Udpate animation blink character */
-            if(animation_character_blink){
+            if (animation_character_blink)
+            {
                 name[curr_name_idx] = ' ';
             }
             name[SETTING_MAX_NAME] = '\0';
@@ -273,17 +285,20 @@ static void view_scr_setting(void)
 //    Argument: None
 //    Return  : None
 //    Created : V.Vu
-//    Change  : 
-//    Note    : 
+//    Change  :
+//    Note    :
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void udpate_user_name(void)
 {
     uint8_t au1_ForC;
-    for(au1_ForC = 0; au1_ForC < SETTING_MAX_NAME; au1_ForC++)
+    for (au1_ForC = 0; au1_ForC < SETTING_MAX_NAME; au1_ForC++)
     {
-        if(au1_ForC < len_name){
+        if (au1_ForC < len_name)
+        {
             current_user_name[au1_ForC] = g_alphabet[alphabet_idx[au1_ForC]];
-        }else{
+        }
+        else
+        {
             current_user_name[au1_ForC] = '\0';
             alphabet_idx[au1_ForC] = 0;
         }
@@ -296,12 +311,13 @@ static void udpate_user_name(void)
 //    Argument: None
 //    Return  : None
 //    Created : V.Vu
-//    Change  : 
+//    Change  :
 //    Note    : Only get user name correct when name updated before game play.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 bool get_current_user_name(char* user_name, uint8_t len)
 {
-    if(!user_name || len < SETTING_MAX_NAME || !len_name){
+    if (!user_name || len < SETTING_MAX_NAME || !len_name)
+    {
         return false;
     }
     memcpy(user_name, &current_user_name[0], SETTING_MAX_NAME);

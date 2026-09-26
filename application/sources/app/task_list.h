@@ -12,21 +12,22 @@ extern const task_polling_t app_task_polling_table[];
  *  Note: Task id MUST be increasing order.
  */
 /*****************************************************************************/
-enum {
-	/* SYSTEM TASKS */
-	TASK_TIMER_TICK_ID,
+enum
+{
+    /* SYSTEM TASKS */
+    TASK_TIMER_TICK_ID,
 
-	/* APP TASKS */
-	TINY_REX_TASK_LIFE_ID,
-	TINY_REX_TASK_DISPLAY_ID,
+    /* APP TASKS */
+    TINY_REX_TASK_LIFE_ID,
+    TINY_REX_TASK_DISPLAY_ID,
 
-	/* TINY_REX GAME ID */
-	TINY_REX_OBJECT_ID,
-	OBSTACLE_OBJECT_ID,
-	HORIZON_OBJECT_ID,
-	SCORE_ID,
-	/* EOT task ID */
-	AK_TASK_EOT_ID,
+    /* TINY_REX GAME ID */
+    TINY_REX_OBJECT_ID,
+    OBSTACLE_OBJECT_ID,
+    HORIZON_OBJECT_ID,
+    SCORE_ID,
+    /* EOT task ID */
+    AK_TASK_EOT_ID,
 };
 
 /*****************************************************************************/
@@ -34,9 +35,10 @@ enum {
  *  Note: Task id MUST be increasing order.
  */
 /*****************************************************************************/
-enum {
-	/* EOT polling task ID */
-	AK_TASK_POLLING_EOT_ID,
+enum
+{
+    /* EOT polling task ID */
+    AK_TASK_POLLING_EOT_ID,
 };
 
 /*****************************************************************************/
