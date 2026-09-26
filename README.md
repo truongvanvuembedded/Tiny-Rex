@@ -3,7 +3,7 @@
 
 ## Gameplay Demo
 
-<video src="https://github.com/user-attachments/assets/aeda37a9-95ff-4896-bd56-b53e5ca4aa56" controls type="video/mp4"></video>
+<video src="https://github.com/user-attachments/assets/54d1881f-a5f9-4996-bc1e-d8f020ad9e21" controls type="video/mp4"></video>
 
 ## Documentation
 
