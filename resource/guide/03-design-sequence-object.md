@@ -24,20 +24,22 @@ The Game Screen controls the gameplay flow and sends events to the T-Rex object.
 **Per-move tick.** Each `TINY_REX_MOVE_EVENT` updates the T-Rex according to its current state:
 
 - `RUNNING`: Updates the running animation frame.
-- `JUMPING`: Updates the Y position upward (`Y--`).
-- `FALLING`: Updates the Y position downward (`Y++`).
+- `JUMPING`: Moves the T-Rex up. The height above the ground is read from the first half of the jump height table of the current level.
+- `FALLING`: Moves the T-Rex down by reading the second half of the same table, until the table is finished and the T-Rex lands.
 - `DUCKING`: Updates the duck animation frame.
 
 **Button control.** The Game Screen sends control events directly to the T-Rex:
 
 - `BUTTON_UP_PRESS` -> `TINY_REX_JUMP`
-  - If `state == RUNNING`, changes the state to `JUMPING` and sets the jump velocity.
+  - If `state == RUNNING`, changes the state to `JUMPING` and selects the jump height table of the current level.
 - `BUTTON_DOWN_PRESS` -> `TINY_REX_FALL`
-  - If `state == JUMPING`, changes the state to `FALLING` and sets the fall velocity.
+  - If `state == JUMPING` or `state == FALLING`, changes the state to `FALLING` and falls 2 times faster (2 table entries for each update). If the T-Rex is still going up it continues down from the same height, so it never goes higher after the button is pressed.
 - `BUTTON_MODE_PRESS` -> `TINY_REX_DUCK`
   - If `state == RUNNING`, changes the state to `DUCKING`.
 
-**Difficulty increase.** `TINY_REX_INC_SPEED_EVENT` increases the jumping and falling velocity to increase game difficulty.
+**Jump height tables.** There is one table for each level (`TINY_REX_JUMP_HEIGHT_L1` to `TINY_REX_JUMP_HEIGHT_L4` in `tiny_rex_object.cpp`). Every table goes up to the same top (36 pixels) and comes back down, one entry for each update (50ms). The higher the level, the faster the obstacles come, so the table is shorter (18, 13, 12 and 11 entries). The table is chosen when the jump starts and used for the whole jump.
+
+**Difficulty increase.** The T-Rex starts at `L1`. `TINY_REX_INC_SPEED_EVENT` increases the level (up to `L4`), so the next jump uses a shorter jump height table. The Score handler sends this event every 200 points.
 
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{'fontSize':'18px','primaryColor':'#1565c0','primaryTextColor':'#ffffff','primaryBorderColor':'#0d47a1','lineColor':'#90a4ae','signalColor':'#ffc107','signalTextColor':'#ffc107','actorBkg':'#1565c0','actorBorder':'#0d47a1','actorTextColor':'#ffffff','actorLineColor':'#90caf9','noteBkgColor':'#fff59d','noteTextColor':'#000000','noteBorderColor':'#f57f17','activationBkgColor':'#66bb6a','activationBorderColor':'#2e7d32','sequenceNumberColor':'#ffffff','loopTextColor':'#ffc107','labelBoxBkgColor':'#37474f','labelBoxBorderColor':'#90a4ae','labelTextColor':'#ffffff'},'sequence':{'actorMargin':120,'messageFontSize':17,'noteFontSize':15,'actorFontSize':17,'boxMargin':15,'boxTextMargin':8,'noteMargin':12,'useMaxWidth':false}}}%%
@@ -68,13 +70,13 @@ sequenceDiagram
     alt State = RUNNING
         Note right of Rex: Update running animation frame
     else State = JUMPING
-        Note right of Rex: Update Y position (Y--)
-        alt Y position reach to top Y
-            Note right of Rex: State = FALLING <br/> Speed = fall-velocity
+        Note right of Rex: Y = ground - table[index] <br/> index + 1
+        alt First half of the table is done
+            Note right of Rex: State = FALLING
         end
     else State = FALLING
-        Note right of Rex: Update Y position (Y++)
-        alt Y position reach to ground Y
+        Note right of Rex: Y = ground - table[index] <br/> index + 1 or 2 after fast-fall
+        alt Table is finished
             Note right of Rex: State = RUNNING
         end
     else State = DUCKING
@@ -89,7 +91,7 @@ sequenceDiagram
         Scr->>Rex: TINY_REX_JUMP
         activate Rex
         alt State == RUNNING
-            Note right of Rex: State = JUMPING <br/> Set jump velocity
+            Note right of Rex: State = JUMPING <br/> Select jump height table of the level
         end
         deactivate Rex
 
@@ -97,7 +99,7 @@ sequenceDiagram
         Scr->>Rex: TINY_REX_FALL
         activate Rex
         alt State == JUMPING <br/> State == FALLING
-            Note right of Rex: State = FALLING <br/> Set fast-fall speed
+            Note right of Rex: State = FALLING <br/> Fall 2 times faster
         end
         deactivate Rex
 
@@ -117,7 +119,7 @@ sequenceDiagram
 
     Score->>Rex: TINY_REX_INC_SPEED_EVENT
     activate Rex
-    Note right of Rex: Increase jumping and falling velocity
+    Note right of Rex: Increase level <br/> next jump uses a shorter table
     deactivate Rex
 ```
 
@@ -292,7 +294,7 @@ The Game Screen controls the gameplay flow and sends events to the Score handler
 
 * Clear Current score
 
-**Per-move tick.** Each `SCORE_UPDATE` updates the score and it will compare with score threshold for increase difficult level. When difficult level increase, It will send event to object for increase velocity.
+**Per-move tick.** Each `SCORE_UPDATE` updates the score and it will compare with score threshold for increase difficult level. The threshold starts at 200 points and goes up by 200 every time it is reached (200, 400, 600 ...). When difficult level increase, It will send event to object for increase velocity.
 * Score -> T-Rex: `TINY_REX_INC_SPEED_EVENT`
 * Score -> Obstacles: `OBSTACLE_INC_SPEED_EVENT`
 

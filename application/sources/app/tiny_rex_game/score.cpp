@@ -24,7 +24,8 @@
 //==================================================================================================
 //	Local define
 //==================================================================================================
-
+/* The level goes up every time the score reaches a multiple of this value */
+#define SCORE_LEVEL_UP_INTERVAL (200)
 //==================================================================================================
 //	Local define I/O
 //==================================================================================================
@@ -107,7 +108,7 @@ static void score_on_setup(ak_msg_t* msg)
     score_object.current_score = 0;
     score_object.high_score = get_highest_score();
     ;
-    score_object.threshold = 100;
+    score_object.threshold = SCORE_LEVEL_UP_INTERVAL;
     score_object.animation_timer = 0;
 }
 
@@ -126,9 +127,9 @@ static void score_on_update(ak_msg_t* msg)
         score_object.skip_count = 0;
     }
     /* Update new high score */
-    if (score_object.current_score > score_object.threshold)
+    if (score_object.current_score >= score_object.threshold)
     {
-        score_object.threshold += 100;
+        score_object.threshold += SCORE_LEVEL_UP_INTERVAL;
         score_object.animation_timer = 25;
         BUZZER_PlaySound_Priority(BUZZER_SOUND_HIGHSCORE);
         task_post_pure_msg(TINY_REX_OBJECT_ID, TINY_REX_INC_SPEED_EVENT);

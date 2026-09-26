@@ -126,7 +126,7 @@ extern "C"
 #define APP_MAGIC_NUMBER 0xAABBCCDD
 #define APP_VER    \
     {              \
-        0, 0, 0, 3 \
+        1, 0, 0, 0 \
     }
 
     typedef struct

@@ -126,7 +126,7 @@ The game opens on the **Main Menu**, which offers the following options:
 #### Game Mechanics:
 
 - **Scoring:** The score increases continuously until Game Over, based on the distance traveled by the Tiny-Rex.
-- **Difficulty:** Every **100 points (meters)**, the current score blinks and a sound is played to celebrate the player's progress. The game then increases the speed and adjusts the distance between obstacles.
+- **Difficulty:** The game starts at level 1 and there are 4 levels. Every **200 points (meters)**, the current score blinks and a sound is played to celebrate the player's progress. The game then increases the speed and adjusts the distance between obstacles.
 - **Animation:** To keep the gameplay lively, the Tiny-Rex and obstacles use animation frames to create movement.
 - **Game Over:** When the Tiny-Rex collides with an obstacle, the game state changes to **Game Over** and waits for the player to press any button before returning to the **Waiting** screen for restart new match.
 

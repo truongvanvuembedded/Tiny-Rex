@@ -31,7 +31,7 @@
 #define AXIS_X_OBSTACLE_OBJECT_INIT (WIDTH)
 #define AXIS_Y_OBSTACLE_OBJECT_INIT(object) AXIS_Y_OBSTACLE_OBJECT_IN_GROUND(object)
 /* Speed */
-#define SPEED_MIN (3)
+#define SPEED_MIN (4)
 #define SPEED_MAX (8)
 /* Distance for create new object */
 #define SPAWN_DISTANCE_MIN (WIDTH / 2)
